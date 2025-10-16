@@ -87,23 +87,25 @@ app.layout = html.Div(
             **{
                 "data-skip-link": "true",
                 "tabIndex": "1",
-            }
+            },
         ),
         # Header
         html.Header(
             [
                 html.H1(
-                    "Dashboard de Bienestar Mental", 
+                    "Dashboard de Bienestar Mental",
                     className="header-title",
                     **{
                         "aria-label": "Dashboard de Bienestar Mental - Página principal",
-                        "role": "banner"
-                    }
+                        "role": "banner",
+                    },
                 ),
                 html.P(
                     "Tu espacio personal para el seguimiento y mejora de tu salud emocional",
                     className="subtitle",
-                    **{"aria-label": "Descripción: Tu espacio personal para el seguimiento y mejora de tu salud emocional"}
+                    **{
+                        "aria-label": "Descripción: Tu espacio personal para el seguimiento y mejora de tu salud emocional"
+                    },
                 ),
                 html.P(
                     "Datos visuales · Tendencias · Recomendaciones personalizadas",
@@ -114,11 +116,13 @@ app.layout = html.Div(
                         "opacity": "0.85",
                         "fontStyle": "italic",
                     },
-                    **{"aria-label": "Características: Datos visuales, Tendencias y Recomendaciones personalizadas"}
+                    **{
+                        "aria-label": "Características: Datos visuales, Tendencias y Recomendaciones personalizadas"
+                    },
                 ),
             ],
             className="header",
-            **{"role": "banner"}
+            **{"role": "banner"},
         ),
         # Tarjetas de métricas (Main content empieza aquí)
         html.Div(
@@ -127,88 +131,118 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.Div(
-                            "🧠", 
+                            "🧠",
                             className="metric-icon",
-                            **{"aria-hidden": "true", "role": "img", "aria-label": "Icono de cerebro"}
+                            **{
+                                "aria-hidden": "true",
+                                "role": "img",
+                                "aria-label": "Icono de cerebro",
+                            },
                         ),
                         html.H3(
                             "Bienestar Emocional",
-                            **{"aria-label": "Métrica de Bienestar Emocional"}
+                            **{"aria-label": "Métrica de Bienestar Emocional"},
                         ),
                         html.H2(
                             f"{df_bienestar['Bienestar_Emocional'].iloc[-1]:.1f}/10",
                             className="metric-value",
-                            **{"aria-label": f"Valor actual: {df_bienestar['Bienestar_Emocional'].iloc[-1]:.1f} sobre 10"}
+                            **{
+                                "aria-label": f"Valor actual: {df_bienestar['Bienestar_Emocional'].iloc[-1]:.1f} sobre 10"
+                            },
                         ),
                         html.P(
-                            "↑ +0.3 vs mes anterior", 
+                            "↑ +0.3 vs mes anterior",
                             className="metric-change positive",
-                            **{"aria-label": "Tendencia positiva: aumento de 0.3 puntos respecto al mes anterior"}
+                            **{
+                                "aria-label": "Tendencia positiva: aumento de 0.3 puntos respecto al mes anterior"
+                            },
                         ),
                     ],
                     className="metric-card mental",
                     tabIndex="0",
                     role="article",
-                    **{"aria-label": "Tarjeta de Bienestar Emocional: 8.1 sobre 10, aumento de 0.3 puntos"}
+                    **{
+                        "aria-label": "Tarjeta de Bienestar Emocional: 8.1 sobre 10, aumento de 0.3 puntos"
+                    },
                 ),
                 html.Div(
                     [
                         html.Div(
-                            "😌", 
+                            "😌",
                             className="metric-icon",
-                            **{"aria-hidden": "true", "role": "img", "aria-label": "Icono de relajación"}
+                            **{
+                                "aria-hidden": "true",
+                                "role": "img",
+                                "aria-label": "Icono de relajación",
+                            },
                         ),
                         html.H3(
                             "Nivel de Estrés",
-                            **{"aria-label": "Métrica de Nivel de Estrés"}
+                            **{"aria-label": "Métrica de Nivel de Estrés"},
                         ),
                         html.H2(
                             f"{df_bienestar['Nivel_Estrés'].iloc[-1]:.1f}/10",
                             className="metric-value",
-                            **{"aria-label": f"Valor actual: {df_bienestar['Nivel_Estrés'].iloc[-1]:.1f} sobre 10"}
+                            **{
+                                "aria-label": f"Valor actual: {df_bienestar['Nivel_Estrés'].iloc[-1]:.1f} sobre 10"
+                            },
                         ),
                         html.P(
-                            "↓ -0.3 mejorando", 
+                            "↓ -0.3 mejorando",
                             className="metric-change positive",
-                            **{"aria-label": "Tendencia positiva: reducción de 0.3 puntos de estrés, mejorando"}
+                            **{
+                                "aria-label": "Tendencia positiva: reducción de 0.3 puntos de estrés, mejorando"
+                            },
                         ),
                     ],
                     className="metric-card stress",
                     tabIndex="0",
                     role="article",
-                    **{"aria-label": "Tarjeta de Nivel de Estrés: 5.2 sobre 10, reducción de 0.3 puntos, estado mejorando"}
+                    **{
+                        "aria-label": "Tarjeta de Nivel de Estrés: 5.2 sobre 10, reducción de 0.3 puntos, estado mejorando"
+                    },
                 ),
                 html.Div(
                     [
                         html.Div(
-                            "😴", 
+                            "😴",
                             className="metric-icon",
-                            **{"aria-hidden": "true", "role": "img", "aria-label": "Icono de sueño"}
+                            **{
+                                "aria-hidden": "true",
+                                "role": "img",
+                                "aria-label": "Icono de sueño",
+                            },
                         ),
                         html.H3(
                             "Horas de Sueño",
-                            **{"aria-label": "Métrica de Horas de Sueño"}
+                            **{"aria-label": "Métrica de Horas de Sueño"},
                         ),
                         html.H2(
                             f"{df_bienestar['Horas_Sueño'].iloc[-1]:.1f}h",
                             className="metric-value",
-                            **{"aria-label": f"Valor actual: {df_bienestar['Horas_Sueño'].iloc[-1]:.1f} horas"}
+                            **{
+                                "aria-label": f"Valor actual: {df_bienestar['Horas_Sueño'].iloc[-1]:.1f} horas"
+                            },
                         ),
                         html.P(
                             "↑ +0.3h vs mes anterior",
                             className="metric-change positive",
-                            **{"aria-label": "Tendencia positiva: aumento de 0.3 horas respecto al mes anterior"}
+                            **{
+                                "aria-label": "Tendencia positiva: aumento de 0.3 horas respecto al mes anterior"
+                            },
                         ),
                     ],
                     className="metric-card sleep",
                     tabIndex="0",
                     role="article",
-                    **{"aria-label": "Tarjeta de Horas de Sueño: 7.5 horas, aumento de 0.3 horas"}
+                    **{
+                        "aria-label": "Tarjeta de Horas de Sueño: 7.5 horas, aumento de 0.3 horas"
+                    },
                 ),
             ],
             className="metrics-grid",
             role="region",
-            **{"aria-label": "Resumen de métricas principales de salud mental"}
+            **{"aria-label": "Resumen de métricas principales de salud mental"},
         ),
         # Gráficos principales
         html.Div(
@@ -379,7 +413,7 @@ app.layout = html.Div(
                     ],
                     className="controls",
                 ),
-                dcc.Graph(id="grafico-tendencia")
+                dcc.Graph(id="grafico-tendencia"),
             ],
             className="chart-card full",
         ),
@@ -502,7 +536,7 @@ def actualizar_grafico(metrica_seleccionada):
         yaxis_title = "Nivel (1-10)"
     elif metrica_seleccionada == "Horas_Sueño":
         yaxis_range = [0, 12]
-        yaxis_title = "Horas"
+        yaxis_title = "Horas de Sueño"
     else:
         yaxis_range = [0, None]
         yaxis_title = "Veces por semana"
