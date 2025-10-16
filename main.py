@@ -78,16 +78,16 @@ app.layout = html.Div([
                         y=df_bienestar['Bienestar_Emocional'],
                         mode='lines+markers',
                         name='Bienestar Emocional',
-                        line=dict(color='#2563eb', width=3),
-                        marker=dict(size=8)
+                        line=dict(color='#0077bb', width=4),  # Azul seguro para daltónicos
+                        marker=dict(size=10, symbol='circle', line=dict(width=2, color='white'))
                     ),
                     go.Scatter(
                         x=df_bienestar['Mes'],
                         y=df_bienestar['Nivel_Estrés'],
                         mode='lines+markers',
                         name='Nivel de Estrés',
-                        line=dict(color='#1e293b', width=3),
-                        marker=dict(size=8)
+                        line=dict(color='#ee7733', width=4, dash='dash'),  # Naranja con patrón
+                        marker=dict(size=10, symbol='square', line=dict(width=2, color='white'))
                     )
                 ]).update_layout(
                     plot_bgcolor='white',
@@ -114,7 +114,7 @@ app.layout = html.Div([
                     values='Porcentaje', 
                     names='Factor',
                     hole=0.4,
-                    color_discrete_sequence=['#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#dbeafe']
+                    color_discrete_sequence=['#0077bb', '#ee7733', '#009988', '#cc3311', '#33bbee']  # Paleta daltónica
                 ).update_layout(
                     paper_bgcolor='white',
                     font={'family': 'Segoe UI, sans-serif', 'color': '#1e293b'},
@@ -137,7 +137,7 @@ app.layout = html.Div([
                 x='Actividad',
                 y='Frecuencia_Semanal',
                 color='Frecuencia_Semanal',
-                color_continuous_scale=['#dbeafe', '#93c5fd', '#60a5fa', '#3b82f6', '#2563eb'],
+                color_continuous_scale=['#e6f7f5', '#b3e5dc', '#80d4c3', '#4dc2aa', '#009988'],  # Gradiente verde azulado
                 labels={'Frecuencia_Semanal': 'Veces por semana'}
             ).update_layout(
                 plot_bgcolor='white',
@@ -208,12 +208,20 @@ app.layout = html.Div([
     Input('dropdown-metrica', 'value')
 )
 def actualizar_grafico(metrica_seleccionada):
-    # Definir colores según la métrica - paleta azul y negro
+    # Definir colores según la métrica - paleta azul y negro (con alternativa daltónica)
     colores = {
-        'Bienestar_Emocional': '#2563eb',
-        'Nivel_Estrés': '#1e293b',
-        'Horas_Sueño': '#3b82f6',
-        'Actividad_Fisica': '#60a5fa'
+        'Bienestar_Emocional': '#2563eb',  # Azul - compatible con daltonismo
+        'Nivel_Estrés': '#ee7733',  # Naranja - visible para daltónicos
+        'Horas_Sueño': '#009988',  # Verde azulado - seguro
+        'Actividad_Fisica': '#0077bb'  # Azul oscuro - seguro
+    }
+    
+    # Colores de relleno con mejor contraste
+    colores_relleno = {
+        'Bienestar_Emocional': 'rgba(37, 99, 235, 0.15)',
+        'Nivel_Estrés': 'rgba(238, 119, 51, 0.15)',
+        'Horas_Sueño': 'rgba(0, 153, 136, 0.15)',
+        'Actividad_Fisica': 'rgba(0, 119, 187, 0.15)'
     }
     
     # Nombres amigables
@@ -225,6 +233,7 @@ def actualizar_grafico(metrica_seleccionada):
     }
     
     color = colores.get(metrica_seleccionada, '#2563eb')
+    color_relleno = colores_relleno.get(metrica_seleccionada, 'rgba(37, 99, 235, 0.1)')
     nombre = nombres.get(metrica_seleccionada, metrica_seleccionada)
     
     fig = go.Figure()
@@ -233,10 +242,10 @@ def actualizar_grafico(metrica_seleccionada):
         y=df_bienestar[metrica_seleccionada],
         mode='lines+markers',
         name=nombre,
-        line=dict(color=color, width=3),
-        marker=dict(size=10, color=color),
+        line=dict(color=color, width=4),  # Líneas más gruesas para mejor visibilidad
+        marker=dict(size=12, color=color, line=dict(width=2, color='white')),  # Marcadores con borde
         fill='tozeroy',
-        fillcolor=f'rgba({int(color[1:3], 16)}, {int(color[3:5], 16)}, {int(color[5:7], 16)}, 0.1)'
+        fillcolor=color_relleno
     ))
     
     # Configurar el eje Y según la métrica

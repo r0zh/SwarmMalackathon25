@@ -329,9 +329,658 @@ body.dark-mode .tip-card p {
     color: #94a3b8;
 }
 
+/* Modo Daltónico - Paleta accesible con patrones */
+body.colorblind-mode {
+    --cb-primary: #0077bb;      /* Azul seguro */
+    --cb-secondary: #ee7733;    /* Naranja */
+    --cb-success: #009988;      /* Verde azulado */
+    --cb-warning: #cc3311;      /* Rojo seguro */
+    --cb-info: #33bbee;         /* Cyan */
+    --cb-dark: #1e293b;
+    --cb-light: #f0f0f0;
+}
+
+/* Tarjetas con patrones para diferenciar */
+body.colorblind-mode .metric-card.mental {
+    background: linear-gradient(135deg, #ffffff 0%, #e6f3ff 100%);
+    border: 3px solid var(--cb-primary);
+    position: relative;
+}
+
+body.colorblind-mode .metric-card.mental::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: repeating-linear-gradient(
+        45deg,
+        var(--cb-primary),
+        var(--cb-primary) 10px,
+        #ffffff 10px,
+        #ffffff 20px
+    );
+}
+
+body.colorblind-mode .metric-card.stress {
+    background: linear-gradient(135deg, #ffffff 0%, #fff3e6 100%);
+    border: 3px solid var(--cb-secondary);
+    position: relative;
+}
+
+body.colorblind-mode .metric-card.stress::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--cb-secondary),
+        var(--cb-secondary) 5px,
+        #ffffff 5px,
+        #ffffff 10px
+    );
+}
+
+body.colorblind-mode .metric-card.sleep {
+    background: linear-gradient(135deg, #ffffff 0%, #e6f7f5 100%);
+    border: 3px solid var(--cb-success);
+    position: relative;
+}
+
+body.colorblind-mode .metric-card.sleep::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: repeating-linear-gradient(
+        -45deg,
+        var(--cb-success),
+        var(--cb-success) 10px,
+        #ffffff 10px,
+        #ffffff 20px
+    );
+}
+
+body.colorblind-mode .metric-card.mental .metric-value {
+    color: var(--cb-primary);
+}
+
+body.colorblind-mode .metric-card.stress .metric-value {
+    color: var(--cb-secondary);
+}
+
+body.colorblind-mode .metric-card.sleep .metric-value {
+    color: var(--cb-success);
+}
+
+body.colorblind-mode .header {
+    background: linear-gradient(135deg, var(--cb-primary) 0%, var(--cb-dark) 100%);
+}
+
+body.colorblind-mode .tip-card {
+    border-left: 4px solid var(--cb-primary);
+    background: var(--cb-light);
+}
+
+body.colorblind-mode .tip-card:nth-child(2) {
+    border-left-color: var(--cb-secondary);
+}
+
+body.colorblind-mode .tip-card:nth-child(3) {
+    border-left-color: var(--cb-success);
+}
+
+body.colorblind-mode .tip-card:nth-child(4) {
+    border-left-color: var(--cb-info);
+}
+
+/* Añadir etiquetas de texto en modo daltónico */
+body.colorblind-mode .metric-card.mental .metric-icon::after {
+    content: ' BIENESTAR';
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--cb-primary);
+    letter-spacing: 1px;
+}
+
+body.colorblind-mode .metric-card.stress .metric-icon::after {
+    content: ' ESTRÉS';
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--cb-secondary);
+    letter-spacing: 1px;
+}
+
+body.colorblind-mode .metric-card.sleep .metric-icon::after {
+    content: ' SUEÑO';
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--cb-success);
+    letter-spacing: 1px;
+}
+
+/* Panel de configuración de accesibilidad */
+.accessibility-panel {
+    position: fixed;
+    bottom: 170px;
+    right: 30px;
+    width: 320px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    padding: 24px;
+    z-index: 999;
+    transform: translateX(400px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border: 2px solid #e2e8f0;
+}
+
+.accessibility-panel.visible {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.accessibility-panel h3 {
+    margin: 0 0 20px 0;
+    color: #1e293b;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.accessibility-panel h3::before {
+    content: '♿';
+    font-size: 1.3rem;
+}
+
+.panel-section {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.panel-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.panel-section label {
+    display: block;
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 12px 0;
+}
+
+.toggle-switch span {
+    font-size: 0.95rem;
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    background: #cbd5e1;
+    border-radius: 13px;
+    transition: all 0.3s ease;
+}
+
+.switch::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch.active .switch {
+    background: #0077bb;
+}
+
+.toggle-switch.active .switch::after {
+    left: 27px;
+}
+
+.colorblind-type-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.type-option {
+    padding: 10px 12px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #64748b;
+}
+
+.type-option:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+}
+
+.type-option.active {
+    background: linear-gradient(135deg, #0077bb, #33bbee);
+    border-color: #0077bb;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 119, 187, 0.3);
+}
+
+.type-option .type-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.type-option .type-description {
+    display: block;
+    font-size: 0.7rem;
+    opacity: 0.8;
+}
+
+.intensity-slider-container {
+    margin-top: 12px;
+}
+
+.intensity-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.intensity-value span:first-child {
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.intensity-value span:last-child {
+    color: #0077bb;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.intensity-slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #e2e8f0 0%, #0077bb 100%);
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+.intensity-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #0077bb;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 119, 187, 0.4);
+    transition: all 0.2s ease;
+}
+
+.intensity-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(0, 119, 187, 0.6);
+}
+
+.intensity-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #0077bb;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 119, 187, 0.4);
+    transition: all 0.2s ease;
+}
+
+.intensity-slider::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(0, 119, 187, 0.6);
+}
+
+.info-text {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 8px;
+    line-height: 1.4;
+    font-style: italic;
+}
+
+.info-text::before {
+    content: 'ℹ️ ';
+}
+
+/* Modo oscuro para el panel */
+body.dark-mode .accessibility-panel {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+body.dark-mode .accessibility-panel h3 {
+    color: #e2e8f0;
+}
+
+body.dark-mode .panel-section {
+    border-bottom-color: #334155;
+}
+
+body.dark-mode .panel-section label {
+    color: #94a3b8;
+}
+
+body.dark-mode .toggle-switch span {
+    color: #e2e8f0;
+}
+
+body.dark-mode .type-option {
+    background: #0f172a;
+    border-color: #334155;
+    color: #94a3b8;
+}
+
+body.dark-mode .type-option:hover {
+    background: #1e293b;
+    border-color: #475569;
+}
+
+body.dark-mode .info-text {
+    color: #64748b;
+}
+
+/* Variaciones de tipo de daltonismo */
+body.colorblind-protanopia {
+    --cb-primary: #0077bb;
+    --cb-secondary: #ee7733;
+    --cb-success: #009988;
+    --cb-warning: #cc3311;
+    --cb-info: #33bbee;
+}
+
+body.colorblind-protanopia .metric-card.mental .metric-value {
+    color: #0077bb !important;
+}
+
+body.colorblind-protanopia .metric-card.stress .metric-value {
+    color: #ee7733 !important;
+}
+
+body.colorblind-protanopia .metric-card.sleep .metric-value {
+    color: #009988 !important;
+}
+
+body.colorblind-deuteranopia {
+    --cb-primary: #0077bb;
+    --cb-secondary: #ee7733;
+    --cb-success: #009988;
+    --cb-warning: #cc3311;
+    --cb-info: #33bbee;
+}
+
+body.colorblind-deuteranopia .metric-card.mental .metric-value {
+    color: #0077bb !important;
+}
+
+body.colorblind-deuteranopia .metric-card.stress .metric-value {
+    color: #ee7733 !important;
+}
+
+body.colorblind-deuteranopia .metric-card.sleep .metric-value {
+    color: #009988 !important;
+}
+
+body.colorblind-tritanopia {
+    --cb-primary: #cc3311;
+    --cb-secondary: #009988;
+    --cb-success: #0077bb;
+    --cb-warning: #ee7733;
+    --cb-info: #33bbee;
+}
+
+body.colorblind-tritanopia .metric-card.mental {
+    border-color: #cc3311 !important;
+}
+
+body.colorblind-tritanopia .metric-card.mental::before {
+    background: repeating-linear-gradient(45deg, #cc3311, #cc3311 10px, #ffffff 10px, #ffffff 20px);
+}
+
+body.colorblind-tritanopia .metric-card.mental .metric-value {
+    color: #cc3311 !important;
+}
+
+body.colorblind-tritanopia .metric-card.stress {
+    border-color: #009988 !important;
+}
+
+body.colorblind-tritanopia .metric-card.stress::before {
+    background: repeating-linear-gradient(90deg, #009988, #009988 5px, #ffffff 5px, #ffffff 10px);
+}
+
+body.colorblind-tritanopia .metric-card.stress .metric-value {
+    color: #009988 !important;
+}
+
+body.colorblind-tritanopia .metric-card.sleep {
+    border-color: #0077bb !important;
+}
+
+body.colorblind-tritanopia .metric-card.sleep::before {
+    background: repeating-linear-gradient(-45deg, #0077bb, #0077bb 10px, #ffffff 10px, #ffffff 20px);
+}
+
+body.colorblind-tritanopia .metric-card.sleep .metric-value {
+    color: #0077bb !important;
+}
+
+body.colorblind-achromatopsia {
+    --cb-primary: #1e293b;
+    --cb-secondary: #64748b;
+    --cb-success: #334155;
+    --cb-warning: #0f172a;
+    --cb-info: #475569;
+}
+
+body.colorblind-achromatopsia .metric-card.mental {
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    border-color: #1e293b !important;
+}
+
+body.colorblind-achromatopsia .metric-card.mental::before {
+    background: repeating-linear-gradient(45deg, #1e293b, #1e293b 10px, #ffffff 10px, #ffffff 20px);
+}
+
+body.colorblind-achromatopsia .metric-card.mental .metric-value {
+    color: #1e293b !important;
+    font-weight: 900;
+}
+
+body.colorblind-achromatopsia .metric-card.stress {
+    background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+    border-color: #64748b !important;
+}
+
+body.colorblind-achromatopsia .metric-card.stress::before {
+    background: repeating-linear-gradient(90deg, #64748b, #64748b 5px, #ffffff 5px, #ffffff 10px);
+}
+
+body.colorblind-achromatopsia .metric-card.stress .metric-value {
+    color: #64748b !important;
+    font-weight: 900;
+}
+
+body.colorblind-achromatopsia .metric-card.sleep {
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    border-color: #334155 !important;
+}
+
+body.colorblind-achromatopsia .metric-card.sleep::before {
+    background: repeating-linear-gradient(-45deg, #334155, #334155 10px, #ffffff 10px, #ffffff 20px);
+}
+
+body.colorblind-achromatopsia .metric-card.sleep .metric-value {
+    color: #334155 !important;
+    font-weight: 900;
+}
+
+/* Añadir iconos más prominentes en acromatopsia */
+body.colorblind-achromatopsia .metric-icon {
+    font-size: 3.5rem;
+    filter: grayscale(100%) contrast(1.2);
+}
+
+body.colorblind-achromatopsia .chart-card {
+    border: 2px solid #94a3b8;
+}
+
+body.colorblind-achromatopsia .header {
+    background: linear-gradient(135deg, #0f172a 0%, #475569 100%);
+}
+
+/* Modo Alto Contraste */
+body.high-contrast-mode {
+    background: #000000;
+}
+
+body.high-contrast-mode .header {
+    background: linear-gradient(135deg, #000000 0%, #1e293b 100%);
+    border-bottom: var(--contrast-border-width, 3px) solid #ffffff;
+}
+
+body.high-contrast-mode .metric-card,
+body.high-contrast-mode .chart-card {
+    border: var(--contrast-border-width, 3px) solid #ffffff;
+    box-shadow: 0 4px 16px rgba(255, 255, 255, var(--contrast-shadow-intensity, 0.2));
+    background: #0f172a;
+}
+
+body.high-contrast-mode .metric-card h3,
+body.high-contrast-mode .chart-title,
+body.high-contrast-mode .control-label {
+    color: #ffffff;
+    font-weight: var(--contrast-text-weight, 700);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+body.high-contrast-mode .metric-value {
+    color: #ffffff !important;
+    font-weight: 900 !important;
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+    font-size: 2.8rem !important;
+}
+
+body.high-contrast-mode .metric-change {
+    color: #ffffff;
+    font-weight: var(--contrast-text-weight, 700);
+}
+
+body.high-contrast-mode .tip-card {
+    background: #1e293b;
+    border: var(--contrast-border-width, 3px) solid #ffffff;
+    border-left-width: 6px;
+}
+
+body.high-contrast-mode .tip-card h4 {
+    color: #ffffff;
+    font-weight: 800;
+}
+
+body.high-contrast-mode .tip-card p {
+    color: #e2e8f0;
+    font-weight: 600;
+}
+
+body.high-contrast-mode .footer {
+    background: #000000;
+    border-top: var(--contrast-border-width, 3px) solid #ffffff;
+}
+
+body.high-contrast-mode .Select-control {
+    border: var(--contrast-border-width, 3px) solid #ffffff !important;
+    background: #1e293b !important;
+    color: #ffffff !important;
+}
+
+body.high-contrast-mode .metric-icon {
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+    font-size: 3.5rem;
+}
+
+/* Vista previa de contraste en el panel */
+.contrast-preview {
+    margin-top: 16px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.preview-box {
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+    border: 2px solid #e2e8f0;
+}
+
+.preview-box span {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+body.dark-mode .contrast-preview {
+    background: #0f172a;
+}
+
+body.dark-mode .preview-box {
+    border-color: #334155;
+}
+
 /* Botón de tema con animación */
 #theme-toggle {
     animation: float 3s ease-in-out infinite;
+}
+
+#accessibility-toggle {
+    animation: float 3s ease-in-out infinite;
+    animation-delay: 0.5s; /* Desfase para que no floten al mismo tiempo */
 }
 
 @keyframes float {
