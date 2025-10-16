@@ -3,8 +3,11 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 
-# Inicializar la app con hojas de estilo personalizadas
+# Inicializar la app con hojas de estilo y scripts personalizados
 app = Dash(__name__, assets_folder='assets')
+
+# Configurar el título de la página
+app.title = "Dashboard de Bienestar Mental"
 
 # Datos de ejemplo - Niveles de Bienestar Mental (escala 1-10)
 df_bienestar = pd.DataFrame({
@@ -32,7 +35,10 @@ app.layout = html.Div([
     # Header
     html.Header([
         html.H1("Dashboard de Bienestar Mental", className="header-title"),
-        html.P("Monitoreo y seguimiento de tu salud emocional", className="subtitle")
+        html.P("Monitoreo y seguimiento de tu salud emocional", className="subtitle"),
+        html.P("✨ Interactúa con las tarjetas y gráficos para descubrir más", 
+               className="subtitle", 
+               style={'fontSize': '0.95rem', 'marginTop': '10px', 'opacity': '0.8'})
     ], className="header"),
     
     # Tarjetas de métricas
@@ -65,6 +71,7 @@ app.layout = html.Div([
             html.H3("Evolución del Bienestar y Estrés", className="chart-title"),
             dcc.Graph(
                 id='grafico-bienestar',
+                config={'displayModeBar': False},
                 figure=go.Figure([
                     go.Scatter(
                         x=df_bienestar['Mes'],
@@ -92,7 +99,7 @@ app.layout = html.Div([
                     yaxis=dict(range=[0, 10]),
                     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                     hovermode='x unified',
-                    height=400
+                    height=380
                 )
             )
         ], className="chart-card chart-large"),
@@ -101,6 +108,7 @@ app.layout = html.Div([
             html.H3("Factores de Estrés", className="chart-title"),
             dcc.Graph(
                 id='grafico-factores',
+                config={'displayModeBar': False},
                 figure=px.pie(
                     df_factores, 
                     values='Porcentaje', 
@@ -112,7 +120,7 @@ app.layout = html.Div([
                     font={'family': 'Segoe UI, sans-serif', 'color': '#1e293b'},
                     margin=dict(l=20, r=20, t=20, b=20),
                     showlegend=True,
-                    height=400
+                    height=380
                 )
             )
         ], className="chart-card chart-small"),
@@ -123,6 +131,7 @@ app.layout = html.Div([
         html.H3("Actividades de Autocuidado Semanales", className="chart-title"),
         dcc.Graph(
             id='grafico-autocuidado',
+            config={'displayModeBar': False},
             figure=px.bar(
                 df_autocuidado,
                 x='Actividad',
