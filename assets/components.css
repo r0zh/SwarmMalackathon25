@@ -1,0 +1,298 @@
+/* ===================================
+   COMPONENT STYLES
+   Metrics, Charts, Cards, Tables
+   =================================== */
+
+/* ===================================
+   METRICS & KPI CARDS
+   =================================== */
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin: 0 24px 40px 24px;
+}
+
+.metric-card {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #2563eb, #3b82f6, #60a5fa);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(37, 99, 235, 0.2);
+    border-color: #3b82f6;
+}
+
+.metric-card:hover::after {
+    opacity: 1;
+}
+
+.metric-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    filter: grayscale(0);
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.metric-card:hover .metric-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.metric-card h3 {
+    color: #64748b;
+    font-size: 0.875rem;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.metric-card.mental .metric-value {
+    color: #2563eb;
+}
+
+.metric-card.stress .metric-value {
+    color: #1e293b;
+}
+
+.metric-card.sleep .metric-value {
+    color: #3b82f6;
+}
+
+.metric-change {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.metric-change.positive {
+    color: #2563eb;
+}
+
+.metric-change.negative {
+    color: #64748b;
+}
+
+/* ===================================
+   CHARTS & VISUALIZATIONS
+   =================================== */
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 24px;
+    margin: 0 24px 40px 24px;
+    align-items: start;
+}
+
+.chart-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-card:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+}
+
+.chart-title {
+    color: #1e293b;
+    margin-bottom: 20px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.25px;
+    flex-shrink: 0;
+}
+
+.chart-card.full {
+    grid-column: 1 / -1;
+    margin: 0 24px 40px 24px;
+}
+
+.chart-large {
+    height: auto;
+}
+
+.chart-small {
+    height: auto;
+}
+
+.chart-card>div:last-child {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 350px;
+    max-height: 450px;
+}
+
+.chart-card.full>div:last-child {
+    min-height: 300px;
+    max-height: 400px;
+}
+
+.js-plotly-plot {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+/* ===================================
+   TIP CARDS & INSIGHTS
+   =================================== */
+
+.tips-section {
+    margin-top: 40px;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.tip-card {
+    background: white;
+    border-left: 4px solid #3b82f6;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+}
+
+.tip-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tip-card h4 {
+    color: #1e293b;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.tip-card p {
+    color: #64748b;
+    font-size: 0.925rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ===================================
+   CONTROLS & DROPDOWNS
+   =================================== */
+
+.controls {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.control-label {
+    color: #64748b;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.dropdown-select {
+    min-width: 250px;
+}
+
+.Select-control {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    padding: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+.Select-control:hover {
+    border-color: #3b82f6 !important;
+}
+
+.is-focused .Select-control {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+}
+
+/* ===================================
+   ANIMATIONS
+   =================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.metric-card,
+.chart-card {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.6s ease;
+}
+
+.metric-card.animate-in,
+.chart-card.animate-in {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.metric-card.visible,
+.chart-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.metric-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.metric-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.metric-card:nth-child(3) {
+    animation-delay: 0.3s;
+}

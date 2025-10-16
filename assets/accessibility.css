@@ -1,0 +1,209 @@
+/* ===================================
+   ACCESSIBILITY STYLES
+   Keyboard navigation and screen readers
+   =================================== */
+
+/* Skip link for keyboard navigation */
+.skip-link:focus {
+    position: fixed !important;
+    top: 10px;
+    left: 10px;
+    z-index: 9999;
+    padding: 1em 1.5em;
+    background-color: #2563eb;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+    outline: 3px solid #60a5fa;
+    outline-offset: 2px;
+}
+
+/* Enhanced focus indicators for keyboard navigation */
+*:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Focus on metric cards */
+.metric-card:focus-visible {
+    outline: 4px solid #2563eb;
+    outline-offset: 4px;
+    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.2),
+        0 8px 24px rgba(37, 99, 235, 0.3);
+    transform: translateY(-4px) scale(1.02);
+    transition: all 0.2s ease;
+}
+
+/* Focus on charts */
+.js-plotly-plot:focus-visible,
+.chart-card:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.15);
+}
+
+/* Focus on dropdown */
+.Select:focus-within,
+.dropdown-select:focus-within {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+}
+
+/* Focus on buttons */
+button:focus-visible,
+.accessibility-button:focus-visible,
+.theme-button:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.25);
+    transform: scale(1.05);
+}
+
+/* Focus on tip cards */
+.tip-card:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+/* Ensure focusable elements have pointer cursor */
+[tabindex="0"],
+[tabindex]:not([tabindex="-1"]) {
+    cursor: pointer;
+}
+
+/* Improve contrast for people with low vision */
+@media (prefers-contrast: high) {
+    body {
+        background: #ffffff;
+        color: #000000;
+    }
+
+    .header {
+        background: #000000;
+        color: #ffffff;
+    }
+
+    .metric-card {
+        border: 3px solid #000000;
+        background: #ffffff;
+    }
+
+    *:focus-visible {
+        outline: 4px solid #000000;
+        outline-offset: 4px;
+    }
+}
+
+/* Support for reduced motion mode */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .metric-card:hover,
+    .metric-card:focus-visible {
+        transform: none;
+    }
+}
+
+/* Screen reader only content */
+.sr-only,
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Show when focused */
+.sr-only:focus,
+.visually-hidden:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* Improve text readability */
+a {
+    text-decoration-skip-ink: auto;
+}
+
+a:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+    text-decoration: underline;
+}
+
+/* Improve button contrast */
+button,
+.btn {
+    font-weight: 600;
+    min-height: 44px;
+    /* Accessible touch size */
+    min-width: 44px;
+}
+
+/* Accessible loading indicator */
+[aria-busy="true"] {
+    position: relative;
+}
+
+[aria-busy="true"]::after {
+    content: "Cargando...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+/* Ensure emoji icons are accessible */
+.metric-icon[role="img"] {
+    display: inline-block;
+}
+
+/* Touch improvements for mobile devices */
+@media (hover: none) and (pointer: coarse) {
+
+    .metric-card,
+    .chart-card,
+    .tip-card,
+    .type-option,
+    .size-option,
+    .toggle-switch {
+        -webkit-tap-highlight-color: rgba(37, 99, 235, 0.1);
+    }
+
+    .metric-card:active {
+        transform: scale(0.98);
+    }
+
+    button {
+        -webkit-tap-highlight-color: transparent;
+    }
+}
