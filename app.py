@@ -1,20 +1,30 @@
-from dash import Dash, html, dcc, callback, Input, Output
+from dash import Dash, html, dcc, dash_table
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
+from ords_utils import (
+    fetch_peso_estancia_data,
+    fetch_diagnosticos_data,
+    fetch_diagnostico_sexo_data,
+)
 
 # Inicializar la app con hojas de estilo y scripts personalizados
 app = Dash(__name__, assets_folder="assets")
 
+# Obtener datos reales al inicio
+df_peso_estancia = fetch_peso_estancia_data()
+df_diagnosticos = fetch_diagnosticos_data()
+df_diagnostico_sexo = fetch_diagnostico_sexo_data()
+
 # Configurar el título de la página y meta tags para responsividad
-app.title = "Dashboard de Bienestar Mental"
+app.title = "Dashboard de Análisis Hospitalario"
 app.index_string = """
 <!DOCTYPE html>
 <html>
     <head>
         {%metas%}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-        <meta name="description" content="Dashboard interactivo de seguimiento de bienestar mental y salud emocional">
+        <meta name="description" content="Dashboard interactivo de análisis de datos hospitalarios">
         <meta name="theme-color" content="#1e293b">
         <title>{%title%}</title>
         {%favicon%}
@@ -32,39 +42,6 @@ app.index_string = """
     </body>
 </html>
 """
-
-# Datos de ejemplo - Niveles de Bienestar Mental (escala 1-10)
-df_bienestar = pd.DataFrame(
-    {
-        "Mes": ["Ene", "Feb", "Mar", "Abr", "May", "Jun"],
-        "Bienestar_Emocional": [6.5, 7.2, 6.8, 7.5, 7.8, 8.1],
-        "Nivel_Estrés": [6.8, 6.2, 6.5, 5.8, 5.5, 5.2],
-        "Horas_Sueño": [6.2, 6.5, 6.8, 7.0, 7.2, 7.5],
-        "Actividad_Fisica": [3.5, 4.0, 4.2, 4.8, 5.2, 5.5],
-    }
-)
-
-# Distribución de factores que afectan la salud mental
-df_factores = pd.DataFrame(
-    {
-        "Factor": [
-            "Trabajo/Estudios",
-            "Relaciones Sociales",
-            "Salud Física",
-            "Finanzas",
-            "Otros",
-        ],
-        "Porcentaje": [35, 25, 20, 15, 5],
-    }
-)
-
-# Datos de actividades de autocuidado realizadas por semana
-df_autocuidado = pd.DataFrame(
-    {
-        "Actividad": ["Meditación", "Ejercicio", "Tiempo Social", "Hobbies", "Terapia"],
-        "Frecuencia_Semanal": [4, 3, 5, 6, 1],
-    }
-)
 
 # Layout de la aplicación con HTML personalizado
 app.layout = html.Div(
@@ -93,22 +70,22 @@ app.layout = html.Div(
         html.Header(
             [
                 html.H1(
-                    "Dashboard de Bienestar Mental",
+                    "Dashboard de Análisis Hospitalario",
                     className="header-title",
                     **{
-                        "aria-label": "Dashboard de Bienestar Mental - Página principal",
+                        "aria-label": "Dashboard de Análisis Hospitalario - Página principal",
                         "role": "banner",
                     },
                 ),
                 html.P(
-                    "Tu espacio personal para el seguimiento y mejora de tu salud emocional",
+                    "Análisis de datos hospitalarios y métricas de estancia",
                     className="subtitle",
                     **{
-                        "aria-label": "Descripción: Tu espacio personal para el seguimiento y mejora de tu salud emocional"
+                        "aria-label": "Descripción: Análisis de datos hospitalarios y métricas de estancia"
                     },
                 ),
                 html.P(
-                    "Datos visuales · Tendencias · Recomendaciones personalizadas",
+                    "Datos en tiempo real · Análisis · Insights",
                     className="subtitle",
                     style={
                         "fontSize": "0.9rem",
@@ -117,307 +94,708 @@ app.layout = html.Div(
                         "fontStyle": "italic",
                     },
                     **{
-                        "aria-label": "Características: Datos visuales, Tendencias y Recomendaciones personalizadas"
+                        "aria-label": "Características: Datos en tiempo real, Análisis e Insights"
                     },
                 ),
             ],
             className="header",
             **{"role": "banner"},
         ),
-        # Tarjetas de métricas (Main content empieza aquí)
+        # Main content empieza aquí
         html.Div(
             id="main-content",
-            children=[
-                html.Div(
-                    [
-                        html.Div(
-                            "🧠",
-                            className="metric-icon",
-                            **{
-                                "aria-hidden": "true",
-                                "role": "img",
-                                "aria-label": "Icono de cerebro",
-                            },
-                        ),
-                        html.H3(
-                            "Bienestar Emocional",
-                            **{"aria-label": "Métrica de Bienestar Emocional"},
-                        ),
-                        html.H2(
-                            f"{df_bienestar['Bienestar_Emocional'].iloc[-1]:.1f}/10",
-                            className="metric-value",
-                            **{
-                                "aria-label": f"Valor actual: {df_bienestar['Bienestar_Emocional'].iloc[-1]:.1f} sobre 10"
-                            },
-                        ),
-                        html.P(
-                            "↑ +0.3 vs mes anterior",
-                            className="metric-change positive",
-                            **{
-                                "aria-label": "Tendencia positiva: aumento de 0.3 puntos respecto al mes anterior"
-                            },
-                        ),
-                    ],
-                    className="metric-card mental",
-                    tabIndex="0",
-                    role="article",
-                    **{
-                        "aria-label": "Tarjeta de Bienestar Emocional: 8.1 sobre 10, aumento de 0.3 puntos"
-                    },
-                ),
-                html.Div(
-                    [
-                        html.Div(
-                            "😌",
-                            className="metric-icon",
-                            **{
-                                "aria-hidden": "true",
-                                "role": "img",
-                                "aria-label": "Icono de relajación",
-                            },
-                        ),
-                        html.H3(
-                            "Nivel de Estrés",
-                            **{"aria-label": "Métrica de Nivel de Estrés"},
-                        ),
-                        html.H2(
-                            f"{df_bienestar['Nivel_Estrés'].iloc[-1]:.1f}/10",
-                            className="metric-value",
-                            **{
-                                "aria-label": f"Valor actual: {df_bienestar['Nivel_Estrés'].iloc[-1]:.1f} sobre 10"
-                            },
-                        ),
-                        html.P(
-                            "↓ -0.4 mejorando",
-                            className="metric-change positive",
-                            **{
-                                "aria-label": "Tendencia positiva: reducción de 0.3 puntos de estrés, mejorando"
-                            },
-                        ),
-                    ],
-                    className="metric-card stress",
-                    tabIndex="0",
-                    role="article",
-                    **{
-                        "aria-label": "Tarjeta de Nivel de Estrés: 5.2 sobre 10, reducción de 0.3 puntos, estado mejorando"
-                    },
-                ),
-                html.Div(
-                    [
-                        html.Div(
-                            "😴",
-                            className="metric-icon",
-                            **{
-                                "aria-hidden": "true",
-                                "role": "img",
-                                "aria-label": "Icono de sueño",
-                            },
-                        ),
-                        html.H3(
-                            "Horas de Sueño",
-                            **{"aria-label": "Métrica de Horas de Sueño"},
-                        ),
-                        html.H2(
-                            f"{df_bienestar['Horas_Sueño'].iloc[-1]:.1f}h",
-                            className="metric-value",
-                            **{
-                                "aria-label": f"Valor actual: {df_bienestar['Horas_Sueño'].iloc[-1]:.1f} horas"
-                            },
-                        ),
-                        html.P(
-                            "↑ +0.3h vs mes anterior",
-                            className="metric-change positive",
-                            **{
-                                "aria-label": "Tendencia positiva: aumento de 0.3 horas respecto al mes anterior"
-                            },
-                        ),
-                    ],
-                    className="metric-card sleep",
-                    tabIndex="0",
-                    role="article",
-                    **{
-                        "aria-label": "Tarjeta de Horas de Sueño: 7.5 horas, aumento de 0.3 horas"
-                    },
-                ),
-            ],
+            children=[],
             className="metrics-grid",
             role="region",
-            **{"aria-label": "Resumen de métricas principales de salud mental"},
+            **{"aria-label": "Contenido principal"},
         ),
-        # Gráficos principales
+        # Sección de Análisis de Diagnósticos
         html.Div(
             [
+                html.H3(
+                    "🏥 Análisis de Diagnósticos y Demografía",
+                    className="chart-title",
+                ),
+                html.P(
+                    "Distribución de diagnósticos principales por rango de edad y período",
+                    style={
+                        "textAlign": "center",
+                        "color": "#64748b",
+                        "marginBottom": "20px",
+                        "fontSize": "0.95rem",
+                    },
+                ),
+                # Gráficos en grid
                 html.Div(
                     [
-                        html.H3(
-                            "Evolución del Bienestar y Estrés", className="chart-title"
+                        # Gráfico 1: Distribución por diagnóstico
+                        html.Div(
+                            [
+                                html.H4(
+                                    "Top 10 Diagnósticos Principales",
+                                    style={
+                                        "textAlign": "center",
+                                        "marginBottom": "15px",
+                                    },
+                                ),
+                                dcc.Graph(
+                                    id="grafico-diagnosticos",
+                                    config={"displayModeBar": False},
+                                    figure=px.bar(
+                                        df_diagnosticos["diagnostico_principal"]
+                                        .value_counts()
+                                        .head(10)
+                                        .reset_index()
+                                        if not df_diagnosticos.empty
+                                        else pd.DataFrame(),
+                                        x="count",
+                                        y="diagnostico_principal",
+                                        orientation="h",
+                                        labels={
+                                            "diagnostico_principal": "Diagnóstico",
+                                            "count": "Número de Casos",
+                                        },
+                                        color="count",
+                                        color_continuous_scale="Blues",
+                                    ).update_layout(
+                                        plot_bgcolor="white",
+                                        paper_bgcolor="white",
+                                        font={
+                                            "family": "Segoe UI, sans-serif",
+                                            "color": "#1e293b",
+                                        },
+                                        margin=dict(l=100, r=30, t=30, b=50),
+                                        height=400,
+                                        showlegend=False,
+                                    )
+                                    if not df_diagnosticos.empty
+                                    else go.Figure()
+                                    .add_annotation(
+                                        text="No hay datos disponibles",
+                                        xref="paper",
+                                        yref="paper",
+                                        x=0.5,
+                                        y=0.5,
+                                        showarrow=False,
+                                        font=dict(size=20, color="#94a3b8"),
+                                    )
+                                    .update_layout(
+                                        plot_bgcolor="white",
+                                        paper_bgcolor="white",
+                                        height=400,
+                                        xaxis=dict(visible=False),
+                                        yaxis=dict(visible=False),
+                                    ),
+                                ),
+                            ],
+                            className="chart-card chart-large",
+                        ),
+                        # Gráfico 2: Distribución por edad
+                        html.Div(
+                            [
+                                html.H4(
+                                    "Distribución por Rango de Edad",
+                                    style={
+                                        "textAlign": "center",
+                                        "marginBottom": "15px",
+                                    },
+                                ),
+                                dcc.Graph(
+                                    id="grafico-edad",
+                                    config={"displayModeBar": False},
+                                    figure=px.pie(
+                                        df_diagnosticos["rango_de_edad"]
+                                        .value_counts()
+                                        .reset_index()
+                                        if not df_diagnosticos.empty
+                                        else pd.DataFrame(),
+                                        values="count",
+                                        names="rango_de_edad",
+                                        hole=0.4,
+                                        color_discrete_sequence=px.colors.qualitative.Set3,
+                                    )
+                                    .update_layout(
+                                        paper_bgcolor="white",
+                                        font={
+                                            "family": "Segoe UI, sans-serif",
+                                            "color": "#1e293b",
+                                        },
+                                        margin=dict(l=20, r=20, t=20, b=20),
+                                        showlegend=True,
+                                        height=400,
+                                    )
+                                    .update_traces(
+                                        textposition="inside", textinfo="percent+label"
+                                    )
+                                    if not df_diagnosticos.empty
+                                    else go.Figure()
+                                    .add_annotation(
+                                        text="No hay datos disponibles",
+                                        xref="paper",
+                                        yref="paper",
+                                        x=0.5,
+                                        y=0.5,
+                                        showarrow=False,
+                                        font=dict(size=20, color="#94a3b8"),
+                                    )
+                                    .update_layout(
+                                        plot_bgcolor="white",
+                                        paper_bgcolor="white",
+                                        height=400,
+                                        xaxis=dict(visible=False),
+                                        yaxis=dict(visible=False),
+                                    ),
+                                ),
+                            ],
+                            className="chart-card chart-small",
+                        ),
+                    ],
+                    className="charts-grid",
+                ),
+                # Gráfico de tendencia temporal
+                html.Div(
+                    [
+                        html.H4(
+                            "Ingresos por Mes",
+                            style={"textAlign": "center", "marginBottom": "15px"},
                         ),
                         dcc.Graph(
-                            id="grafico-bienestar",
+                            id="grafico-temporal",
                             config={"displayModeBar": False},
-                            figure=go.Figure(
-                                [
-                                    go.Scatter(
-                                        x=df_bienestar["Mes"],
-                                        y=df_bienestar["Bienestar_Emocional"],
-                                        mode="lines+markers",
-                                        name="Bienestar Emocional",
-                                        line=dict(
-                                            color="#0077bb", width=4
-                                        ),  # Azul seguro para daltónicos
-                                        marker=dict(
-                                            size=10,
-                                            symbol="circle",
-                                            line=dict(width=2, color="white"),
-                                        ),
-                                    ),
-                                    go.Scatter(
-                                        x=df_bienestar["Mes"],
-                                        y=df_bienestar["Nivel_Estrés"],
-                                        mode="lines+markers",
-                                        name="Nivel de Estrés",
-                                        line=dict(
-                                            color="#ee7733", width=4, dash="dash"
-                                        ),  # Naranja con patrón
-                                        marker=dict(
-                                            size=10,
-                                            symbol="square",
-                                            line=dict(width=2, color="white"),
-                                        ),
-                                    ),
-                                ]
+                            figure=px.line(
+                                df_diagnosticos["mes_de_ingreso"]
+                                .value_counts()
+                                .sort_index()
+                                .reset_index()
+                                if not df_diagnosticos.empty
+                                else pd.DataFrame(),
+                                x="mes_de_ingreso",
+                                y="count",
+                                labels={
+                                    "mes_de_ingreso": "Mes de Ingreso",
+                                    "count": "Número de Ingresos",
+                                },
+                                markers=True,
+                            )
+                            .update_layout(
+                                plot_bgcolor="white",
+                                paper_bgcolor="white",
+                                font={
+                                    "family": "Segoe UI, sans-serif",
+                                    "color": "#1e293b",
+                                },
+                                margin=dict(l=50, r=30, t=30, b=100),
+                                height=350,
+                                xaxis=dict(tickangle=-45),
+                            )
+                            .update_traces(
+                                line=dict(color="#2563eb", width=3),
+                                marker=dict(size=8, color="#2563eb"),
+                            )
+                            if not df_diagnosticos.empty
+                            else go.Figure()
+                            .add_annotation(
+                                text="No hay datos disponibles",
+                                xref="paper",
+                                yref="paper",
+                                x=0.5,
+                                y=0.5,
+                                showarrow=False,
+                                font=dict(size=20, color="#94a3b8"),
+                            )
+                            .update_layout(
+                                plot_bgcolor="white",
+                                paper_bgcolor="white",
+                                height=350,
+                                xaxis=dict(visible=False),
+                                yaxis=dict(visible=False),
+                            ),
+                        ),
+                    ],
+                    style={"marginTop": "20px"},
+                ),
+                # Mapa de calor: Diagnóstico vs Edad
+                html.Div(
+                    [
+                        html.H4(
+                            "Mapa de Calor: Diagnósticos más frecuentes por Rango de Edad",
+                            style={"textAlign": "center", "marginBottom": "15px"},
+                        ),
+                        dcc.Graph(
+                            id="grafico-heatmap",
+                            config={"displayModeBar": False},
+                            figure=px.density_heatmap(
+                                df_diagnosticos
+                                if not df_diagnosticos.empty
+                                else pd.DataFrame(),
+                                x="rango_de_edad",
+                                y="diagnostico_principal",
+                                color_continuous_scale="YlOrRd",
+                                labels={
+                                    "rango_de_edad": "Rango de Edad",
+                                    "diagnostico_principal": "Diagnóstico",
+                                },
                             ).update_layout(
                                 plot_bgcolor="white",
                                 paper_bgcolor="white",
                                 font={
-                                    "size": 12,
                                     "family": "Segoe UI, sans-serif",
                                     "color": "#1e293b",
                                 },
-                                margin=dict(l=50, r=30, t=30, b=50),
-                                xaxis_title="Mes",
-                                yaxis_title="Nivel (1-10)",
-                                yaxis=dict(range=[0, 10]),
-                                legend=dict(
-                                    orientation="h",
-                                    yanchor="bottom",
-                                    y=1.02,
-                                    xanchor="right",
-                                    x=1,
-                                ),
-                                hovermode="x unified",
-                                height=380,
+                                margin=dict(l=150, r=30, t=30, b=100),
+                                height=600,
+                                xaxis=dict(tickangle=-45),
+                            )
+                            if not df_diagnosticos.empty
+                            else go.Figure()
+                            .add_annotation(
+                                text="No hay datos disponibles",
+                                xref="paper",
+                                yref="paper",
+                                x=0.5,
+                                y=0.5,
+                                showarrow=False,
+                                font=dict(size=20, color="#94a3b8"),
+                            )
+                            .update_layout(
+                                plot_bgcolor="white",
+                                paper_bgcolor="white",
+                                height=600,
+                                xaxis=dict(visible=False),
+                                yaxis=dict(visible=False),
                             ),
                         ),
                     ],
-                    className="chart-card chart-large",
+                    style={"marginTop": "20px"},
                 ),
+                # Estadísticas resumen
                 html.Div(
                     [
-                        html.H3("Factores de Estrés", className="chart-title"),
+                        html.Div(
+                            [
+                                html.H4(
+                                    "📊 Estadísticas Generales",
+                                    style={"marginBottom": "15px"},
+                                ),
+                                html.P(
+                                    f"Total de registros: {len(df_diagnosticos)}"
+                                    if not df_diagnosticos.empty
+                                    else "No hay datos disponibles"
+                                ),
+                                html.P(
+                                    f"Diagnósticos únicos: {df_diagnosticos['diagnostico_principal'].nunique()}"
+                                    if not df_diagnosticos.empty
+                                    else ""
+                                ),
+                                html.P(
+                                    f"Rango de edad más común: {df_diagnosticos['rango_de_edad'].mode()[0] if not df_diagnosticos.empty and not df_diagnosticos['rango_de_edad'].mode().empty else 'N/A'}"
+                                ),
+                                html.P(
+                                    f"Diagnóstico más frecuente: {df_diagnosticos['diagnostico_principal'].mode()[0] if not df_diagnosticos.empty and not df_diagnosticos['diagnostico_principal'].mode().empty else 'N/A'}"
+                                ),
+                            ],
+                            style={
+                                "backgroundColor": "#f0f9ff",
+                                "padding": "20px",
+                                "borderRadius": "8px",
+                                "marginTop": "20px",
+                                "border": "1px solid #bae6fd",
+                            },
+                        )
+                    ]
+                ),
+            ],
+            className="chart-card full",
+        ),
+        # Sección de Análisis de Diagnósticos por Sexo
+        html.Div(
+            [
+                html.H3(
+                    "👥 Análisis de Diagnósticos por Sexo",
+                    className="chart-title",
+                ),
+                html.P(
+                    "Distribución de diagnósticos principales según el sexo del paciente",
+                    style={
+                        "textAlign": "center",
+                        "color": "#64748b",
+                        "marginBottom": "20px",
+                        "fontSize": "0.95rem",
+                    },
+                ),
+                # Gráficos en grid
+                html.Div(
+                    [
+                        # Gráfico 1: Distribución general por sexo
+                        html.Div(
+                            [
+                                html.H4(
+                                    "Distribución General por Sexo",
+                                    style={
+                                        "textAlign": "center",
+                                        "marginBottom": "15px",
+                                    },
+                                ),
+                                dcc.Graph(
+                                    id="grafico-sexo-general",
+                                    config={"displayModeBar": False},
+                                    figure=px.pie(
+                                        df_diagnostico_sexo["sexo_label"]
+                                        .value_counts()
+                                        .reset_index()
+                                        if not df_diagnostico_sexo.empty
+                                        else pd.DataFrame(),
+                                        values="count",
+                                        names="sexo_label",
+                                        hole=0.4,
+                                        color="sexo_label",
+                                        color_discrete_map={
+                                            "Masculino": "#3b82f6",
+                                            "Femenino": "#ec4899",
+                                        },
+                                    )
+                                    .update_layout(
+                                        paper_bgcolor="white",
+                                        font={
+                                            "family": "Segoe UI, sans-serif",
+                                            "color": "#1e293b",
+                                        },
+                                        margin=dict(l=20, r=20, t=20, b=20),
+                                        showlegend=True,
+                                        height=400,
+                                    )
+                                    .update_traces(
+                                        textposition="inside",
+                                        textinfo="percent+label",
+                                        textfont_size=14,
+                                    )
+                                    if not df_diagnostico_sexo.empty
+                                    else go.Figure()
+                                    .add_annotation(
+                                        text="No hay datos disponibles",
+                                        xref="paper",
+                                        yref="paper",
+                                        x=0.5,
+                                        y=0.5,
+                                        showarrow=False,
+                                        font=dict(size=20, color="#94a3b8"),
+                                    )
+                                    .update_layout(
+                                        plot_bgcolor="white",
+                                        paper_bgcolor="white",
+                                        height=400,
+                                        xaxis=dict(visible=False),
+                                        yaxis=dict(visible=False),
+                                    ),
+                                ),
+                            ],
+                            className="chart-card chart-small",
+                        ),
+                        # Gráfico 2: Top diagnósticos por sexo
+                        html.Div(
+                            [
+                                html.H4(
+                                    "Top 10 Diagnósticos por Sexo",
+                                    style={
+                                        "textAlign": "center",
+                                        "marginBottom": "15px",
+                                    },
+                                ),
+                                dcc.Graph(
+                                    id="grafico-diagnosticos-sexo",
+                                    config={"displayModeBar": False},
+                                    figure=px.histogram(
+                                        df_diagnostico_sexo[
+                                            df_diagnostico_sexo[
+                                                "diagnostico_principal"
+                                            ].isin(
+                                                df_diagnostico_sexo[
+                                                    "diagnostico_principal"
+                                                ]
+                                                .value_counts()
+                                                .head(10)
+                                                .index
+                                            )
+                                        ]
+                                        if not df_diagnostico_sexo.empty
+                                        else pd.DataFrame(),
+                                        x="diagnostico_principal",
+                                        color="sexo_label",
+                                        barmode="group",
+                                        labels={
+                                            "diagnostico_principal": "Diagnóstico",
+                                            "count": "Número de Casos",
+                                            "sexo_label": "Sexo",
+                                        },
+                                        color_discrete_map={
+                                            "Masculino": "#3b82f6",
+                                            "Femenino": "#ec4899",
+                                        },
+                                    ).update_layout(
+                                        plot_bgcolor="white",
+                                        paper_bgcolor="white",
+                                        font={
+                                            "family": "Segoe UI, sans-serif",
+                                            "color": "#1e293b",
+                                        },
+                                        margin=dict(l=50, r=30, t=30, b=100),
+                                        height=400,
+                                        xaxis=dict(tickangle=-45),
+                                    )
+                                    if not df_diagnostico_sexo.empty
+                                    else go.Figure()
+                                    .add_annotation(
+                                        text="No hay datos disponibles",
+                                        xref="paper",
+                                        yref="paper",
+                                        x=0.5,
+                                        y=0.5,
+                                        showarrow=False,
+                                        font=dict(size=20, color="#94a3b8"),
+                                    )
+                                    .update_layout(
+                                        plot_bgcolor="white",
+                                        paper_bgcolor="white",
+                                        height=400,
+                                        xaxis=dict(visible=False),
+                                        yaxis=dict(visible=False),
+                                    ),
+                                ),
+                            ],
+                            className="chart-card chart-large",
+                        ),
+                    ],
+                    className="charts-grid",
+                ),
+                # Gráfico de barras apiladas - Proporción de sexo por diagnóstico
+                html.Div(
+                    [
+                        html.H4(
+                            "Proporción de Sexo en Diagnósticos Principales",
+                            style={"textAlign": "center", "marginBottom": "15px"},
+                        ),
                         dcc.Graph(
-                            id="grafico-factores",
+                            id="grafico-proporcion-sexo",
                             config={"displayModeBar": False},
-                            figure=px.pie(
-                                df_factores,
-                                values="Porcentaje",
-                                names="Factor",
-                                hole=0.4,
-                                color_discrete_sequence=[
-                                    "#0077bb",
-                                    "#ee7733",
-                                    "#009988",
-                                    "#cc3311",
-                                    "#33bbee",
-                                ],  # Paleta daltónica
+                            figure=px.histogram(
+                                df_diagnostico_sexo[
+                                    df_diagnostico_sexo["diagnostico_principal"].isin(
+                                        df_diagnostico_sexo["diagnostico_principal"]
+                                        .value_counts()
+                                        .head(15)
+                                        .index
+                                    )
+                                ]
+                                if not df_diagnostico_sexo.empty
+                                else pd.DataFrame(),
+                                y="diagnostico_principal",
+                                color="sexo_label",
+                                barmode="stack",
+                                orientation="h",
+                                labels={
+                                    "diagnostico_principal": "Diagnóstico",
+                                    "count": "Número de Casos",
+                                    "sexo_label": "Sexo",
+                                },
+                                color_discrete_map={
+                                    "Masculino": "#3b82f6",
+                                    "Femenino": "#ec4899",
+                                },
                             ).update_layout(
+                                plot_bgcolor="white",
                                 paper_bgcolor="white",
                                 font={
                                     "family": "Segoe UI, sans-serif",
                                     "color": "#1e293b",
                                 },
-                                margin=dict(l=20, r=20, t=20, b=20),
-                                showlegend=True,
-                                height=380,
+                                margin=dict(l=100, r=30, t=30, b=50),
+                                height=500,
+                            )
+                            if not df_diagnostico_sexo.empty
+                            else go.Figure()
+                            .add_annotation(
+                                text="No hay datos disponibles",
+                                xref="paper",
+                                yref="paper",
+                                x=0.5,
+                                y=0.5,
+                                showarrow=False,
+                                font=dict(size=20, color="#94a3b8"),
+                            )
+                            .update_layout(
+                                plot_bgcolor="white",
+                                paper_bgcolor="white",
+                                height=500,
+                                xaxis=dict(visible=False),
+                                yaxis=dict(visible=False),
                             ),
                         ),
                     ],
-                    className="chart-card chart-small",
+                    style={"marginTop": "20px"},
                 ),
-            ],
-            className="charts-grid",
-        ),
-        # Gráfico de actividades de autocuidado
-        html.Div(
-            [
-                html.H3(
-                    "Actividades de Autocuidado Semanales", className="chart-title"
-                ),
-                dcc.Graph(
-                    id="grafico-autocuidado",
-                    config={"displayModeBar": False},
-                    figure=px.bar(
-                        df_autocuidado,
-                        x="Actividad",
-                        y="Frecuencia_Semanal",
-                        color="Frecuencia_Semanal",
-                        color_continuous_scale=[
-                            "#e6f7f5",
-                            "#b3e5dc",
-                            "#80d4c3",
-                            "#4dc2aa",
-                            "#009988",
-                        ],  # Gradiente verde azulado
-                        labels={"Frecuencia_Semanal": "Veces por semana"},
-                    ).update_layout(
-                        plot_bgcolor="white",
-                        paper_bgcolor="white",
-                        font={"family": "Segoe UI, sans-serif", "color": "#1e293b"},
-                        margin=dict(l=50, r=30, t=30, b=50),
-                        xaxis_title="Actividad",
-                        yaxis_title="Frecuencia (veces/semana)",
-                        showlegend=False,
-                        height=350,
-                    ),
-                ),
-            ],
-            className="chart-card full",
-        ),
-        # Gráfico interactivo con selector
-        html.Div(
-            [
-                html.H3("Seguimiento Personalizado", className="chart-title"),
+                # Tabla comparativa
                 html.Div(
                     [
-                        html.Label("Selecciona métrica:", className="control-label"),
-                        dcc.Dropdown(
-                            id="dropdown-metrica",
-                            options=[
+                        html.H4(
+                            "Tabla Comparativa: Diagnósticos por Sexo",
+                            style={"textAlign": "center", "marginBottom": "15px"},
+                        ),
+                        dash_table.DataTable(
+                            id="tabla-diagnostico-sexo",
+                            columns=[
                                 {
-                                    "label": "🧠 Bienestar Emocional",
-                                    "value": "Bienestar_Emocional",
+                                    "name": "Diagnóstico",
+                                    "id": "diagnostico_principal",
+                                },
+                                {"name": "Masculino", "id": "Masculino"},
+                                {"name": "Femenino", "id": "Femenino"},
+                                {"name": "Total", "id": "Total"},
+                            ],
+                            data=df_diagnostico_sexo.groupby("diagnostico_principal")[
+                                "sexo_label"
+                            ]
+                            .value_counts()
+                            .unstack(fill_value=0)
+                            .assign(Total=lambda x: x.sum(axis=1) if not x.empty else 0)
+                            .reset_index()
+                            .sort_values("Total", ascending=False)
+                            .head(20)
+                            .to_dict("records")
+                            if not df_diagnostico_sexo.empty
+                            else [],
+                            style_table={
+                                "overflowX": "auto",
+                                "overflowY": "auto",
+                                "maxHeight": "400px",
+                            },
+                            style_cell={
+                                "textAlign": "center",
+                                "padding": "12px",
+                                "fontFamily": "Segoe UI, sans-serif",
+                                "fontSize": "14px",
+                                "border": "1px solid #e2e8f0",
+                            },
+                            style_header={
+                                "backgroundColor": "#6366f1",
+                                "color": "white",
+                                "fontWeight": "bold",
+                                "textAlign": "center",
+                                "border": "1px solid #4f46e5",
+                            },
+                            style_data={
+                                "backgroundColor": "white",
+                                "color": "#1e293b",
+                            },
+                            style_data_conditional=[
+                                {
+                                    "if": {"row_index": "odd"},
+                                    "backgroundColor": "#f8fafc",
                                 },
                                 {
-                                    "label": "😌 Nivel de Estrés",
-                                    "value": "Nivel_Estrés",
+                                    "if": {"state": "active"},
+                                    "backgroundColor": "#dbeafe",
+                                    "border": "1px solid #2563eb",
                                 },
-                                {"label": "😴 Horas de Sueño", "value": "Horas_Sueño"},
                                 {
-                                    "label": "🏃 Actividad Física",
-                                    "value": "Actividad_Fisica",
+                                    "if": {"column_id": "Masculino"},
+                                    "backgroundColor": "#eff6ff",
+                                },
+                                {
+                                    "if": {"column_id": "Femenino"},
+                                    "backgroundColor": "#fdf2f8",
                                 },
                             ],
-                            value="Bienestar_Emocional",
-                            className="dropdown-select",
+                            page_size=10,
+                            sort_action="native",
+                            sort_mode="multi",
+                            filter_action="native",
                         ),
                     ],
-                    className="controls",
+                    style={"marginTop": "30px"},
                 ),
-                dcc.Graph(id="grafico-tendencia"),
+                # Estadísticas resumen
+                html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.H4(
+                                    "📊 Estadísticas por Sexo",
+                                    style={"marginBottom": "15px"},
+                                ),
+                                html.Div(
+                                    [
+                                        html.Div(
+                                            [
+                                                html.H5(
+                                                    "👨 Masculino",
+                                                    style={"color": "#3b82f6"},
+                                                ),
+                                                html.P(
+                                                    f"Total casos: {len(df_diagnostico_sexo[df_diagnostico_sexo['sexo_label'] == 'Masculino'])}"
+                                                    if not df_diagnostico_sexo.empty
+                                                    else "N/A"
+                                                ),
+                                                html.P(
+                                                    f"Diagnósticos únicos: {df_diagnostico_sexo[df_diagnostico_sexo['sexo_label'] == 'Masculino']['diagnostico_principal'].nunique()}"
+                                                    if not df_diagnostico_sexo.empty
+                                                    else "N/A"
+                                                ),
+                                            ],
+                                            style={
+                                                "flex": "1",
+                                                "padding": "15px",
+                                                "backgroundColor": "#eff6ff",
+                                                "borderRadius": "8px",
+                                                "border": "2px solid #bfdbfe",
+                                            },
+                                        ),
+                                        html.Div(
+                                            [
+                                                html.H5(
+                                                    "👩 Femenino",
+                                                    style={"color": "#ec4899"},
+                                                ),
+                                                html.P(
+                                                    f"Total casos: {len(df_diagnostico_sexo[df_diagnostico_sexo['sexo_label'] == 'Femenino'])}"
+                                                    if not df_diagnostico_sexo.empty
+                                                    else "N/A"
+                                                ),
+                                                html.P(
+                                                    f"Diagnósticos únicos: {df_diagnostico_sexo[df_diagnostico_sexo['sexo_label'] == 'Femenino']['diagnostico_principal'].nunique()}"
+                                                    if not df_diagnostico_sexo.empty
+                                                    else "N/A"
+                                                ),
+                                            ],
+                                            style={
+                                                "flex": "1",
+                                                "padding": "15px",
+                                                "backgroundColor": "#fdf2f8",
+                                                "borderRadius": "8px",
+                                                "border": "2px solid #fbcfe8",
+                                            },
+                                        ),
+                                    ],
+                                    style={
+                                        "display": "flex",
+                                        "gap": "20px",
+                                        "marginTop": "15px",
+                                    },
+                                ),
+                            ],
+                            style={
+                                "backgroundColor": "#f8fafc",
+                                "padding": "20px",
+                                "borderRadius": "8px",
+                                "marginTop": "20px",
+                                "border": "1px solid #e2e8f0",
+                            },
+                        )
+                    ]
+                ),
             ],
             className="chart-card full",
         ),
-        # Sección de consejos
+        # Sección de Datos Reales: Peso vs Estancia
         html.Div(
             [
                 html.H3(
@@ -467,11 +845,169 @@ app.layout = html.Div(
             ],
             className="chart-card full tips-section",
         ),
+        # Sección de Datos Reales: Peso vs Estancia
+        html.Div(
+            [
+                html.H3(
+                    "📊 Datos Reales: Peso APR-GRD vs Días de Estancia",
+                    className="chart-title",
+                ),
+                html.P(
+                    "Análisis de la relación entre el peso APR-GRD español y los días de estancia hospitalaria",
+                    style={
+                        "textAlign": "center",
+                        "color": "#64748b",
+                        "marginBottom": "20px",
+                        "fontSize": "0.95rem",
+                    },
+                ),
+                # Gráfico de dispersión
+                dcc.Graph(
+                    id="grafico-peso-estancia",
+                    config={"displayModeBar": False},
+                    figure=px.scatter(
+                        df_peso_estancia
+                        if not df_peso_estancia.empty
+                        else pd.DataFrame(),
+                        x="peso_espanol_apr",
+                        y="estancia_dias",
+                        title="Relación entre Peso APR-GRD y Estancia Hospitalaria",
+                        labels={
+                            "peso_espanol_apr": "Peso APR-GRD Español",
+                            "estancia_dias": "Días de Estancia",
+                        },
+                        color="estancia_dias",
+                        size="peso_espanol_apr",
+                        color_continuous_scale="Viridis",
+                        hover_data={"peso_espanol_apr": ":.3f", "estancia_dias": True},
+                    ).update_layout(
+                        plot_bgcolor="white",
+                        paper_bgcolor="white",
+                        font={"family": "Segoe UI, sans-serif", "color": "#1e293b"},
+                        margin=dict(l=50, r=30, t=60, b=50),
+                        height=400,
+                    )
+                    if not df_peso_estancia.empty
+                    else go.Figure()
+                    .add_annotation(
+                        text="No hay datos disponibles",
+                        xref="paper",
+                        yref="paper",
+                        x=0.5,
+                        y=0.5,
+                        showarrow=False,
+                        font=dict(size=20, color="#94a3b8"),
+                    )
+                    .update_layout(
+                        plot_bgcolor="white",
+                        paper_bgcolor="white",
+                        height=400,
+                        xaxis=dict(visible=False),
+                        yaxis=dict(visible=False),
+                    ),
+                    style={"marginBottom": "30px"},
+                ),
+                # Tabla de datos
+                dash_table.DataTable(
+                    id="tabla-peso-estancia",
+                    columns=[
+                        {"name": "Peso APR-GRD Español", "id": "peso_espanol_apr"},
+                        {"name": "Estancia (días)", "id": "estancia_dias"},
+                    ],
+                    data=df_peso_estancia.to_dict("records")
+                    if not df_peso_estancia.empty
+                    else [],
+                    style_table={
+                        "overflowX": "auto",
+                        "overflowY": "auto",
+                        "maxHeight": "400px",
+                    },
+                    style_cell={
+                        "textAlign": "center",
+                        "padding": "12px",
+                        "fontFamily": "Segoe UI, sans-serif",
+                        "fontSize": "14px",
+                        "border": "1px solid #e2e8f0",
+                    },
+                    style_header={
+                        "backgroundColor": "#2563eb",
+                        "color": "white",
+                        "fontWeight": "bold",
+                        "textAlign": "center",
+                        "border": "1px solid #1e40af",
+                    },
+                    style_data={
+                        "backgroundColor": "white",
+                        "color": "#1e293b",
+                    },
+                    style_data_conditional=[
+                        {
+                            "if": {"row_index": "odd"},
+                            "backgroundColor": "#f8fafc",
+                        },
+                        {
+                            "if": {"state": "active"},
+                            "backgroundColor": "#dbeafe",
+                            "border": "1px solid #2563eb",
+                        },
+                    ],
+                    page_size=10,
+                    sort_action="native",
+                    sort_mode="multi",
+                    filter_action="native",
+                ),
+                # Estadísticas resumen
+                html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.H4(
+                                    "📈 Estadísticas", style={"marginBottom": "15px"}
+                                ),
+                                html.P(
+                                    f"Total de registros: {len(df_peso_estancia)}"
+                                    if not df_peso_estancia.empty
+                                    else "No hay datos disponibles"
+                                ),
+                                html.P(
+                                    f"Peso promedio: {df_peso_estancia['peso_espanol_apr'].mean():.3f}"
+                                    if not df_peso_estancia.empty
+                                    else ""
+                                ),
+                                html.P(
+                                    f"Estancia promedio: {df_peso_estancia['estancia_dias'].mean():.1f} días"
+                                    if not df_peso_estancia.empty
+                                    else ""
+                                ),
+                                html.P(
+                                    f"Estancia máxima: {df_peso_estancia['estancia_dias'].max()} días"
+                                    if not df_peso_estancia.empty
+                                    else ""
+                                ),
+                                html.P(
+                                    f"Estancia mínima: {df_peso_estancia['estancia_dias'].min()} días"
+                                    if not df_peso_estancia.empty
+                                    else ""
+                                ),
+                            ],
+                            style={
+                                "backgroundColor": "#f0f9ff",
+                                "padding": "20px",
+                                "borderRadius": "8px",
+                                "marginTop": "20px",
+                                "border": "1px solid #bae6fd",
+                            },
+                        )
+                    ]
+                ),
+            ],
+            className="chart-card full",
+        ),
         # Footer
         html.Footer(
             [
                 html.P(
-                    "© 2025 Dashboard de Bienestar Mental | Tu salud mental importa 💚"
+                    "© 2025 Dashboard de Análisis Hospitalario | Datos en tiempo real"
                 )
             ],
             className="footer",
@@ -479,82 +1015,6 @@ app.layout = html.Div(
     ],
     className="container",
 )
-
-
-# Callback para actualizar el gráfico de tendencias
-@callback(Output("grafico-tendencia", "figure"), Input("dropdown-metrica", "value"))
-def actualizar_grafico(metrica_seleccionada):
-    # Definir colores según la métrica - paleta azul y negro (con alternativa daltónica)
-    colores = {
-        "Bienestar_Emocional": "#2563eb",  # Azul - compatible con daltonismo
-        "Nivel_Estrés": "#ee7733",  # Naranja - visible para daltónicos
-        "Horas_Sueño": "#009988",  # Verde azulado - seguro
-        "Actividad_Fisica": "#0077bb",  # Azul oscuro - seguro
-    }
-
-    # Colores de relleno con mejor contraste
-    colores_relleno = {
-        "Bienestar_Emocional": "rgba(37, 99, 235, 0.15)",
-        "Nivel_Estrés": "rgba(238, 119, 51, 0.15)",
-        "Horas_Sueño": "rgba(0, 153, 136, 0.15)",
-        "Actividad_Fisica": "rgba(0, 119, 187, 0.15)",
-    }
-
-    # Nombres amigables
-    nombres = {
-        "Bienestar_Emocional": "Bienestar Emocional",
-        "Nivel_Estrés": "Nivel de Estrés",
-        "Horas_Sueño": "Horas de Sueño",
-        "Actividad_Fisica": "Actividad Física (veces/semana)",
-    }
-
-    color = colores.get(metrica_seleccionada, "#2563eb")
-    color_relleno = colores_relleno.get(metrica_seleccionada, "rgba(37, 99, 235, 0.1)")
-    nombre = nombres.get(metrica_seleccionada, metrica_seleccionada)
-
-    fig = go.Figure()
-    fig.add_trace(
-        go.Scatter(
-            x=df_bienestar["Mes"],
-            y=df_bienestar[metrica_seleccionada],
-            mode="lines+markers",
-            name=nombre,
-            line=dict(
-                color=color, width=4
-            ),  # Líneas más gruesas para mejor visibilidad
-            marker=dict(
-                size=12, color=color, line=dict(width=2, color="white")
-            ),  # Marcadores con borde
-            fill="tozeroy",
-            fillcolor=color_relleno,
-        )
-    )
-
-    # Configurar el eje Y según la métrica
-    if metrica_seleccionada in ["Bienestar_Emocional", "Nivel_Estrés"]:
-        yaxis_range = [0, 10]
-        yaxis_title = "Nivel (1-10)"
-    elif metrica_seleccionada == "Horas_Sueño":
-        yaxis_range = [0, 12]
-        yaxis_title = "Horas de Sueño"
-    else:
-        yaxis_range = [0, None]
-        yaxis_title = "Veces por semana"
-
-    fig.update_layout(
-        xaxis_title="Mes",
-        yaxis_title=yaxis_title,
-        yaxis=dict(range=yaxis_range),
-        plot_bgcolor="white",
-        paper_bgcolor="white",
-        font={"family": "Segoe UI, sans-serif", "color": "#1e293b"},
-        hovermode="x unified",
-        margin=dict(l=50, r=30, t=30, b=50),
-        height=350,
-    )
-
-    return fig
-
 
 server = app.server
 
