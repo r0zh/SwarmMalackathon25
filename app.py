@@ -188,7 +188,7 @@ app.layout = html.Div(
                             },
                         ),
                         html.P(
-                            "↓ -0.3 mejorando",
+                            "↓ -0.4 mejorando",
                             className="metric-change positive",
                             **{
                                 "aria-label": "Tendencia positiva: reducción de 0.3 puntos de estrés, mejorando"
