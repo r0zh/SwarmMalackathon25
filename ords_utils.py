@@ -8,7 +8,7 @@ from requests.auth import HTTPBasicAuth
 from config import Config
 
 
-def fetch_ords_data(endpoint: str, limit: int = 1000) -> pd.DataFrame:
+def fetch_ords_data(endpoint: str, limit: int = 20000) -> pd.DataFrame:
     """
     Función genérica para obtener datos desde Oracle ORDS con soporte para paginación.
 

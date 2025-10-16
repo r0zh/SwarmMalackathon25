@@ -1,16 +1,105 @@
 // Custom JavaScript para mejorar la interactividad del Dashboard de Bienestar Mental
 
 // Esperar a que el DOM esté completamente cargado
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.log('Dashboard de Bienestar Mental - JavaScript Cargado');
-    
+
     // Inicializar todas las funcionalidades
     initializeAnimations();
     initializeMetricCards();
     initializeChartInteractions();
     initializeThemeToggle();
     addScrollEffects();
+    initializeThemeChanges();
 });
+
+// Manejar cambios de tema en los gráficos de Plotly y tablas
+function initializeThemeChanges() {
+    window.addEventListener('themeChange', function (event) {
+        const isDarkMode = event.detail.isDarkMode;
+        console.log('Tema cambiado a:', isDarkMode ? 'Oscuro' : 'Claro');
+
+        // Actualizar gráficos de Plotly
+        const plots = document.querySelectorAll('.js-plotly-plot, [data-plotly]');
+        plots.forEach(plot => {
+            if (window.Plotly && plot.data && plot.layout) {
+                // Definir colores según el tema
+                const textColor = isDarkMode ? '#e2e8f0' : '#1e293b';
+                const bgColor = isDarkMode ? '#1e293b' : 'white';
+                const plotBg = isDarkMode ? '#0f172a' : '#f8fafc';
+                const gridColor = isDarkMode ? '#334155' : '#e2e8f0';
+                const lineColor = isDarkMode ? '#475569' : '#cbd5e1';
+                const legendBg = isDarkMode ? 'rgba(30, 41, 59, 0.8)' : 'rgba(255, 255, 255, 0.9)';
+                const legendBorder = isDarkMode ? '#475569' : '#cbd5e1';
+                const template = isDarkMode ? 'plotly_dark' : 'plotly';
+
+                // Construir el update layout completo
+                const updateLayout = {
+                    template: template,
+                    paper_bgcolor: bgColor,
+                    plot_bgcolor: plotBg,
+                    font: { 
+                        color: textColor,
+                        family: 'Inter, system-ui, sans-serif'
+                    },
+                    title: {
+                        font: { color: textColor, size: 16 }
+                    },
+                    xaxis: { 
+                        gridcolor: gridColor, 
+                        linecolor: lineColor,
+                        zerolinecolor: lineColor,
+                        tickfont: { color: textColor }
+                    },
+                    yaxis: { 
+                        gridcolor: gridColor, 
+                        linecolor: lineColor,
+                        zerolinecolor: lineColor,
+                        tickfont: { color: textColor }
+                    },
+                    legend: { 
+                        bgcolor: legendBg, 
+                        bordercolor: legendBorder,
+                        font: { color: textColor }
+                    },
+                    coloraxis: {
+                        colorbar: {
+                            tickfont: { color: textColor }
+                        }
+                    }
+                };
+
+                try {
+                    window.Plotly.relayout(plot, updateLayout);
+                } catch (e) {
+                    console.warn('No se pudo actualizar el gráfico:', e);
+                }
+            }
+        });
+
+        // Forzar repintado de las tablas Dash
+        // Esto dispara un reflow que aplica los estilos CSS del nuevo tema
+        const tables = document.querySelectorAll('.dash-table, .dash-table-container');
+        tables.forEach(table => {
+            table.style.display = 'none';
+            setTimeout(() => {
+                table.style.display = '';
+            }, 10);
+        });
+
+        // Forzar repintado de tarjetas KPI
+        const kpiCards = document.querySelectorAll('div[style*="backgroundColor: #eff6ff"], div[style*="backgroundColor: #f0fdf4"], div[style*="backgroundColor: #fef2f2"], div[style*="backgroundColor: #f3e8ff"]');
+        kpiCards.forEach(card => {
+            // Forzar recalculación de estilos
+            card.style.opacity = '0.99';
+            setTimeout(() => {
+                card.style.opacity = '';
+            }, 50);
+        });
+        
+        console.log('Tema actualizado en gráficos, tablas y tarjetas KPI');
+    });
+}
 
 // Animaciones de entrada mejoradas para las tarjetas
 function initializeAnimations() {
@@ -20,7 +109,7 @@ function initializeAnimations() {
         card.style.opacity = '1';
         card.style.transform = 'translateY(0)';
     });
-    
+
     // Observer para animaciones futuras (opcional)
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -43,31 +132,31 @@ function initializeAnimations() {
 // Interactividad mejorada para las tarjetas de métricas
 function initializeMetricCards() {
     const metricCards = document.querySelectorAll('.metric-card');
-    
+
     metricCards.forEach(card => {
         // Efecto de pulso al hacer hover
-        card.addEventListener('mouseenter', function() {
+        card.addEventListener('mouseenter', function () {
             this.style.transform = 'translateY(-8px) scale(1.02)';
         });
-        
-        card.addEventListener('mouseleave', function() {
+
+        card.addEventListener('mouseleave', function () {
             this.style.transform = 'translateY(0) scale(1)';
         });
-        
+
         // Click para ver más detalles (simulado)
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             const metricValue = this.querySelector('.metric-value');
             const originalValue = metricValue.textContent;
-            
+
             // Animación de actualización
             metricValue.style.transform = 'scale(1.1)';
             metricValue.style.color = '#2563eb';
-            
+
             setTimeout(() => {
                 metricValue.style.transform = 'scale(1)';
                 metricValue.style.color = '';
             }, 300);
-            
+
             // Crear partículas de celebración
             createParticles(this);
         });
@@ -79,7 +168,7 @@ function createParticles(element) {
     const rect = element.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    
+
     for (let i = 0; i < 12; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
@@ -94,14 +183,14 @@ function createParticles(element) {
             left: ${centerX}px;
             top: ${centerY}px;
         `;
-        
+
         document.body.appendChild(particle);
-        
+
         const angle = (Math.PI * 2 * i) / 12;
         const velocity = 100 + Math.random() * 50;
         const tx = Math.cos(angle) * velocity;
         const ty = Math.sin(angle) * velocity;
-        
+
         particle.animate([
             { transform: 'translate(0, 0)', opacity: 1 },
             { transform: `translate(${tx}px, ${ty}px)`, opacity: 0 }
@@ -119,7 +208,7 @@ function initializeChartInteractions() {
         const graphs = document.querySelectorAll('.js-plotly-plot');
         if (graphs.length > 0) {
             clearInterval(checkPlotly);
-            
+
             graphs.forEach(graph => {
                 // Establecer altura consistente sin forzar demasiado
                 const parentCard = graph.closest('.chart-card');
@@ -128,19 +217,19 @@ function initializeChartInteractions() {
                 } else if (parentCard) {
                     graph.style.height = '380px';
                 }
-                
+
                 // Añadir efecto de brillo al hacer hover (sin cambiar tamaño)
-                graph.addEventListener('mouseenter', function() {
+                graph.addEventListener('mouseenter', function () {
                     this.closest('.chart-card').style.boxShadow = '0 8px 24px rgba(37, 99, 235, 0.2)';
                 });
-                
-                graph.addEventListener('mouseleave', function() {
+
+                graph.addEventListener('mouseleave', function () {
                     this.closest('.chart-card').style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
                 });
             });
         }
     }, 100);
-    
+
     // Limpiar el intervalo después de 5 segundos
     setTimeout(() => clearInterval(checkPlotly), 5000);
 }
@@ -171,7 +260,7 @@ function initializeThemeToggle() {
         align-items: center;
         justify-content: center;
     `;
-    
+
     // Crear botón de accesibilidad (abre el panel) - LADO IZQUIERDO
     const colorblindButton = document.createElement('button');
     colorblindButton.id = 'accessibility-toggle';
@@ -197,7 +286,7 @@ function initializeThemeToggle() {
         justify-content: center;
         animation: float 3s ease-in-out infinite;
     `;
-    
+
     // Crear panel de configuración de accesibilidad
     const panel = document.createElement('div');
     panel.className = 'accessibility-panel';
@@ -304,49 +393,56 @@ function initializeThemeToggle() {
             <p class="info-text">Ajusta el tamaño del texto para mejorar la legibilidad</p>
         </div>
     `;
-    
-    toggleButton.addEventListener('mouseenter', function() {
+
+    toggleButton.addEventListener('mouseenter', function () {
         this.style.transform = 'scale(1.1) rotate(15deg)';
     });
-    
-    toggleButton.addEventListener('mouseleave', function() {
+
+    toggleButton.addEventListener('mouseleave', function () {
         this.style.transform = 'scale(1) rotate(0deg)';
     });
-    
-    toggleButton.addEventListener('click', function() {
+
+    toggleButton.addEventListener('click', function () {
         document.body.classList.toggle('dark-mode');
         this.innerHTML = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
         this.title = document.body.classList.contains('dark-mode') ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro';
-        
+
+        // Disparar evento personalizado para Dash
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        window.dispatchEvent(new CustomEvent('themeChange', { detail: { isDarkMode } }));
+
+        // Guardar preferencia en localStorage
+        localStorage.setItem('dashboardTheme', isDarkMode ? 'dark' : 'light');
+
         // Animación de transición
         this.style.transform = 'scale(0.8) rotate(180deg)';
         setTimeout(() => {
             this.style.transform = 'scale(1) rotate(0deg)';
         }, 300);
     });
-    
-    colorblindButton.addEventListener('mouseenter', function() {
+
+    colorblindButton.addEventListener('mouseenter', function () {
         this.style.transform = 'scale(1.1) rotate(15deg)';
     });
-    
-    colorblindButton.addEventListener('mouseleave', function() {
+
+    colorblindButton.addEventListener('mouseleave', function () {
         this.style.transform = 'scale(1) rotate(0deg)';
     });
-    
-    colorblindButton.addEventListener('click', function() {
+
+    colorblindButton.addEventListener('click', function () {
         panel.classList.toggle('visible');
-        
+
         // Animación de transición
         this.style.transform = 'scale(0.9) rotate(180deg)';
         setTimeout(() => {
             this.style.transform = 'scale(1) rotate(0deg)';
         }, 300);
     });
-    
+
     document.body.appendChild(toggleButton);
     document.body.appendChild(colorblindButton);
     document.body.appendChild(panel);
-    
+
     // Configurar interacciones del panel
     setupAccessibilityPanel();
 }
@@ -363,19 +459,19 @@ function setupAccessibilityPanel() {
     const contrastSlider = document.getElementById('contrast-slider');
     const contrastDisplay = document.getElementById('contrast-display');
     const sizeOptions = document.querySelectorAll('.size-option');
-    
+
     let isColorblindMode = false;
     let isHighContrastMode = false;
     let currentType = 'protanopia';
     let currentIntensity = 70;
     let currentContrast = 80;
     let currentFontSize = 'normal';
-    
+
     // Toggle del modo daltónico
-    colorblindToggle.addEventListener('click', function() {
+    colorblindToggle.addEventListener('click', function () {
         this.classList.toggle('active');
         isColorblindMode = !isColorblindMode;
-        
+
         if (isColorblindMode) {
             colorblindOptions.style.display = 'block';
             applyColorblindMode(currentType, currentIntensity);
@@ -384,12 +480,12 @@ function setupAccessibilityPanel() {
             removeColorblindMode();
         }
     });
-    
+
     // Toggle del modo alto contraste
-    highContrastToggle.addEventListener('click', function() {
+    highContrastToggle.addEventListener('click', function () {
         this.classList.toggle('active');
         isHighContrastMode = !isHighContrastMode;
-        
+
         if (isHighContrastMode) {
             highContrastOptions.style.display = 'block';
             applyHighContrastMode(currentContrast);
@@ -398,43 +494,43 @@ function setupAccessibilityPanel() {
             removeHighContrastMode();
         }
     });
-    
+
     // Selección de tipo de daltonismo
     typeOptions.forEach(option => {
-        option.addEventListener('click', function() {
+        option.addEventListener('click', function () {
             typeOptions.forEach(opt => opt.classList.remove('active'));
             this.classList.add('active');
             currentType = this.dataset.type;
-            
+
             if (isColorblindMode) {
                 applyColorblindMode(currentType, currentIntensity);
             }
         });
     });
-    
+
     // Slider de intensidad daltonismo
-    intensitySlider.addEventListener('input', function() {
+    intensitySlider.addEventListener('input', function () {
         currentIntensity = parseInt(this.value);
         intensityDisplay.textContent = currentIntensity + '%';
-        
+
         if (isColorblindMode) {
             applyColorblindMode(currentType, currentIntensity);
         }
     });
-    
+
     // Slider de intensidad alto contraste
-    contrastSlider.addEventListener('input', function() {
+    contrastSlider.addEventListener('input', function () {
         currentContrast = parseInt(this.value);
         contrastDisplay.textContent = currentContrast + '%';
-        
+
         if (isHighContrastMode) {
             applyHighContrastMode(currentContrast);
         }
     });
-    
+
     // Selección de tamaño de letra
     sizeOptions.forEach(option => {
-        option.addEventListener('click', function() {
+        option.addEventListener('click', function () {
             sizeOptions.forEach(opt => opt.classList.remove('active'));
             this.classList.add('active');
             currentFontSize = this.dataset.size;
@@ -446,15 +542,15 @@ function setupAccessibilityPanel() {
 // Aplicar modo daltónico con tipo e intensidad
 function applyColorblindMode(type, intensity) {
     // Remover clases previas
-    document.body.classList.remove('colorblind-protanopia', 'colorblind-deuteranopia', 
-                                   'colorblind-tritanopia', 'colorblind-achromatopsia');
-    
+    document.body.classList.remove('colorblind-protanopia', 'colorblind-deuteranopia',
+        'colorblind-tritanopia', 'colorblind-achromatopsia');
+
     // Añadir clase específica
     document.body.classList.add('colorblind-mode', `colorblind-${type}`);
-    
+
     // Aplicar intensidad mediante filtros CSS
     const filterIntensity = intensity / 100;
-    
+
     // Paletas de color según el tipo
     const colorPalettes = {
         protanopia: {
@@ -474,33 +570,33 @@ function applyColorblindMode(type, intensity) {
             filter: `grayscale(${filterIntensity}) contrast(${1 + filterIntensity * 0.4})`
         }
     };
-    
+
     const palette = colorPalettes[type];
-    
+
     // Aplicar filtro a los gráficos
     const graphs = document.querySelectorAll('.js-plotly-plot');
     graphs.forEach(graph => {
         graph.style.filter = palette.filter;
     });
-    
+
     // Actualizar colores de gráficos si es posible
     updateChartsForColorblind(palette.colors, type, intensity);
-    
+
     console.log(`✓ Modo daltónico activado: ${type} al ${intensity}%`);
 }
 
 // Remover modo daltónico
 function removeColorblindMode() {
-    document.body.classList.remove('colorblind-mode', 'colorblind-protanopia', 
-                                   'colorblind-deuteranopia', 'colorblind-tritanopia', 
-                                   'colorblind-achromatopsia');
-    
+    document.body.classList.remove('colorblind-mode', 'colorblind-protanopia',
+        'colorblind-deuteranopia', 'colorblind-tritanopia',
+        'colorblind-achromatopsia');
+
     // Remover filtros
     const graphs = document.querySelectorAll('.js-plotly-plot');
     graphs.forEach(graph => {
         graph.style.filter = '';
     });
-    
+
     resetChartColors();
     console.log('✓ Modo daltónico desactivado');
 }
@@ -508,7 +604,7 @@ function removeColorblindMode() {
 // Actualizar colores de gráficos para modo daltónico
 function updateChartsForColorblind(colors, type, intensity) {
     const graphs = document.querySelectorAll('.js-plotly-plot');
-    
+
     graphs.forEach((graph, index) => {
         if (graph && graph.data) {
             try {
@@ -535,40 +631,40 @@ function resetChartColors() {
 // Aplicar modo alto contraste
 function applyHighContrastMode(intensity) {
     document.body.classList.add('high-contrast-mode');
-    
+
     const contrastValue = 1 + (intensity / 100) * 1.5; // 1.0 a 2.5
     const brightnessValue = 1 + (intensity / 100) * 0.3; // 1.0 a 1.3
     const saturationValue = 1 + (intensity / 100) * 0.5; // 1.0 a 1.5
-    
+
     // Aplicar filtros a todo el contenido
     const container = document.querySelector('.container');
     if (container) {
         container.style.filter = `contrast(${contrastValue}) brightness(${brightnessValue}) saturate(${saturationValue})`;
     }
-    
+
     // Ajustar estilos específicos según intensidad
     const root = document.documentElement;
     root.style.setProperty('--contrast-border-width', `${2 + (intensity / 100) * 2}px`);
     root.style.setProperty('--contrast-shadow-intensity', `${0.1 + (intensity / 100) * 0.3}`);
     root.style.setProperty('--contrast-text-weight', intensity > 50 ? '700' : '600');
-    
+
     console.log(`✓ Modo alto contraste activado: ${intensity}%`);
 }
 
 // Remover modo alto contraste
 function removeHighContrastMode() {
     document.body.classList.remove('high-contrast-mode');
-    
+
     const container = document.querySelector('.container');
     if (container) {
         container.style.filter = '';
     }
-    
+
     const root = document.documentElement;
     root.style.removeProperty('--contrast-border-width');
     root.style.removeProperty('--contrast-shadow-intensity');
     root.style.removeProperty('--contrast-text-weight');
-    
+
     console.log('✓ Modo alto contraste desactivado');
 }
 
@@ -576,10 +672,10 @@ function removeHighContrastMode() {
 function applyFontSize(size) {
     // Remover clases previas
     document.body.classList.remove('font-small', 'font-normal', 'font-large', 'font-xlarge');
-    
+
     // Añadir nueva clase
     document.body.classList.add(`font-${size}`);
-    
+
     // Mapeo de tamaños
     const fontSizeMap = {
         small: {
@@ -611,16 +707,16 @@ function applyFontSize(size) {
             body: '1.25rem'
         }
     };
-    
+
     const sizes = fontSizeMap[size];
     const root = document.documentElement;
-    
+
     root.style.setProperty('--font-size-base', sizes.base);
     root.style.setProperty('--font-size-header', sizes.header);
     root.style.setProperty('--font-size-metric', sizes.metric);
     root.style.setProperty('--font-size-chart', sizes.chart);
     root.style.setProperty('--font-size-body', sizes.body);
-    
+
     console.log(`✓ Tamaño de letra ajustado: ${size}`);
 }
 
@@ -629,10 +725,10 @@ function addScrollEffects() {
     let lastScroll = 0;
     const header = document.querySelector('.header');
     const isMobile = window.innerWidth <= 768;
-    
+
     window.addEventListener('scroll', () => {
         const currentScroll = window.pageYOffset;
-        
+
         // Efecto parallax en el header (reducido en móvil)
         if (header) {
             const parallaxSpeed = isMobile ? 0.3 : 0.5;
@@ -640,10 +736,10 @@ function addScrollEffects() {
             header.style.transform = `translateY(${Math.min(currentScroll, maxScroll) * parallaxSpeed}px)`;
             header.style.opacity = Math.max(0.3, 1 - (currentScroll / maxScroll));
         }
-        
+
         lastScroll = currentScroll;
     });
-    
+
     // Reajustar en cambio de tamaño de ventana
     window.addEventListener('resize', () => {
         const newIsMobile = window.innerWidth <= 768;
@@ -692,13 +788,13 @@ graphObserver.observe(document.body, {
 // Añadir tooltips informativos
 function addTooltips() {
     const tipCards = document.querySelectorAll('.tip-card');
-    
+
     tipCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
+        card.addEventListener('mouseenter', function () {
             this.style.transform = 'translateX(8px) scale(1.02)';
         });
-        
-        card.addEventListener('mouseleave', function() {
+
+        card.addEventListener('mouseleave', function () {
             this.style.transform = 'translateX(0) scale(1)';
         });
     });
@@ -708,7 +804,7 @@ function addTooltips() {
 setTimeout(addTooltips, 500);
 
 // Añadir indicador de carga
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     // Ocultar cualquier indicador de carga si existe
     const loader = document.querySelector('.loader');
     if (loader) {
@@ -724,7 +820,7 @@ function logInteraction(type, detail) {
 }
 
 // Detectar clicks en las tarjetas
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
     if (e.target.closest('.metric-card')) {
         const cardType = e.target.closest('.metric-card').className.split(' ')[1];
         logInteraction('metric-card-click', cardType);

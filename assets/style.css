@@ -31,8 +31,8 @@
 .metric-card:focus-visible {
     outline: 4px solid #2563eb;
     outline-offset: 4px;
-    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.2), 
-                0 8px 24px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.2),
+        0 8px 24px rgba(37, 99, 235, 0.3);
     transform: translateY(-4px) scale(1.02);
     transition: all 0.2s ease;
 }
@@ -83,17 +83,17 @@ button:focus-visible,
         background: #ffffff;
         color: #000000;
     }
-    
+
     .header {
         background: #000000;
         color: #ffffff;
     }
-    
+
     .metric-card {
         border: 3px solid #000000;
         background: #ffffff;
     }
-    
+
     *:focus-visible {
         outline: 4px solid #000000;
         outline-offset: 4px;
@@ -102,6 +102,7 @@ button:focus-visible,
 
 /* Soporte para modo de movimiento reducido */
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {
@@ -109,7 +110,7 @@ button:focus-visible,
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-    
+
     .metric-card:hover,
     .metric-card:focus-visible {
         transform: none;
@@ -154,7 +155,12 @@ body {
     letter-spacing: 0.01em;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     line-height: 1.3;
 }
 
@@ -170,9 +176,11 @@ a:focus-visible {
 }
 
 /* Mejorar contraste de botones */
-button, .btn {
+button,
+.btn {
     font-weight: 600;
-    min-height: 44px; /* Tamaño táctil accesible */
+    min-height: 44px;
+    /* Tamaño táctil accesible */
     min-width: 44px;
 }
 
@@ -236,8 +244,8 @@ button, .btn {
 .metric-card:focus-visible {
     outline: 4px solid #2563eb;
     outline-offset: 4px;
-    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.2), 
-                0 8px 24px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.2),
+        0 8px 24px rgba(37, 99, 235, 0.3);
     transform: translateY(-4px) scale(1.02);
     transition: all 0.2s ease;
 }
@@ -288,17 +296,17 @@ button:focus-visible,
         background: #ffffff;
         color: #000000;
     }
-    
+
     .header {
         background: #000000;
         color: #ffffff;
     }
-    
+
     .metric-card {
         border: 3px solid #000000;
         background: #ffffff;
     }
-    
+
     *:focus-visible {
         outline: 4px solid #000000;
         outline-offset: 4px;
@@ -307,6 +315,7 @@ button:focus-visible,
 
 /* Soporte para modo de movimiento reducido */
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {
@@ -314,7 +323,7 @@ button:focus-visible,
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-    
+
     .metric-card:hover,
     .metric-card:focus-visible {
         transform: none;
@@ -359,7 +368,12 @@ body {
     letter-spacing: 0.01em;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     line-height: 1.3;
 }
 
@@ -375,9 +389,11 @@ a:focus-visible {
 }
 
 /* Mejorar contraste de botones */
-button, .btn {
+button,
+.btn {
     font-weight: 600;
-    min-height: 44px; /* Tamaño táctil accesible */
+    min-height: 44px;
+    /* Tamaño táctil accesible */
     min-width: 44px;
 }
 
@@ -424,6 +440,7 @@ body {
 
 /* Mejoras táctiles para dispositivos móviles */
 @media (hover: none) and (pointer: coarse) {
+
     .metric-card,
     .chart-card,
     .tip-card,
@@ -432,11 +449,11 @@ body {
     .toggle-switch {
         -webkit-tap-highlight-color: rgba(37, 99, 235, 0.1);
     }
-    
+
     .metric-card:active {
         transform: scale(0.98);
     }
-    
+
     button {
         -webkit-tap-highlight-color: transparent;
     }
@@ -450,12 +467,11 @@ body {
 
 /* Header Espectacular Mejorado */
 .header {
-    background: 
-        linear-gradient(135deg, 
-            rgba(15, 23, 42, 0.98) 0%, 
+    background:
+        linear-gradient(135deg,
+            rgba(15, 23, 42, 0.98) 0%,
             rgba(30, 41, 59, 0.95) 40%,
-            rgba(51, 65, 85, 0.98) 100%
-        ),
+            rgba(51, 65, 85, 0.98) 100%),
         radial-gradient(ellipse at top, rgba(96, 165, 250, 0.15), transparent),
         radial-gradient(ellipse at bottom right, rgba(59, 130, 246, 0.1), transparent);
     background-size: 100% 100%, 150% 150%, 200% 200%;
@@ -464,7 +480,7 @@ body {
     color: white;
     padding: 100px 30px 80px 30px;
     margin-bottom: 50px;
-    box-shadow: 
+    box-shadow:
         0 10px 40px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     position: relative;
@@ -480,7 +496,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: 
+    background-image:
         radial-gradient(circle at 25% 25%, rgba(96, 165, 250, 0.3) 2px, transparent 2px),
         radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.2) 2px, transparent 2px);
     background-size: 50px 50px;
@@ -498,13 +514,12 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, 
-        transparent,
-        rgba(96, 165, 250, 0.8) 20%,
-        rgba(59, 130, 246, 1) 50%,
-        rgba(96, 165, 250, 0.8) 80%,
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(96, 165, 250, 0.8) 20%,
+            rgba(59, 130, 246, 1) 50%,
+            rgba(96, 165, 250, 0.8) 80%,
+            transparent);
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
 }
 
@@ -512,6 +527,7 @@ body {
     0% {
         background-position: 0 0, 25px 25px;
     }
+
     100% {
         background-position: 50px 50px, 75px 75px;
     }
@@ -528,9 +544,12 @@ body {
 }
 
 @keyframes floatEmoji {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateY(0) rotate(0deg);
     }
+
     50% {
         transform: translateY(-10px) rotate(5deg);
     }
@@ -717,7 +736,7 @@ body {
 }
 
 /* Contenedores de gráficos con altura controlada */
-.chart-card > div:last-child {
+.chart-card>div:last-child {
     flex: 1;
     display: flex;
     align-items: center;
@@ -726,7 +745,7 @@ body {
     max-height: 450px;
 }
 
-.chart-card.full > div:last-child {
+.chart-card.full>div:last-child {
     min-height: 300px;
     max-height: 400px;
 }
@@ -789,7 +808,7 @@ body {
         max-width: 100%;
         padding: 0 16px;
     }
-    
+
     .charts-grid {
         grid-template-columns: 1fr;
         gap: 20px;
@@ -801,29 +820,29 @@ body {
         padding: 80px 20px 60px 20px;
         margin-bottom: 35px;
     }
-    
+
     .header::before {
         background-size: 40px 40px;
         background-position: 0 0, 20px 20px;
     }
-    
+
     .header-title::before {
         font-size: clamp(2rem, 8vw, 3rem);
         margin-bottom: 15px;
     }
-    
+
     .header-title {
         font-size: clamp(2rem, 7vw, 2.8rem);
         letter-spacing: -1px;
         margin-bottom: 15px;
     }
-    
+
     .subtitle {
         font-size: clamp(0.95rem, 3.5vw, 1.2rem);
         padding: 0 15px;
         line-height: 1.6;
     }
-    
+
     .subtitle::before {
         letter-spacing: 6px;
         margin-bottom: 12px;
@@ -836,7 +855,7 @@ body {
     .metric-value {
         font-size: clamp(1.8rem, 5vw, 2.2rem) !important;
     }
-    
+
     .metric-icon {
         font-size: 2.5rem;
     }
@@ -852,7 +871,7 @@ body {
         margin: 0 16px 24px 16px;
         gap: 16px;
     }
-    
+
     .chart-card.full {
         margin: 0 16px 24px 16px;
     }
@@ -860,12 +879,12 @@ body {
     .charts-grid {
         margin: 0 16px 24px 16px;
     }
-    
+
     .tips-grid {
         grid-template-columns: 1fr;
         gap: 12px;
     }
-    
+
     /* Botones de accesibilidad en móvil */
     #theme-toggle,
     #accessibility-toggle {
@@ -874,15 +893,15 @@ body {
         font-size: 20px;
         bottom: 20px;
     }
-    
+
     #theme-toggle {
         right: 20px;
     }
-    
+
     #accessibility-toggle {
         left: 20px;
     }
-    
+
     /* Panel de accesibilidad en móvil */
     .accessibility-panel {
         width: calc(100vw - 40px);
@@ -897,57 +916,57 @@ body {
     .header {
         padding: 60px 16px 50px 16px;
     }
-    
+
     .header::after {
         height: 3px;
     }
-    
+
     .header-title::before {
         font-size: 2rem;
         margin-bottom: 10px;
     }
-    
+
     .header-title {
         font-size: 1.8rem;
         letter-spacing: -0.5px;
     }
-    
+
     .subtitle {
         font-size: 0.9rem;
         line-height: 1.5;
     }
-    
+
     .subtitle::before {
         letter-spacing: 4px;
         font-size: 0.7rem;
         margin-bottom: 10px;
     }
-    
+
     .metric-card {
         padding: 24px 20px;
     }
-    
+
     .chart-card {
         padding: 20px 16px;
     }
-    
+
     .colorblind-type-selector,
     .font-size-selector {
         grid-template-columns: 1fr;
     }
-    
+
     .type-option,
     .size-option {
         padding: 10px;
     }
-    
+
     .accessibility-panel {
         width: calc(100vw - 32px);
         left: 16px;
         bottom: 75px;
         padding: 20px 16px;
     }
-    
+
     .accessibility-panel h3 {
         font-size: 1rem;
     }
@@ -959,7 +978,7 @@ body {
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
     }
-    
+
     .charts-grid {
         grid-template-columns: 1fr;
         gap: 20px;
@@ -971,15 +990,15 @@ body {
     .header-title {
         font-size: 1.5rem;
     }
-    
+
     .subtitle {
         font-size: 0.85rem;
     }
-    
+
     .metric-card h3 {
         font-size: 0.75rem;
     }
-    
+
     #theme-toggle,
     #accessibility-toggle {
         width: 45px;
@@ -987,11 +1006,11 @@ body {
         font-size: 18px;
         bottom: 15px;
     }
-    
+
     #theme-toggle {
         right: 15px;
     }
-    
+
     #accessibility-toggle {
         left: 15px;
     }
@@ -1003,19 +1022,29 @@ body {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-.metric-card, .chart-card {
+.metric-card,
+.chart-card {
     animation: fadeIn 0.5s ease-out;
 }
 
-.metric-card:nth-child(1) { animation-delay: 0.1s; }
-.metric-card:nth-child(2) { animation-delay: 0.2s; }
-.metric-card:nth-child(3) { animation-delay: 0.3s; }
+.metric-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.metric-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.metric-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
 
 /* Ajustes para los gráficos de Plotly */
 .js-plotly-plot {
@@ -1024,19 +1053,22 @@ body {
 }
 
 /* Animaciones de visibilidad - INICIO CON OPACIDAD 1 */
-.metric-card, .chart-card {
+.metric-card,
+.chart-card {
     opacity: 1;
     transform: translateY(0);
     transition: all 0.6s ease;
 }
 
 /* Clase para animación de entrada (opcional) */
-.metric-card.animate-in, .chart-card.animate-in {
+.metric-card.animate-in,
+.chart-card.animate-in {
     opacity: 0;
     transform: translateY(30px);
 }
 
-.metric-card.visible, .chart-card.visible {
+.metric-card.visible,
+.chart-card.visible {
     opacity: 1;
     transform: translateY(0);
 }
@@ -1048,25 +1080,23 @@ body.dark-mode {
 }
 
 body.dark-mode .header {
-    background: 
-        linear-gradient(135deg, 
-            rgba(15, 23, 42, 1) 0%, 
+    background:
+        linear-gradient(135deg,
+            rgba(15, 23, 42, 1) 0%,
             rgba(30, 41, 59, 1) 40%,
-            rgba(51, 65, 85, 1) 100%
-        ),
+            rgba(51, 65, 85, 1) 100%),
         radial-gradient(ellipse at top, rgba(96, 165, 250, 0.2), transparent),
         radial-gradient(ellipse at bottom right, rgba(59, 130, 246, 0.15), transparent);
     border-bottom-color: rgba(96, 165, 250, 0.5);
 }
 
 body.dark-mode .header::after {
-    background: linear-gradient(90deg, 
-        transparent,
-        rgba(96, 165, 250, 1) 20%,
-        rgba(59, 130, 246, 1) 50%,
-        rgba(96, 165, 250, 1) 80%,
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(96, 165, 250, 1) 20%,
+            rgba(59, 130, 246, 1) 50%,
+            rgba(96, 165, 250, 1) 80%,
+            transparent);
     box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
 }
 
@@ -1098,13 +1128,299 @@ body.dark-mode .tip-card p {
     color: #94a3b8;
 }
 
-/* Modo Daltónico - Paleta accesible con patrones */
+/* Tarjetas de estadísticas en modo oscuro */
+body.dark-mode div[style*="backgroundColor: #f0f9ff"] {
+    background-color: #1e293b !important;
+    border-color: #3b82f6 !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #f0f9ff"] h4,
+body.dark-mode div[style*="backgroundColor: #f0f9ff"] h3 {
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #f0f9ff"] p {
+    color: #e2e8f0 !important;
+}
+
+/* Estilos de gráficos en modo oscuro */
+body.dark-mode .js-plotly-plot,
+body.dark-mode .plotly {
+    background-color: #1e293b !important;
+}
+
+body.dark-mode .js-plotly-plot .plotly-container {
+    background-color: #1e293b !important;
+}
+
+/* Tema oscuro para las leyendas de Plotly */
+body.dark-mode .js-plotly-plot .legend {
+    background-color: rgba(30, 41, 59, 0.9) !important;
+    color: #e2e8f0 !important;
+}
+
+/* Ejes de gráficos en modo oscuro */
+body.dark-mode svg.main-svg {
+    background: transparent !important;
+}
+
+body.dark-mode .xaxis-grid,
+body.dark-mode .yaxis-grid {
+    stroke: #334155 !important;
+}
+
+/* Estilos de gráficos en modo claro */
+.js-plotly-plot text,
+.plotly text {
+    fill: #1e293b !important;
+}
+
+.js-plotly-plot .legend text,
+.plotly .legend text {
+    fill: #1e293b !important;
+}
+
+.js-plotly-plot .xaxis text,
+.js-plotly-plot .yaxis text,
+.plotly .xaxis text,
+.plotly .yaxis text {
+    fill: #1e293b !important;
+}
+
+.js-plotly-plot .title text,
+.plotly .title text {
+    fill: #0f172a !important;
+}
+
+/* Estilos de gráficos en modo oscuro */
+body.dark-mode .js-plotly-plot text,
+body.dark-mode .plotly text {
+    fill: #e2e8f0 !important;
+}
+
+body.dark-mode .js-plotly-plot .legend text,
+body.dark-mode .plotly .legend text {
+    fill: #e2e8f0 !important;
+}
+
+body.dark-mode .js-plotly-plot .xaxis text,
+body.dark-mode .js-plotly-plot .yaxis text,
+body.dark-mode .plotly .xaxis text,
+body.dark-mode .plotly .yaxis text {
+    fill: #e2e8f0 !important;
+}
+
+body.dark-mode .js-plotly-plot .title text,
+body.dark-mode .plotly .title text {
+    fill: #f1f5f9 !important;
+}
+
+/* Modo claro - estilos por defecto */
+.js-plotly-plot,
+.plotly {
+    background-color: white !important;
+}
+
+.js-plotly-plot .plotly-container {
+    background-color: white !important;
+}
+
+/* ===================================
+   ESTILOS PARA TABLAS DASH
+   =================================== */
+
+/* DataTable de Dash - Modo Claro (por defecto) */
+.dash-table.dash-spreadsheet {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: white;
+}
+
+.dash-table.dash-spreadsheet thead {
+    background-color: #2563eb;
+}
+
+.dash-table.dash-spreadsheet thead th {
+    background-color: #2563eb !important;
+    color: white !important;
+    border-color: #1e40af !important;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px;
+}
+
+.dash-table.dash-spreadsheet tbody td {
+    color: #1e293b !important;
+    background-color: white !important;
+    border-color: #e2e8f0 !important;
+    padding: 12px;
+    text-align: center;
+}
+
+.dash-table.dash-spreadsheet tbody tr:nth-child(odd) td {
+    background-color: #f8fafc !important;
+}
+
+.dash-table.dash-spreadsheet tbody tr:nth-child(even) td {
+    background-color: white !important;
+}
+
+.dash-table.dash-spreadsheet tbody tr:hover td {
+    background-color: #eff6ff !important;
+}
+
+/* DataTable de Dash - Modo Oscuro */
+body.dark-mode .dash-table.dash-spreadsheet {
+    background-color: #1e293b;
+}
+
+body.dark-mode .dash-table.dash-spreadsheet thead {
+    background-color: #3b82f6;
+}
+
+body.dark-mode .dash-table.dash-spreadsheet thead th {
+    background-color: #3b82f6 !important;
+    color: #f1f5f9 !important;
+    border-color: #1e40af !important;
+    font-weight: bold;
+}
+
+body.dark-mode .dash-table.dash-spreadsheet tbody td {
+    color: #e2e8f0 !important;
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+body.dark-mode .dash-table.dash-spreadsheet tbody tr:nth-child(odd) td {
+    background-color: #0f172a !important;
+}
+
+body.dark-mode .dash-table.dash-spreadsheet tbody tr:nth-child(even) td {
+    background-color: #1e293b !important;
+}
+
+body.dark-mode .dash-table.dash-spreadsheet tbody tr:hover td {
+    background-color: #2d3d5f !important;
+}
+
+/* Tablas contenedoras - Modo Claro */
+.dash-table-container {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dash-table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dash-table-container thead th {
+    background-color: #2563eb;
+    color: white;
+    padding: 12px;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #1e40af;
+}
+
+.dash-table-container tbody td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    color: #1e293b;
+}
+
+.dash-table-container tbody tr:nth-child(odd) {
+    background-color: #f8fafc;
+}
+
+.dash-table-container tbody tr:nth-child(even) {
+    background-color: white;
+}
+
+.dash-table-container tbody tr:hover {
+    background-color: #eff6ff;
+    cursor: pointer;
+}
+
+/* Tablas contenedoras - Modo Oscuro */
+body.dark-mode .dash-table-container {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+}
+
+body.dark-mode .dash-table-container table {
+    background-color: #1e293b;
+}
+
+body.dark-mode .dash-table-container thead th {
+    background-color: #3b82f6;
+    color: #f1f5f9;
+    border-color: #1e40af;
+}
+
+body.dark-mode .dash-table-container tbody td {
+    color: #e2e8f0;
+    border-color: #334155;
+}
+
+body.dark-mode .dash-table-container tbody tr:nth-child(odd) {
+    background-color: #0f172a;
+}
+
+body.dark-mode .dash-table-container tbody tr:nth-child(even) {
+    background-color: #1e293b;
+}
+
+body.dark-mode .dash-table-container tbody tr:hover {
+    background-color: #2d3d5f;
+    cursor: pointer;
+}
+
+/* Tarjetas de estadísticas en modo claro (por defecto) */
+div[style*="backgroundColor: #f0f9ff"] {
+    background-color: #f0f9ff !important;
+    border-color: #bae6fd !important;
+}
+
+div[style*="backgroundColor: #f0f9ff"] h4,
+div[style*="backgroundColor: #f0f9ff"] h3 {
+    color: #0369a1 !important;
+}
+
+div[style*="backgroundColor: #f0f9ff"] p {
+    color: #0c4a6e !important;
+}
+
+/* Tarjetas de estadísticas en modo oscuro */
+body.dark-mode div[style*="backgroundColor: #f0f9ff"] {
+    background-color: #1e293b !important;
+    border-color: #3b82f6 !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #f0f9ff"] h4,
+body.dark-mode div[style*="backgroundColor: #f0f9ff"] h3 {
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #f0f9ff"] p {
+    color: #e2e8f0 !important;
+}
+
+/* ===================================
+   MODO DALTÓNICO - PALETA ACCESIBLE
+   =================================== */
 body.colorblind-mode {
-    --cb-primary: #0077bb;      /* Azul seguro */
-    --cb-secondary: #ee7733;    /* Naranja */
-    --cb-success: #009988;      /* Verde azulado */
-    --cb-warning: #cc3311;      /* Rojo seguro */
-    --cb-info: #33bbee;         /* Cyan */
+    --cb-primary: #0077bb;
+    /* Azul seguro */
+    --cb-secondary: #ee7733;
+    /* Naranja */
+    --cb-success: #009988;
+    /* Verde azulado */
+    --cb-warning: #cc3311;
+    /* Rojo seguro */
+    --cb-info: #33bbee;
+    /* Cyan */
     --cb-dark: #1e293b;
     --cb-light: #f0f0f0;
 }
@@ -1124,13 +1440,11 @@ body.colorblind-mode .metric-card.mental::before {
     left: 0;
     right: 0;
     height: 8px;
-    background: repeating-linear-gradient(
-        45deg,
-        var(--cb-primary),
-        var(--cb-primary) 10px,
-        #ffffff 10px,
-        #ffffff 20px
-    );
+    background: repeating-linear-gradient(45deg,
+            var(--cb-primary),
+            var(--cb-primary) 10px,
+            #ffffff 10px,
+            #ffffff 20px);
 }
 
 body.colorblind-mode .metric-card.stress {
@@ -1147,13 +1461,11 @@ body.colorblind-mode .metric-card.stress::before {
     left: 0;
     right: 0;
     height: 8px;
-    background: repeating-linear-gradient(
-        90deg,
-        var(--cb-secondary),
-        var(--cb-secondary) 5px,
-        #ffffff 5px,
-        #ffffff 10px
-    );
+    background: repeating-linear-gradient(90deg,
+            var(--cb-secondary),
+            var(--cb-secondary) 5px,
+            #ffffff 5px,
+            #ffffff 10px);
 }
 
 body.colorblind-mode .metric-card.sleep {
@@ -1170,13 +1482,11 @@ body.colorblind-mode .metric-card.sleep::before {
     left: 0;
     right: 0;
     height: 8px;
-    background: repeating-linear-gradient(
-        -45deg,
-        var(--cb-success),
-        var(--cb-success) 10px,
-        #ffffff 10px,
-        #ffffff 20px
-    );
+    background: repeating-linear-gradient(-45deg,
+            var(--cb-success),
+            var(--cb-success) 10px,
+            #ffffff 10px,
+            #ffffff 20px);
 }
 
 body.colorblind-mode .metric-card.mental .metric-value {
@@ -1197,13 +1507,12 @@ body.colorblind-mode .header {
 }
 
 body.colorblind-mode .header::after {
-    background: linear-gradient(90deg, 
-        transparent,
-        var(--cb-primary) 20%,
-        var(--cb-info) 50%,
-        var(--cb-primary) 80%,
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            var(--cb-primary) 20%,
+            var(--cb-info) 50%,
+            var(--cb-primary) 80%,
+            transparent);
 }
 
 body.colorblind-mode .header-title {
@@ -1563,7 +1872,8 @@ body {
     font-size: var(--font-size-chart) !important;
 }
 
-body p, body span:not(.metric-value):not(.chart-title):not(.header-title) {
+body p,
+body span:not(.metric-value):not(.chart-title):not(.header-title) {
     font-size: var(--font-size-body) !important;
 }
 
@@ -1828,13 +2138,12 @@ body.high-contrast-mode .header {
 }
 
 body.high-contrast-mode .header::after {
-    background: linear-gradient(90deg, 
-        transparent,
-        #ffffff 20%,
-        #ffffff 50%,
-        #ffffff 80%,
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            #ffffff 20%,
+            #ffffff 50%,
+            #ffffff 80%,
+            transparent);
     box-shadow: 0 0 40px rgba(255, 255, 255, 1);
 }
 
@@ -1949,13 +2258,17 @@ body.dark-mode .preview-box {
 
 #accessibility-toggle {
     animation: float 3s ease-in-out infinite;
-    animation-delay: 0.5s; /* Desfase para que no floten al mismo tiempo */
+    animation-delay: 0.5s;
+    /* Desfase para que no floten al mismo tiempo */
 }
 
 @keyframes float {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateY(0);
     }
+
     50% {
         transform: translateY(-10px);
     }
@@ -1983,9 +2296,11 @@ body,
     0% {
         box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4);
     }
+
     70% {
         box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
     }
+
     100% {
         box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
     }
@@ -2092,4 +2407,115 @@ body,
     line-height: 1.7;
     margin: 0;
     font-weight: 400;
+}
+
+/* ===================================
+   TARJETAS KPI EN AMBOS TEMAS
+   =================================== */
+
+/* Tarjetas KPI en modo claro (por defecto) */
+div[style*="backgroundColor: #eff6ff"],
+div[style*="backgroundColor: #f0fdf4"],
+div[style*="backgroundColor: #fef2f2"],
+div[style*="backgroundColor: #f3e8ff"] {
+    background-color: inherit !important;
+    border: 2px solid !important;
+    border-radius: 12px !important;
+}
+
+div[style*="backgroundColor: #eff6ff"] {
+    background-color: #eff6ff !important;
+    border-color: #bfdbfe !important;
+}
+
+div[style*="backgroundColor: #eff6ff"] h3 {
+    color: #1e40af !important;
+}
+
+div[style*="backgroundColor: #f0fdf4"] {
+    background-color: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+}
+
+div[style*="backgroundColor: #f0fdf4"] h3 {
+    color: #166534 !important;
+}
+
+div[style*="backgroundColor: #fef2f2"] {
+    background-color: #fef2f2 !important;
+    border-color: #fecaca !important;
+}
+
+div[style*="backgroundColor: #fef2f2"] h3 {
+    color: #991b1b !important;
+}
+
+div[style*="backgroundColor: #f3e8ff"] {
+    background-color: #f3e8ff !important;
+    border-color: #e9d5ff !important;
+}
+
+div[style*="backgroundColor: #f3e8ff"] h3 {
+    color: #6b21a8 !important;
+}
+
+/* Tarjetas KPI en modo oscuro - MUY IMPORTANTE: especificidad alta */
+body.dark-mode div[style*="backgroundColor: #eff6ff"] {
+    background-color: #1e293b !important;
+    border-color: #3b82f6 !important;
+    background: #1e293b !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #eff6ff"] h3,
+body.dark-mode div[style*="backgroundColor: #eff6ff"] h2 {
+    color: #93c5fd !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #eff6ff"] p {
+    color: #e2e8f0 !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #f0fdf4"] {
+    background-color: #1e293b !important;
+    border-color: #22c55e !important;
+    background: #1e293b !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #f0fdf4"] h3,
+body.dark-mode div[style*="backgroundColor: #f0fdf4"] h2 {
+    color: #86efac !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #f0fdf4"] p {
+    color: #e2e8f0 !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #fef2f2"] {
+    background-color: #1e293b !important;
+    border-color: #ef4444 !important;
+    background: #1e293b !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #fef2f2"] h3,
+body.dark-mode div[style*="backgroundColor: #fef2f2"] h2 {
+    color: #fca5a5 !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #fef2f2"] p {
+    color: #e2e8f0 !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #f3e8ff"] {
+    background-color: #1e293b !important;
+    border-color: #a855f7 !important;
+    background: #1e293b !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #f3e8ff"] h3,
+body.dark-mode div[style*="backgroundColor: #f3e8ff"] h2 {
+    color: #d8b4fe !important;
+}
+
+body.dark-mode div[style*="backgroundColor: #f3e8ff"] p {
+    color: #e2e8f0 !important;
 }
