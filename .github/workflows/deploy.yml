@@ -8,10 +8,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
     steps:
     - uses: actions/checkout@v4
-    
     - name: Deploy to OCI
       uses: appleboy/ssh-action@v0.1.7
       with:
@@ -19,4 +17,4 @@ jobs:
         username: ${{ secrets.OCI_USERNAME }}
         key: ${{ secrets.OCI_SSH_KEY }}
         script: |
-          ${{ secrets.DEPLOY_SCRIPT }}
+          sh /home/deployer/deploy.sh
