@@ -1,0 +1,32 @@
+services:
+  flask-app:
+    build: .
+    container_name: malackathon-flask-app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - FLASK_ENV=production
+    networks:
+      - proxy-network
+
+  nginx-proxy-manager:
+    image: "jc21/nginx-proxy-manager:latest"
+    restart: unless-stopped
+    container_name: malackathon-proxy-manager
+    ports:
+      - "80:80"
+      - "443:443"
+      - "81:81"
+    environment:
+      DB_SQLITE_FILE: "/data/database.sqlite"
+      DISABLE_IPV6: "true"
+    volumes:
+      - ../npm/data:/data
+      - ../npm/letsencrypt:/etc/letsencrypt
+    networks:
+      - proxy-network
+
+networks:
+  proxy-network:
+    driver: bridge
