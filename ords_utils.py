@@ -8,38 +8,75 @@ from requests.auth import HTTPBasicAuth
 from config import Config
 
 
-def fetch_ords_data(endpoint: str) -> pd.DataFrame:
+def fetch_ords_data(endpoint: str, limit: int = 1000) -> pd.DataFrame:
     """
-    Función genérica para obtener datos desde Oracle ORDS.
+    Función genérica para obtener datos desde Oracle ORDS con soporte para paginación.
 
     Args:
         endpoint: El endpoint de la API (ej: "peso_vs_estancia")
+        limit: Número de registros por petición (default: 1000, máximo recomendado por ORDS)
 
     Returns:
-        DataFrame con los datos obtenidos, o DataFrame vacío si hay error
+        DataFrame con todos los datos obtenidos, o DataFrame vacío si hay error
     """
-    url = f"{Config.ORDS_BASE_URL}/{endpoint}/"
+    base_url = f"{Config.ORDS_BASE_URL}/{endpoint}/"
+    all_items = []
+    offset = 0
+    has_more = True
 
     try:
-        response = requests.get(
-            url,
-            auth=HTTPBasicAuth(Config.ORDS_USERNAME, Config.ORDS_PASSWORD),
-            headers={"Content-Type": "application/json"},
-        )
+        print(f"Obteniendo datos de {endpoint}...")
 
-        if response.status_code == 200:
-            data = response.json()
+        while has_more:
+            # Construir URL con parámetros de paginación
+            url = f"{base_url}?limit={limit}&offset={offset}"
 
-            # Verificar si hay items en la respuesta
-            if "items" in data:
-                df = pd.DataFrame(data["items"])
-                return df
+            response = requests.get(
+                url,
+                auth=HTTPBasicAuth(Config.ORDS_USERNAME, Config.ORDS_PASSWORD),
+                headers={"Content-Type": "application/json"},
+            )
+
+            if response.status_code == 200:
+                data = response.json()
+
+                # Verificar si hay items en la respuesta
+                if "items" in data and len(data["items"]) > 0:
+                    all_items.extend(data["items"])
+                    print(
+                        f"  → Obtenidos {len(data['items'])} registros (Total acumulado: {len(all_items)})"
+                    )
+
+                    # Verificar si hay más datos
+                    has_more = data.get("hasMore", False)
+
+                    if has_more:
+                        offset += limit
+                    else:
+                        print(
+                            f"✓ Completado: Total de {len(all_items)} registros obtenidos de {endpoint}"
+                        )
+                else:
+                    # No hay más items
+                    has_more = False
+                    if len(all_items) == 0:
+                        print(
+                            f"No se encontraron 'items' en la respuesta de {endpoint}"
+                        )
+                    else:
+                        print(
+                            f"✓ Completado: Total de {len(all_items)} registros obtenidos de {endpoint}"
+                        )
             else:
-                print(f"No se encontraron 'items' en la respuesta de {endpoint}")
-                return pd.DataFrame()
+                print(f"Error al obtener datos de {endpoint}: {response.status_code}")
+                print(f"Respuesta: {response.text}")
+                has_more = False
+
+        # Convertir todos los items a DataFrame
+        if all_items:
+            df = pd.DataFrame(all_items)
+            return df
         else:
-            print(f"Error al obtener datos de {endpoint}: {response.status_code}")
-            print(f"Respuesta: {response.text}")
             return pd.DataFrame()
 
     except Exception as e:
