@@ -6,8 +6,30 @@ import pandas as pd
 # Inicializar la app con hojas de estilo y scripts personalizados
 app = Dash(__name__, assets_folder='assets')
 
-# Configurar el título de la página
+# Configurar el título de la página y meta tags para responsividad
 app.title = "Dashboard de Bienestar Mental"
+app.index_string = '''
+<!DOCTYPE html>
+<html>
+    <head>
+        {%metas%}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+        <meta name="description" content="Dashboard interactivo de seguimiento de bienestar mental y salud emocional">
+        <meta name="theme-color" content="#1e293b">
+        <title>{%title%}</title>
+        {%favicon%}
+        {%css%}
+    </head>
+    <body>
+        {%app_entry%}
+        <footer>
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+        </footer>
+    </body>
+</html>
+'''
 
 # Datos de ejemplo - Niveles de Bienestar Mental (escala 1-10)
 df_bienestar = pd.DataFrame({
@@ -35,10 +57,10 @@ app.layout = html.Div([
     # Header
     html.Header([
         html.H1("Dashboard de Bienestar Mental", className="header-title"),
-        html.P("Monitoreo y seguimiento de tu salud emocional", className="subtitle"),
-        html.P("✨ Interactúa con las tarjetas y gráficos para descubrir más", 
+        html.P("Tu espacio personal para el seguimiento y mejora de tu salud emocional", className="subtitle"),
+        html.P("Datos visuales · Tendencias · Recomendaciones personalizadas", 
                className="subtitle", 
-               style={'fontSize': '0.95rem', 'marginTop': '10px', 'opacity': '0.8'})
+               style={'fontSize': '0.9rem', 'marginTop': '15px', 'opacity': '0.85', 'fontStyle': 'italic'})
     ], className="header"),
     
     # Tarjetas de métricas

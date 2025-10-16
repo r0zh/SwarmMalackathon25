@@ -172,15 +172,15 @@ function initializeThemeToggle() {
         justify-content: center;
     `;
     
-    // Crear botón de accesibilidad (abre el panel)
+    // Crear botón de accesibilidad (abre el panel) - LADO IZQUIERDO
     const colorblindButton = document.createElement('button');
     colorblindButton.id = 'accessibility-toggle';
     colorblindButton.innerHTML = '🎨';
     colorblindButton.title = 'Configuración de accesibilidad';
     colorblindButton.style.cssText = `
         position: fixed;
-        bottom: 100px;
-        right: 30px;
+        bottom: 30px;
+        left: 30px;
         width: 60px;
         height: 60px;
         border-radius: 50%;
@@ -280,6 +280,29 @@ function initializeThemeToggle() {
                 </div>
             </div>
         </div>
+        
+        <div class="panel-section">
+            <label>Tamaño de Letra</label>
+            <div class="font-size-selector">
+                <div class="size-option" data-size="small">
+                    <span class="size-icon" style="font-size: 14px;">A</span>
+                    <span class="size-label">Pequeño</span>
+                </div>
+                <div class="size-option active" data-size="normal">
+                    <span class="size-icon" style="font-size: 18px;">A</span>
+                    <span class="size-label">Normal</span>
+                </div>
+                <div class="size-option" data-size="large">
+                    <span class="size-icon" style="font-size: 22px;">A</span>
+                    <span class="size-label">Grande</span>
+                </div>
+                <div class="size-option" data-size="xlarge">
+                    <span class="size-icon" style="font-size: 26px;">A</span>
+                    <span class="size-label">Muy Grande</span>
+                </div>
+            </div>
+            <p class="info-text">Ajusta el tamaño del texto para mejorar la legibilidad</p>
+        </div>
     `;
     
     toggleButton.addEventListener('mouseenter', function() {
@@ -339,12 +362,14 @@ function setupAccessibilityPanel() {
     const intensityDisplay = document.getElementById('intensity-display');
     const contrastSlider = document.getElementById('contrast-slider');
     const contrastDisplay = document.getElementById('contrast-display');
+    const sizeOptions = document.querySelectorAll('.size-option');
     
     let isColorblindMode = false;
     let isHighContrastMode = false;
     let currentType = 'protanopia';
     let currentIntensity = 70;
     let currentContrast = 80;
+    let currentFontSize = 'normal';
     
     // Toggle del modo daltónico
     colorblindToggle.addEventListener('click', function() {
@@ -405,6 +430,16 @@ function setupAccessibilityPanel() {
         if (isHighContrastMode) {
             applyHighContrastMode(currentContrast);
         }
+    });
+    
+    // Selección de tamaño de letra
+    sizeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            sizeOptions.forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            currentFontSize = this.dataset.size;
+            applyFontSize(currentFontSize);
+        });
     });
 }
 
@@ -537,21 +572,84 @@ function removeHighContrastMode() {
     console.log('✓ Modo alto contraste desactivado');
 }
 
+// Aplicar tamaño de letra
+function applyFontSize(size) {
+    // Remover clases previas
+    document.body.classList.remove('font-small', 'font-normal', 'font-large', 'font-xlarge');
+    
+    // Añadir nueva clase
+    document.body.classList.add(`font-${size}`);
+    
+    // Mapeo de tamaños
+    const fontSizeMap = {
+        small: {
+            base: '14px',
+            header: '2.2rem',
+            metric: '2rem',
+            chart: '1rem',
+            body: '0.85rem'
+        },
+        normal: {
+            base: '16px',
+            header: '3rem',
+            metric: '2.5rem',
+            chart: '1.25rem',
+            body: '1rem'
+        },
+        large: {
+            base: '18px',
+            header: '3.5rem',
+            metric: '3rem',
+            chart: '1.4rem',
+            body: '1.1rem'
+        },
+        xlarge: {
+            base: '20px',
+            header: '4rem',
+            metric: '3.5rem',
+            chart: '1.6rem',
+            body: '1.25rem'
+        }
+    };
+    
+    const sizes = fontSizeMap[size];
+    const root = document.documentElement;
+    
+    root.style.setProperty('--font-size-base', sizes.base);
+    root.style.setProperty('--font-size-header', sizes.header);
+    root.style.setProperty('--font-size-metric', sizes.metric);
+    root.style.setProperty('--font-size-chart', sizes.chart);
+    root.style.setProperty('--font-size-body', sizes.body);
+    
+    console.log(`✓ Tamaño de letra ajustado: ${size}`);
+}
+
 // Efectos de scroll
 function addScrollEffects() {
     let lastScroll = 0;
     const header = document.querySelector('.header');
+    const isMobile = window.innerWidth <= 768;
     
     window.addEventListener('scroll', () => {
         const currentScroll = window.pageYOffset;
         
-        // Efecto parallax en el header
+        // Efecto parallax en el header (reducido en móvil)
         if (header) {
-            header.style.transform = `translateY(${currentScroll * 0.5}px)`;
-            header.style.opacity = 1 - (currentScroll / 500);
+            const parallaxSpeed = isMobile ? 0.3 : 0.5;
+            const maxScroll = isMobile ? 300 : 500;
+            header.style.transform = `translateY(${Math.min(currentScroll, maxScroll) * parallaxSpeed}px)`;
+            header.style.opacity = Math.max(0.3, 1 - (currentScroll / maxScroll));
         }
         
         lastScroll = currentScroll;
+    });
+    
+    // Reajustar en cambio de tamaño de ventana
+    window.addEventListener('resize', () => {
+        const newIsMobile = window.innerWidth <= 768;
+        if (newIsMobile !== isMobile) {
+            location.reload(); // Recargar si cambia entre móvil y escritorio
+        }
     });
 }
 
