@@ -1,3 +1,411 @@
+/* ===================================
+   ESTILOS DE ACCESIBILIDAD
+   Navegación por teclado y lectores de pantalla
+   =================================== */
+
+/* Skip link para navegación por teclado */
+.skip-link:focus {
+    position: fixed !important;
+    top: 10px;
+    left: 10px;
+    z-index: 9999;
+    padding: 1em 1.5em;
+    background-color: #2563eb;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+    outline: 3px solid #60a5fa;
+    outline-offset: 2px;
+}
+
+/* Indicadores de foco mejorados para navegación por teclado */
+*:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Foco en tarjetas de métricas */
+.metric-card:focus-visible {
+    outline: 4px solid #2563eb;
+    outline-offset: 4px;
+    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.2), 
+                0 8px 24px rgba(37, 99, 235, 0.3);
+    transform: translateY(-4px) scale(1.02);
+    transition: all 0.2s ease;
+}
+
+/* Foco en gráficos */
+.js-plotly-plot:focus-visible,
+.chart-card:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.15);
+}
+
+/* Foco en dropdown */
+.Select:focus-within,
+.dropdown-select:focus-within {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+}
+
+/* Foco en botones */
+button:focus-visible,
+.accessibility-button:focus-visible,
+.theme-button:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.25);
+    transform: scale(1.05);
+}
+
+/* Foco en tarjetas de consejos */
+.tip-card:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+/* Asegurar que los elementos focusables tengan cursor pointer */
+[tabindex="0"],
+[tabindex]:not([tabindex="-1"]) {
+    cursor: pointer;
+}
+
+/* Mejorar contraste para personas con baja visión */
+@media (prefers-contrast: high) {
+    body {
+        background: #ffffff;
+        color: #000000;
+    }
+    
+    .header {
+        background: #000000;
+        color: #ffffff;
+    }
+    
+    .metric-card {
+        border: 3px solid #000000;
+        background: #ffffff;
+    }
+    
+    *:focus-visible {
+        outline: 4px solid #000000;
+        outline-offset: 4px;
+    }
+}
+
+/* Soporte para modo de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .metric-card:hover,
+    .metric-card:focus-visible {
+        transform: none;
+    }
+}
+
+/* Texto alternativo visible para imágenes */
+[aria-label] {
+    position: relative;
+}
+
+/* Ocultar contenido solo visualmente (disponible para lectores de pantalla) */
+.sr-only,
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Mostrar cuando recibe foco */
+.sr-only:focus,
+.visually-hidden:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* Mejorar legibilidad de texto */
+body {
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.3;
+}
+
+/* Asegurar que los enlaces sean identificables */
+a {
+    text-decoration-skip-ink: auto;
+}
+
+a:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+    text-decoration: underline;
+}
+
+/* Mejorar contraste de botones */
+button, .btn {
+    font-weight: 600;
+    min-height: 44px; /* Tamaño táctil accesible */
+    min-width: 44px;
+}
+
+/* Indicador de estado cargando accesible */
+[aria-busy="true"] {
+    position: relative;
+}
+
+[aria-busy="true"]::after {
+    content: "Cargando...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+/* Asegurar que los iconos de emoji sean accesibles */
+.metric-icon[role="img"] {
+    display: inline-block;
+}
+
+
+
+/* ========== ESTILOS ORIGINALES ========== */
+
+/* ===================================
+   ESTILOS DE ACCESIBILIDAD
+   Navegación por teclado y lectores de pantalla
+   =================================== */
+
+/* Skip link para navegación por teclado */
+.skip-link:focus {
+    position: fixed !important;
+    top: 10px;
+    left: 10px;
+    z-index: 9999;
+    padding: 1em 1.5em;
+    background-color: #2563eb;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+    outline: 3px solid #60a5fa;
+    outline-offset: 2px;
+}
+
+/* Indicadores de foco mejorados para navegación por teclado */
+*:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Foco en tarjetas de métricas */
+.metric-card:focus-visible {
+    outline: 4px solid #2563eb;
+    outline-offset: 4px;
+    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.2), 
+                0 8px 24px rgba(37, 99, 235, 0.3);
+    transform: translateY(-4px) scale(1.02);
+    transition: all 0.2s ease;
+}
+
+/* Foco en gráficos */
+.js-plotly-plot:focus-visible,
+.chart-card:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.15);
+}
+
+/* Foco en dropdown */
+.Select:focus-within,
+.dropdown-select:focus-within {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+}
+
+/* Foco en botones */
+button:focus-visible,
+.accessibility-button:focus-visible,
+.theme-button:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.25);
+    transform: scale(1.05);
+}
+
+/* Foco en tarjetas de consejos */
+.tip-card:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+/* Asegurar que los elementos focusables tengan cursor pointer */
+[tabindex="0"],
+[tabindex]:not([tabindex="-1"]) {
+    cursor: pointer;
+}
+
+/* Mejorar contraste para personas con baja visión */
+@media (prefers-contrast: high) {
+    body {
+        background: #ffffff;
+        color: #000000;
+    }
+    
+    .header {
+        background: #000000;
+        color: #ffffff;
+    }
+    
+    .metric-card {
+        border: 3px solid #000000;
+        background: #ffffff;
+    }
+    
+    *:focus-visible {
+        outline: 4px solid #000000;
+        outline-offset: 4px;
+    }
+}
+
+/* Soporte para modo de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .metric-card:hover,
+    .metric-card:focus-visible {
+        transform: none;
+    }
+}
+
+/* Texto alternativo visible para imágenes */
+[aria-label] {
+    position: relative;
+}
+
+/* Ocultar contenido solo visualmente (disponible para lectores de pantalla) */
+.sr-only,
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Mostrar cuando recibe foco */
+.sr-only:focus,
+.visually-hidden:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* Mejorar legibilidad de texto */
+body {
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.3;
+}
+
+/* Asegurar que los enlaces sean identificables */
+a {
+    text-decoration-skip-ink: auto;
+}
+
+a:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+    text-decoration: underline;
+}
+
+/* Mejorar contraste de botones */
+button, .btn {
+    font-weight: 600;
+    min-height: 44px; /* Tamaño táctil accesible */
+    min-width: 44px;
+}
+
+/* Indicador de estado cargando accesible */
+[aria-busy="true"] {
+    position: relative;
+}
+
+[aria-busy="true"]::after {
+    content: "Cargando...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+/* Asegurar que los iconos de emoji sean accesibles */
+.metric-icon[role="img"] {
+    display: inline-block;
+}
+
+
+
 * {
     margin: 0;
     padding: 0;
