@@ -139,3 +139,37 @@ def fetch_diagnostico_sexo_data() -> pd.DataFrame:
         df = df.dropna(subset=["diagnostico_principal", "sexo"])
 
     return df
+
+
+def fetch_severidad_mortalidad_data() -> pd.DataFrame:
+    """
+    Obtiene datos de severidad APR vs mortalidad APR desde Oracle ORDS.
+
+    Returns:
+        DataFrame con columnas: nivel_severidad_apr, riesgo_mortalidad_apr,
+                                severidad_label, mortalidad_label
+    """
+    df = fetch_ords_data("severidad_apr vs mortadilad_apr")
+
+    if not df.empty:
+        # Convertir a numérico
+        df["nivel_severidad_apr"] = pd.to_numeric(
+            df["nivel_severidad_apr"], errors="coerce"
+        )
+        df["riesgo_mortalidad_apr"] = pd.to_numeric(
+            df["riesgo_mortalidad_apr"], errors="coerce"
+        )
+
+        # Mapear niveles a etiquetas descriptivas
+        # Severidad: 1=Leve, 2=Moderado, 3=Grave, 4=Extremo
+        severidad_map = {1: "Leve", 2: "Moderado", 3: "Grave", 4: "Extremo"}
+        df["severidad_label"] = df["nivel_severidad_apr"].map(severidad_map)
+
+        # Mortalidad: 1=Bajo, 2=Moderado, 3=Alto, 4=Extremo
+        mortalidad_map = {1: "Bajo", 2: "Moderado", 3: "Alto", 4: "Extremo"}
+        df["mortalidad_label"] = df["riesgo_mortalidad_apr"].map(mortalidad_map)
+
+        # Eliminar filas con valores nulos
+        df = df.dropna(subset=["nivel_severidad_apr", "riesgo_mortalidad_apr"])
+
+    return df

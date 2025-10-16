@@ -6,6 +6,7 @@ from ords_utils import (
     fetch_peso_estancia_data,
     fetch_diagnosticos_data,
     fetch_diagnostico_sexo_data,
+    fetch_severidad_mortalidad_data,
 )
 
 # Inicializar la app con hojas de estilo y scripts personalizados
@@ -15,6 +16,7 @@ app = Dash(__name__, assets_folder="assets")
 df_peso_estancia = fetch_peso_estancia_data()
 df_diagnosticos = fetch_diagnosticos_data()
 df_diagnostico_sexo = fetch_diagnostico_sexo_data()
+df_severidad_mortalidad = fetch_severidad_mortalidad_data()
 
 # Configurar el título de la página y meta tags para responsividad
 app.title = "Dashboard de Análisis Hospitalario"
@@ -101,23 +103,151 @@ app.layout = html.Div(
             className="header",
             **{"role": "banner"},
         ),
-        # Main content empieza aquí
+        # Main content empieza aquí - Resumen Ejecutivo
         html.Div(
             id="main-content",
-            children=[],
+            children=[
+                # KPIs principales
+                html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.Div(
+                                    "📊",
+                                    className="metric-icon",
+                                    style={"fontSize": "2.5rem"},
+                                ),
+                                html.H3("Total de Casos"),
+                                html.H2(
+                                    f"{len(df_diagnosticos):,}"
+                                    if not df_diagnosticos.empty
+                                    else "N/A",
+                                    className="metric-value",
+                                    style={"color": "#2563eb"},
+                                ),
+                                html.P(
+                                    "Registros analizados",
+                                    style={"fontSize": "0.9rem", "opacity": "0.7"},
+                                ),
+                            ],
+                            className="metric-card",
+                            style={
+                                "backgroundColor": "#eff6ff",
+                                "border": "2px solid #bfdbfe",
+                                "borderRadius": "12px",
+                                "padding": "20px",
+                                "textAlign": "center",
+                            },
+                        ),
+                        html.Div(
+                            [
+                                html.Div(
+                                    "⚕️",
+                                    className="metric-icon",
+                                    style={"fontSize": "2.5rem"},
+                                ),
+                                html.H3("Estancia Media"),
+                                html.H2(
+                                    f"{df_peso_estancia['estancia_dias'].mean():.1f}"
+                                    if not df_peso_estancia.empty
+                                    else "N/A",
+                                    className="metric-value",
+                                    style={"color": "#16a34a"},
+                                ),
+                                html.P(
+                                    "Días promedio",
+                                    style={"fontSize": "0.9rem", "opacity": "0.7"},
+                                ),
+                            ],
+                            className="metric-card",
+                            style={
+                                "backgroundColor": "#f0fdf4",
+                                "border": "2px solid #bbf7d0",
+                                "borderRadius": "12px",
+                                "padding": "20px",
+                                "textAlign": "center",
+                            },
+                        ),
+                        html.Div(
+                            [
+                                html.Div(
+                                    "🔴",
+                                    className="metric-icon",
+                                    style={"fontSize": "2.5rem"},
+                                ),
+                                html.H3("Casos Graves"),
+                                html.H2(
+                                    f"{((df_severidad_mortalidad['nivel_severidad_apr'] >= 3).sum() if not df_severidad_mortalidad.empty else 0):,}"
+                                    if not df_severidad_mortalidad.empty
+                                    else "N/A",
+                                    className="metric-value",
+                                    style={"color": "#dc2626"},
+                                ),
+                                html.P(
+                                    "Severidad grave/extrema",
+                                    style={"fontSize": "0.9rem", "opacity": "0.7"},
+                                ),
+                            ],
+                            className="metric-card",
+                            style={
+                                "backgroundColor": "#fef2f2",
+                                "border": "2px solid #fecaca",
+                                "borderRadius": "12px",
+                                "padding": "20px",
+                                "textAlign": "center",
+                            },
+                        ),
+                        html.Div(
+                            [
+                                html.Div(
+                                    "🏥",
+                                    className="metric-icon",
+                                    style={"fontSize": "2.5rem"},
+                                ),
+                                html.H3("Diagnósticos"),
+                                html.H2(
+                                    f"{df_diagnosticos['diagnostico_principal'].nunique():,}"
+                                    if not df_diagnosticos.empty
+                                    else "N/A",
+                                    className="metric-value",
+                                    style={"color": "#7c3aed"},
+                                ),
+                                html.P(
+                                    "Condiciones únicas",
+                                    style={"fontSize": "0.9rem", "opacity": "0.7"},
+                                ),
+                            ],
+                            className="metric-card",
+                            style={
+                                "backgroundColor": "#faf5ff",
+                                "border": "2px solid #e9d5ff",
+                                "borderRadius": "12px",
+                                "padding": "20px",
+                                "textAlign": "center",
+                            },
+                        ),
+                    ],
+                    style={
+                        "display": "grid",
+                        "gridTemplateColumns": "repeat(auto-fit, minmax(250px, 1fr))",
+                        "gap": "20px",
+                        "marginBottom": "40px",
+                    },
+                )
+            ],
             className="metrics-grid",
             role="region",
             **{"aria-label": "Contenido principal"},
         ),
-        # Sección de Análisis de Diagnósticos
+        # Sección 1: Análisis de Diagnósticos y Demografía
         html.Div(
             [
                 html.H3(
-                    "🏥 Análisis de Diagnósticos y Demografía",
+                    "1️⃣ Análisis de Diagnósticos y Demografía",
                     className="chart-title",
                 ),
                 html.P(
-                    "Distribución de diagnósticos principales por rango de edad y período",
+                    "Distribución de diagnósticos principales, tendencias temporales y análisis demográfico",
                     style={
                         "textAlign": "center",
                         "color": "#64748b",
@@ -407,15 +537,15 @@ app.layout = html.Div(
             ],
             className="chart-card full",
         ),
-        # Sección de Análisis de Diagnósticos por Sexo
+        # Sección 2: Análisis de Diagnósticos por Sexo
         html.Div(
             [
                 html.H3(
-                    "👥 Análisis de Diagnósticos por Sexo",
+                    "2️⃣ Análisis por Sexo: Perspectiva de Género",
                     className="chart-title",
                 ),
                 html.P(
-                    "Distribución de diagnósticos principales según el sexo del paciente",
+                    "Distribución de diagnósticos y patrones diferenciados por sexo del paciente",
                     style={
                         "textAlign": "center",
                         "color": "#64748b",
@@ -795,65 +925,440 @@ app.layout = html.Div(
             ],
             className="chart-card full",
         ),
-        # Sección de Datos Reales: Peso vs Estancia
+        # Sección 3: Análisis de Severidad vs Mortalidad APR
         html.Div(
             [
                 html.H3(
-                    "💡 Recomendaciones para tu Bienestar", className="chart-title"
+                    "3️⃣ Severidad y Riesgo de Mortalidad APR",
+                    className="chart-title",
                 ),
+                html.P(
+                    "Evaluación de la gravedad clínica y correlación con el riesgo de mortalidad",
+                    style={
+                        "textAlign": "center",
+                        "color": "#64748b",
+                        "marginBottom": "20px",
+                        "fontSize": "0.95rem",
+                    },
+                ),
+                # Gráficos en grid
+                html.Div(
+                    [
+                        # Gráfico 1: Distribución de Severidad
+                        html.Div(
+                            [
+                                html.H4(
+                                    "Distribución de Niveles de Severidad",
+                                    style={
+                                        "textAlign": "center",
+                                        "marginBottom": "15px",
+                                    },
+                                ),
+                                dcc.Graph(
+                                    id="grafico-severidad-dist",
+                                    config={"displayModeBar": False},
+                                    figure=px.pie(
+                                        df_severidad_mortalidad["severidad_label"]
+                                        .value_counts()
+                                        .reset_index()
+                                        if not df_severidad_mortalidad.empty
+                                        else pd.DataFrame(),
+                                        values="count",
+                                        names="severidad_label",
+                                        hole=0.4,
+                                        color="severidad_label",
+                                        color_discrete_map={
+                                            "Leve": "#22c55e",
+                                            "Moderado": "#eab308",
+                                            "Grave": "#f97316",
+                                            "Extremo": "#dc2626",
+                                        },
+                                        category_orders={
+                                            "severidad_label": [
+                                                "Leve",
+                                                "Moderado",
+                                                "Grave",
+                                                "Extremo",
+                                            ]
+                                        },
+                                    )
+                                    .update_layout(
+                                        paper_bgcolor="white",
+                                        font={
+                                            "family": "Segoe UI, sans-serif",
+                                            "color": "#1e293b",
+                                        },
+                                        margin=dict(l=20, r=20, t=20, b=20),
+                                        showlegend=True,
+                                        height=400,
+                                    )
+                                    .update_traces(
+                                        textposition="inside",
+                                        textinfo="percent+label",
+                                        textfont_size=13,
+                                    )
+                                    if not df_severidad_mortalidad.empty
+                                    else go.Figure()
+                                    .add_annotation(
+                                        text="No hay datos disponibles",
+                                        xref="paper",
+                                        yref="paper",
+                                        x=0.5,
+                                        y=0.5,
+                                        showarrow=False,
+                                        font=dict(size=20, color="#94a3b8"),
+                                    )
+                                    .update_layout(
+                                        plot_bgcolor="white",
+                                        paper_bgcolor="white",
+                                        height=400,
+                                        xaxis=dict(visible=False),
+                                        yaxis=dict(visible=False),
+                                    ),
+                                ),
+                            ],
+                            className="chart-card chart-small",
+                        ),
+                        # Gráfico 2: Distribución de Mortalidad
+                        html.Div(
+                            [
+                                html.H4(
+                                    "Distribución de Riesgo de Mortalidad",
+                                    style={
+                                        "textAlign": "center",
+                                        "marginBottom": "15px",
+                                    },
+                                ),
+                                dcc.Graph(
+                                    id="grafico-mortalidad-dist",
+                                    config={"displayModeBar": False},
+                                    figure=px.pie(
+                                        df_severidad_mortalidad["mortalidad_label"]
+                                        .value_counts()
+                                        .reset_index()
+                                        if not df_severidad_mortalidad.empty
+                                        else pd.DataFrame(),
+                                        values="count",
+                                        names="mortalidad_label",
+                                        hole=0.4,
+                                        color="mortalidad_label",
+                                        color_discrete_map={
+                                            "Bajo": "#22c55e",
+                                            "Moderado": "#eab308",
+                                            "Alto": "#f97316",
+                                            "Extremo": "#dc2626",
+                                        },
+                                        category_orders={
+                                            "mortalidad_label": [
+                                                "Bajo",
+                                                "Moderado",
+                                                "Alto",
+                                                "Extremo",
+                                            ]
+                                        },
+                                    )
+                                    .update_layout(
+                                        paper_bgcolor="white",
+                                        font={
+                                            "family": "Segoe UI, sans-serif",
+                                            "color": "#1e293b",
+                                        },
+                                        margin=dict(l=20, r=20, t=20, b=20),
+                                        showlegend=True,
+                                        height=400,
+                                    )
+                                    .update_traces(
+                                        textposition="inside",
+                                        textinfo="percent+label",
+                                        textfont_size=13,
+                                    )
+                                    if not df_severidad_mortalidad.empty
+                                    else go.Figure()
+                                    .add_annotation(
+                                        text="No hay datos disponibles",
+                                        xref="paper",
+                                        yref="paper",
+                                        x=0.5,
+                                        y=0.5,
+                                        showarrow=False,
+                                        font=dict(size=20, color="#94a3b8"),
+                                    )
+                                    .update_layout(
+                                        plot_bgcolor="white",
+                                        paper_bgcolor="white",
+                                        height=400,
+                                        xaxis=dict(visible=False),
+                                        yaxis=dict(visible=False),
+                                    ),
+                                ),
+                            ],
+                            className="chart-card chart-small",
+                        ),
+                    ],
+                    className="charts-grid",
+                ),
+                # Mapa de calor: Severidad vs Mortalidad
+                html.Div(
+                    [
+                        html.H4(
+                            "Mapa de Calor: Correlación Severidad vs Mortalidad",
+                            style={"textAlign": "center", "marginBottom": "15px"},
+                        ),
+                        dcc.Graph(
+                            id="grafico-severidad-mortalidad-heatmap",
+                            config={"displayModeBar": False},
+                            figure=px.density_heatmap(
+                                df_severidad_mortalidad
+                                if not df_severidad_mortalidad.empty
+                                else pd.DataFrame(),
+                                x="severidad_label",
+                                y="mortalidad_label",
+                                color_continuous_scale="RdYlGn_r",
+                                labels={
+                                    "severidad_label": "Nivel de Severidad APR",
+                                    "mortalidad_label": "Riesgo de Mortalidad APR",
+                                },
+                                category_orders={
+                                    "severidad_label": [
+                                        "Leve",
+                                        "Moderado",
+                                        "Grave",
+                                        "Extremo",
+                                    ],
+                                    "mortalidad_label": [
+                                        "Bajo",
+                                        "Moderado",
+                                        "Alto",
+                                        "Extremo",
+                                    ],
+                                },
+                            ).update_layout(
+                                plot_bgcolor="white",
+                                paper_bgcolor="white",
+                                font={
+                                    "family": "Segoe UI, sans-serif",
+                                    "color": "#1e293b",
+                                },
+                                margin=dict(l=100, r=30, t=30, b=100),
+                                height=500,
+                            )
+                            if not df_severidad_mortalidad.empty
+                            else go.Figure()
+                            .add_annotation(
+                                text="No hay datos disponibles",
+                                xref="paper",
+                                yref="paper",
+                                x=0.5,
+                                y=0.5,
+                                showarrow=False,
+                                font=dict(size=20, color="#94a3b8"),
+                            )
+                            .update_layout(
+                                plot_bgcolor="white",
+                                paper_bgcolor="white",
+                                height=500,
+                                xaxis=dict(visible=False),
+                                yaxis=dict(visible=False),
+                            ),
+                        ),
+                    ],
+                    style={"marginTop": "20px"},
+                ),
+                # Gráfico de barras agrupadas
+                html.Div(
+                    [
+                        html.H4(
+                            "Distribución Combinada: Severidad y Mortalidad",
+                            style={"textAlign": "center", "marginBottom": "15px"},
+                        ),
+                        dcc.Graph(
+                            id="grafico-severidad-mortalidad-bars",
+                            config={"displayModeBar": False},
+                            figure=px.histogram(
+                                df_severidad_mortalidad
+                                if not df_severidad_mortalidad.empty
+                                else pd.DataFrame(),
+                                x="severidad_label",
+                                color="mortalidad_label",
+                                barmode="group",
+                                labels={
+                                    "severidad_label": "Nivel de Severidad APR",
+                                    "mortalidad_label": "Riesgo de Mortalidad",
+                                    "count": "Número de Casos",
+                                },
+                                color_discrete_map={
+                                    "Bajo": "#22c55e",
+                                    "Moderado": "#eab308",
+                                    "Alto": "#f97316",
+                                    "Extremo": "#dc2626",
+                                },
+                                category_orders={
+                                    "severidad_label": [
+                                        "Leve",
+                                        "Moderado",
+                                        "Grave",
+                                        "Extremo",
+                                    ],
+                                    "mortalidad_label": [
+                                        "Bajo",
+                                        "Moderado",
+                                        "Alto",
+                                        "Extremo",
+                                    ],
+                                },
+                            ).update_layout(
+                                plot_bgcolor="white",
+                                paper_bgcolor="white",
+                                font={
+                                    "family": "Segoe UI, sans-serif",
+                                    "color": "#1e293b",
+                                },
+                                margin=dict(l=50, r=30, t=30, b=50),
+                                height=450,
+                            )
+                            if not df_severidad_mortalidad.empty
+                            else go.Figure()
+                            .add_annotation(
+                                text="No hay datos disponibles",
+                                xref="paper",
+                                yref="paper",
+                                x=0.5,
+                                y=0.5,
+                                showarrow=False,
+                                font=dict(size=20, color="#94a3b8"),
+                            )
+                            .update_layout(
+                                plot_bgcolor="white",
+                                paper_bgcolor="white",
+                                height=450,
+                                xaxis=dict(visible=False),
+                                yaxis=dict(visible=False),
+                            ),
+                        ),
+                    ],
+                    style={"marginTop": "20px"},
+                ),
+                # Tabla de contingencia
+                html.Div(
+                    [
+                        html.H4(
+                            "Tabla de Contingencia: Severidad vs Mortalidad",
+                            style={"textAlign": "center", "marginBottom": "15px"},
+                        ),
+                        dash_table.DataTable(
+                            id="tabla-severidad-mortalidad",
+                            columns=[
+                                {"name": "Severidad \\ Mortalidad", "id": "index"},
+                                {"name": "Bajo", "id": "Bajo"},
+                                {"name": "Moderado", "id": "Moderado"},
+                                {"name": "Alto", "id": "Alto"},
+                                {"name": "Extremo", "id": "Extremo"},
+                                {"name": "Total", "id": "Total"},
+                            ],
+                            data=pd.crosstab(
+                                df_severidad_mortalidad["severidad_label"],
+                                df_severidad_mortalidad["mortalidad_label"],
+                                margins=True,
+                                margins_name="Total",
+                            )
+                            .rename_axis("index")
+                            .reset_index()
+                            .fillna(0)
+                            .to_dict("records")
+                            if not df_severidad_mortalidad.empty
+                            else [],
+                            style_table={
+                                "overflowX": "auto",
+                            },
+                            style_cell={
+                                "textAlign": "center",
+                                "padding": "12px",
+                                "fontFamily": "Segoe UI, sans-serif",
+                                "fontSize": "14px",
+                                "border": "1px solid #e2e8f0",
+                            },
+                            style_header={
+                                "backgroundColor": "#dc2626",
+                                "color": "white",
+                                "fontWeight": "bold",
+                                "textAlign": "center",
+                                "border": "1px solid #b91c1c",
+                            },
+                            style_data={
+                                "backgroundColor": "white",
+                                "color": "#1e293b",
+                            },
+                            style_data_conditional=[
+                                {
+                                    "if": {"row_index": "odd"},
+                                    "backgroundColor": "#fef2f2",
+                                },
+                                {
+                                    "if": {"column_id": "Total"},
+                                    "backgroundColor": "#fee2e2",
+                                    "fontWeight": "bold",
+                                },
+                                {
+                                    "if": {
+                                        "filter_query": "{index} = 'Total'",
+                                    },
+                                    "backgroundColor": "#fee2e2",
+                                    "fontWeight": "bold",
+                                },
+                            ],
+                        ),
+                    ],
+                    style={"marginTop": "30px"},
+                ),
+                # Estadísticas resumen
                 html.Div(
                     [
                         html.Div(
                             [
-                                html.H4("🧘 Mindfulness"),
+                                html.H4(
+                                    "📊 Análisis Estadístico",
+                                    style={"marginBottom": "15px"},
+                                ),
                                 html.P(
-                                    "Practica 10 minutos de meditación al día para reducir el estrés"
+                                    f"Total de casos: {len(df_severidad_mortalidad)}"
+                                    if not df_severidad_mortalidad.empty
+                                    else "No hay datos disponibles"
+                                ),
+                                html.P(
+                                    f"Severidad más común: {df_severidad_mortalidad['severidad_label'].mode()[0] if not df_severidad_mortalidad.empty and not df_severidad_mortalidad['severidad_label'].mode().empty else 'N/A'}"
+                                ),
+                                html.P(
+                                    f"Riesgo de mortalidad más común: {df_severidad_mortalidad['mortalidad_label'].mode()[0] if not df_severidad_mortalidad.empty and not df_severidad_mortalidad['mortalidad_label'].mode().empty else 'N/A'}"
+                                ),
+                                html.P(
+                                    f"Casos de severidad extrema: {len(df_severidad_mortalidad[df_severidad_mortalidad['severidad_label'] == 'Extremo']) if not df_severidad_mortalidad.empty else 0}"
+                                ),
+                                html.P(
+                                    f"Casos de mortalidad extrema: {len(df_severidad_mortalidad[df_severidad_mortalidad['mortalidad_label'] == 'Extremo']) if not df_severidad_mortalidad.empty else 0}"
                                 ),
                             ],
-                            className="tip-card",
-                        ),
-                        html.Div(
-                            [
-                                html.H4("💪 Ejercicio"),
-                                html.P(
-                                    "La actividad física regular mejora el estado de ánimo"
-                                ),
-                            ],
-                            className="tip-card",
-                        ),
-                        html.Div(
-                            [
-                                html.H4("😴 Sueño"),
-                                html.P(
-                                    "Mantén un horario regular de sueño de 7-8 horas"
-                                ),
-                            ],
-                            className="tip-card",
-                        ),
-                        html.Div(
-                            [
-                                html.H4("👥 Conexión Social"),
-                                html.P(
-                                    "Mantén contacto regular con amigos y seres queridos"
-                                ),
-                            ],
-                            className="tip-card",
-                        ),
-                    ],
-                    className="tips-grid",
+                            style={
+                                "backgroundColor": "#fef2f2",
+                                "padding": "20px",
+                                "borderRadius": "8px",
+                                "marginTop": "20px",
+                                "border": "2px solid #fecaca",
+                            },
+                        )
+                    ]
                 ),
             ],
-            className="chart-card full tips-section",
+            className="chart-card full",
         ),
-        # Sección de Datos Reales: Peso vs Estancia
+        # Sección 4: Análisis de Peso APR-GRD y Estancia Hospitalaria
         html.Div(
             [
                 html.H3(
-                    "📊 Datos Reales: Peso APR-GRD vs Días de Estancia",
+                    "4️⃣ Peso APR-GRD y Estancia Hospitalaria",
                     className="chart-title",
                 ),
                 html.P(
-                    "Análisis de la relación entre el peso APR-GRD español y los días de estancia hospitalaria",
+                    "Correlación entre el peso APR-GRD español y los días de estancia hospitalaria",
                     style={
                         "textAlign": "center",
                         "color": "#64748b",
@@ -1002,6 +1507,64 @@ app.layout = html.Div(
                 ),
             ],
             className="chart-card full",
+        ),
+        # Sección 5: Insights y Conclusiones
+        html.Div(
+            [
+                html.H3(
+                    "5️⃣ Insights Clave y Conclusiones", className="chart-title"
+                ),
+                html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.H4("🎯 Diagnósticos"),
+                                html.P(
+                                    f"Los {df_diagnosticos['diagnostico_principal'].nunique() if not df_diagnosticos.empty else 0} diagnósticos únicos muestran una alta diversidad en condiciones de salud mental"
+                                    if not df_diagnosticos.empty
+                                    else "Datos no disponibles"
+                                ),
+                            ],
+                            className="tip-card",
+                        ),
+                        html.Div(
+                            [
+                                html.H4("⚕️ Severidad"),
+                                html.P(
+                                    f"El {((df_severidad_mortalidad['nivel_severidad_apr'] >= 3).sum() / len(df_severidad_mortalidad) * 100):.1f}% de casos presentan severidad grave o extrema"
+                                    if not df_severidad_mortalidad.empty
+                                    else "Datos no disponibles"
+                                ),
+                            ],
+                            className="tip-card",
+                        ),
+                        html.Div(
+                            [
+                                html.H4("� Demografía"),
+                                html.P(
+                                    f"Rango de edad predominante: {df_diagnosticos['rango_de_edad'].mode()[0] if not df_diagnosticos.empty and not df_diagnosticos['rango_de_edad'].mode().empty else 'N/A'} años"
+                                    if not df_diagnosticos.empty
+                                    else "Datos no disponibles"
+                                ),
+                            ],
+                            className="tip-card",
+                        ),
+                        html.Div(
+                            [
+                                html.H4("� Estancia"),
+                                html.P(
+                                    f"Estancia promedio: {df_peso_estancia['estancia_dias'].mean():.1f} días con correlación al peso APR-GRD"
+                                    if not df_peso_estancia.empty
+                                    else "Datos no disponibles"
+                                ),
+                            ],
+                            className="tip-card",
+                        ),
+                    ],
+                    className="tips-grid",
+                ),
+            ],
+            className="chart-card full tips-section",
         ),
         # Footer
         html.Footer(

@@ -60,6 +60,15 @@ La aplicación estará disponible en `http://localhost:8050`
 - El archivo `.env` está incluido en `.gitignore` y no se sube al repositorio
 - Usa `.env.example` como plantilla para configurar tu entorno local
 
+### Cifrado de Nombres de Pacientes
+
+Los nombres de pacientes están cifrados con **AES-256**. Se puede hacer decrypt con el nombre cifrado y la clave:
+
+**Clave de cifrado:**
+```
+QwV1^-LRj-[6_YzJ$/zDOKub"!YeJjA2
+```
+
 ## 📁 Estructura del Proyecto
 
 ```
