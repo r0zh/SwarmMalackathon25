@@ -38,27 +38,27 @@ function initializeThemeChanges() {
                     template: template,
                     paper_bgcolor: bgColor,
                     plot_bgcolor: plotBg,
-                    font: { 
+                    font: {
                         color: textColor,
                         family: 'Inter, system-ui, sans-serif'
                     },
                     title: {
                         font: { color: textColor, size: 16 }
                     },
-                    xaxis: { 
-                        gridcolor: gridColor, 
+                    xaxis: {
+                        gridcolor: gridColor,
                         linecolor: lineColor,
                         zerolinecolor: lineColor,
                         tickfont: { color: textColor }
                     },
-                    yaxis: { 
-                        gridcolor: gridColor, 
+                    yaxis: {
+                        gridcolor: gridColor,
                         linecolor: lineColor,
                         zerolinecolor: lineColor,
                         tickfont: { color: textColor }
                     },
-                    legend: { 
-                        bgcolor: legendBg, 
+                    legend: {
+                        bgcolor: legendBg,
                         bordercolor: legendBorder,
                         font: { color: textColor }
                     },
@@ -96,7 +96,7 @@ function initializeThemeChanges() {
                 card.style.opacity = '';
             }, 50);
         });
-        
+
         console.log('Tema actualizado en gráficos, tablas y tarjetas KPI');
     });
 }

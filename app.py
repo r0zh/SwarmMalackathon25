@@ -14,7 +14,7 @@ from ords_utils import (
 def apply_dark_theme(fig):
     """
     Aplica el tema oscuro consistente a todas las figuras de Plotly.
-    Nota: Este tema se aplica en la carga inicial. Los cambios posteriores 
+    Nota: Este tema se aplica en la carga inicial. Los cambios posteriores
     se manejan con CSS.
     """
     fig.update_layout(
@@ -30,7 +30,7 @@ def apply_dark_theme(fig):
 def apply_light_theme(fig):
     """
     Aplica el tema claro consistente a todas las figuras de Plotly.
-    Nota: Este tema se aplica en la carga inicial. Los cambios posteriores 
+    Nota: Este tema se aplica en la carga inicial. Los cambios posteriores
     se manejan con CSS.
     """
     fig.update_layout(
@@ -381,7 +381,8 @@ app.layout = html.Div(
                                             height=400,
                                         )
                                         .update_traces(
-                                            textposition="inside", textinfo="percent+label"
+                                            textposition="inside",
+                                            textinfo="percent+label",
                                         )
                                     )
                                     if not df_diagnosticos.empty
@@ -502,15 +503,15 @@ app.layout = html.Div(
                                     text="No hay datos disponibles",
                                     xref="paper",
                                     yref="paper",
-                                x=0.5,
-                                y=0.5,
-                                showarrow=False,
-                                font=dict(size=20, color="#94a3b8"),
-                            )
-                            .update_layout(
-                                height=600,
-                                xaxis=dict(visible=False),
-                                yaxis=dict(visible=False),
+                                    x=0.5,
+                                    y=0.5,
+                                    showarrow=False,
+                                    font=dict(size=20, color="#94a3b8"),
+                                )
+                                .update_layout(
+                                    height=600,
+                                    xaxis=dict(visible=False),
+                                    yaxis=dict(visible=False),
                                 )
                             ),
                         ),
@@ -588,51 +589,55 @@ app.layout = html.Div(
                                 dcc.Graph(
                                     id="grafico-sexo-general",
                                     config={"displayModeBar": False},
-                                    figure=apply_dark_theme(px.pie(
-                                        df_diagnostico_sexo["sexo_label"]
-                                        .value_counts()
-                                        .reset_index()
-                                        if not df_diagnostico_sexo.empty
-                                        else pd.DataFrame(),
-                                        values="count",
-                                        names="sexo_label",
-                                        hole=0.4,
-                                        color="sexo_label",
-                                        color_discrete_map={
-                                            "Masculino": "#3b82f6",
-                                            "Femenino": "#ec4899",
-                                        },
+                                    figure=apply_dark_theme(
+                                        px.pie(
+                                            df_diagnostico_sexo["sexo_label"]
+                                            .value_counts()
+                                            .reset_index()
+                                            if not df_diagnostico_sexo.empty
+                                            else pd.DataFrame(),
+                                            values="count",
+                                            names="sexo_label",
+                                            hole=0.4,
+                                            color="sexo_label",
+                                            color_discrete_map={
+                                                "Masculino": "#3b82f6",
+                                                "Femenino": "#ec4899",
+                                            },
+                                        )
+                                        .update_layout(
+                                            font={
+                                                "family": "Segoe UI, sans-serif",
+                                                "color": "#e2e8f0",
+                                            },
+                                            margin=dict(l=20, r=20, t=20, b=20),
+                                            showlegend=True,
+                                            height=400,
+                                        )
+                                        .update_traces(
+                                            textposition="inside",
+                                            textinfo="percent+label",
+                                            textfont_size=14,
+                                        )
                                     )
-                                    .update_layout(
-                                        font={
-                                            "family": "Segoe UI, sans-serif",
-                                            "color": "#e2e8f0",
-                                        },
-                                        margin=dict(l=20, r=20, t=20, b=20),
-                                        showlegend=True,
-                                        height=400,
-                                    )
-                                    .update_traces(
-                                        textposition="inside",
-                                        textinfo="percent+label",
-                                        textfont_size=14,
-                                    ))
                                     if not df_diagnostico_sexo.empty
-                                    else apply_dark_theme(go.Figure()
-                                    .add_annotation(
-                                        text="No hay datos disponibles",
-                                        xref="paper",
-                                        yref="paper",
-                                        x=0.5,
-                                        y=0.5,
-                                        showarrow=False,
-                                        font=dict(size=20, color="#94a3b8"),
-                                    )
-                                    .update_layout(
-                                        height=400,
-                                        xaxis=dict(visible=False),
-                                        yaxis=dict(visible=False),
-                                    )),
+                                    else apply_dark_theme(
+                                        go.Figure()
+                                        .add_annotation(
+                                            text="No hay datos disponibles",
+                                            xref="paper",
+                                            yref="paper",
+                                            x=0.5,
+                                            y=0.5,
+                                            showarrow=False,
+                                            font=dict(size=20, color="#94a3b8"),
+                                        )
+                                        .update_layout(
+                                            height=400,
+                                            xaxis=dict(visible=False),
+                                            yaxis=dict(visible=False),
+                                        )
+                                    ),
                                 ),
                             ],
                             className="chart-card chart-small",
@@ -650,58 +655,62 @@ app.layout = html.Div(
                                 dcc.Graph(
                                     id="grafico-diagnosticos-sexo",
                                     config={"displayModeBar": False},
-                                    figure=apply_dark_theme(px.histogram(
-                                        df_diagnostico_sexo[
+                                    figure=apply_dark_theme(
+                                        px.histogram(
                                             df_diagnostico_sexo[
-                                                "diagnostico_principal"
-                                            ].isin(
                                                 df_diagnostico_sexo[
                                                     "diagnostico_principal"
-                                                ]
-                                                .value_counts()
-                                                .head(10)
-                                                .index
-                                            )
-                                        ]
-                                        if not df_diagnostico_sexo.empty
-                                        else pd.DataFrame(),
-                                        x="diagnostico_principal",
-                                        color="sexo_label",
-                                        barmode="group",
-                                        labels={
-                                            "diagnostico_principal": "Diagnóstico",
-                                            "count": "Número de Casos",
-                                            "sexo_label": "Sexo",
-                                        },
-                                        color_discrete_map={
-                                            "Masculino": "#3b82f6",
-                                            "Femenino": "#ec4899",
-                                        },
-                                    ).update_layout(
-                                        font={
-                                            "family": "Segoe UI, sans-serif",
-                                            "color": "#e2e8f0",
-                                        },
-                                        margin=dict(l=50, r=30, t=30, b=100),
-                                        height=400,
-                                        xaxis=dict(tickangle=-45),
-                                    ))
-                                    if not df_diagnostico_sexo.empty
-                                    else apply_dark_theme(go.Figure()
-                                    .add_annotation(
-                                        text="No hay datos disponibles",
-                                        xref="paper",
-                                        yref="paper",
-                                        x=0.5,
-                                        y=0.5,
-                                        showarrow=False,
-                                        font=dict(size=20, color="#94a3b8"),
+                                                ].isin(
+                                                    df_diagnostico_sexo[
+                                                        "diagnostico_principal"
+                                                    ]
+                                                    .value_counts()
+                                                    .head(10)
+                                                    .index
+                                                )
+                                            ]
+                                            if not df_diagnostico_sexo.empty
+                                            else pd.DataFrame(),
+                                            x="diagnostico_principal",
+                                            color="sexo_label",
+                                            barmode="group",
+                                            labels={
+                                                "diagnostico_principal": "Diagnóstico",
+                                                "count": "Número de Casos",
+                                                "sexo_label": "Sexo",
+                                            },
+                                            color_discrete_map={
+                                                "Masculino": "#3b82f6",
+                                                "Femenino": "#ec4899",
+                                            },
+                                        ).update_layout(
+                                            font={
+                                                "family": "Segoe UI, sans-serif",
+                                                "color": "#e2e8f0",
+                                            },
+                                            margin=dict(l=50, r=30, t=30, b=100),
+                                            height=400,
+                                            xaxis=dict(tickangle=-45),
+                                        )
                                     )
-                                    .update_layout(
-                                        height=400,
-                                        xaxis=dict(visible=False),
-                                        yaxis=dict(visible=False),
-                                    )),
+                                    if not df_diagnostico_sexo.empty
+                                    else apply_dark_theme(
+                                        go.Figure()
+                                        .add_annotation(
+                                            text="No hay datos disponibles",
+                                            xref="paper",
+                                            yref="paper",
+                                            x=0.5,
+                                            y=0.5,
+                                            showarrow=False,
+                                            font=dict(size=20, color="#94a3b8"),
+                                        )
+                                        .update_layout(
+                                            height=400,
+                                            xaxis=dict(visible=False),
+                                            yaxis=dict(visible=False),
+                                        )
+                                    ),
                                 ),
                             ],
                             className="chart-card chart-large",
@@ -719,54 +728,60 @@ app.layout = html.Div(
                         dcc.Graph(
                             id="grafico-proporcion-sexo",
                             config={"displayModeBar": False},
-                            figure=apply_dark_theme(px.histogram(
-                                df_diagnostico_sexo[
-                                    df_diagnostico_sexo["diagnostico_principal"].isin(
-                                        df_diagnostico_sexo["diagnostico_principal"]
-                                        .value_counts()
-                                        .head(15)
-                                        .index
-                                    )
-                                ]
-                                if not df_diagnostico_sexo.empty
-                                else pd.DataFrame(),
-                                y="diagnostico_principal",
-                                color="sexo_label",
-                                barmode="stack",
-                                orientation="h",
-                                labels={
-                                    "diagnostico_principal": "Diagnóstico",
-                                    "count": "Número de Casos",
-                                    "sexo_label": "Sexo",
-                                },
-                                color_discrete_map={
-                                    "Masculino": "#3b82f6",
-                                    "Femenino": "#ec4899",
-                                },
-                            ).update_layout(
-                                font={
-                                    "family": "Segoe UI, sans-serif",
-                                    "color": "#e2e8f0",
-                                },
-                                margin=dict(l=100, r=30, t=30, b=50),
-                                height=500,
-                            ))
-                            if not df_diagnostico_sexo.empty
-                            else apply_dark_theme(go.Figure()
-                            .add_annotation(
-                                text="No hay datos disponibles",
-                                xref="paper",
-                                yref="paper",
-                                x=0.5,
-                                y=0.5,
-                                showarrow=False,
-                                font=dict(size=20, color="#94a3b8"),
+                            figure=apply_dark_theme(
+                                px.histogram(
+                                    df_diagnostico_sexo[
+                                        df_diagnostico_sexo[
+                                            "diagnostico_principal"
+                                        ].isin(
+                                            df_diagnostico_sexo["diagnostico_principal"]
+                                            .value_counts()
+                                            .head(15)
+                                            .index
+                                        )
+                                    ]
+                                    if not df_diagnostico_sexo.empty
+                                    else pd.DataFrame(),
+                                    y="diagnostico_principal",
+                                    color="sexo_label",
+                                    barmode="stack",
+                                    orientation="h",
+                                    labels={
+                                        "diagnostico_principal": "Diagnóstico",
+                                        "count": "Número de Casos",
+                                        "sexo_label": "Sexo",
+                                    },
+                                    color_discrete_map={
+                                        "Masculino": "#3b82f6",
+                                        "Femenino": "#ec4899",
+                                    },
+                                ).update_layout(
+                                    font={
+                                        "family": "Segoe UI, sans-serif",
+                                        "color": "#e2e8f0",
+                                    },
+                                    margin=dict(l=100, r=30, t=30, b=50),
+                                    height=500,
+                                )
                             )
-                            .update_layout(
-                                height=500,
-                                xaxis=dict(visible=False),
-                                yaxis=dict(visible=False),
-                            )),
+                            if not df_diagnostico_sexo.empty
+                            else apply_dark_theme(
+                                go.Figure()
+                                .add_annotation(
+                                    text="No hay datos disponibles",
+                                    xref="paper",
+                                    yref="paper",
+                                    x=0.5,
+                                    y=0.5,
+                                    showarrow=False,
+                                    font=dict(size=20, color="#94a3b8"),
+                                )
+                                .update_layout(
+                                    height=500,
+                                    xaxis=dict(visible=False),
+                                    yaxis=dict(visible=False),
+                                )
+                            ),
                         ),
                     ],
                     style={"marginTop": "20px"},
@@ -965,61 +980,65 @@ app.layout = html.Div(
                                 dcc.Graph(
                                     id="grafico-severidad-dist",
                                     config={"displayModeBar": False},
-                                    figure=apply_dark_theme(px.pie(
-                                        df_severidad_mortalidad["severidad_label"]
-                                        .value_counts()
-                                        .reset_index()
-                                        if not df_severidad_mortalidad.empty
-                                        else pd.DataFrame(),
-                                        values="count",
-                                        names="severidad_label",
-                                        hole=0.4,
-                                        color="severidad_label",
-                                        color_discrete_map={
-                                            "Leve": "#22c55e",
-                                            "Moderado": "#eab308",
-                                            "Grave": "#f97316",
-                                            "Extremo": "#dc2626",
-                                        },
-                                        category_orders={
-                                            "severidad_label": [
-                                                "Leve",
-                                                "Moderado",
-                                                "Grave",
-                                                "Extremo",
-                                            ]
-                                        },
+                                    figure=apply_dark_theme(
+                                        px.pie(
+                                            df_severidad_mortalidad["severidad_label"]
+                                            .value_counts()
+                                            .reset_index()
+                                            if not df_severidad_mortalidad.empty
+                                            else pd.DataFrame(),
+                                            values="count",
+                                            names="severidad_label",
+                                            hole=0.4,
+                                            color="severidad_label",
+                                            color_discrete_map={
+                                                "Leve": "#22c55e",
+                                                "Moderado": "#eab308",
+                                                "Grave": "#f97316",
+                                                "Extremo": "#dc2626",
+                                            },
+                                            category_orders={
+                                                "severidad_label": [
+                                                    "Leve",
+                                                    "Moderado",
+                                                    "Grave",
+                                                    "Extremo",
+                                                ]
+                                            },
+                                        )
+                                        .update_layout(
+                                            font={
+                                                "family": "Segoe UI, sans-serif",
+                                                "color": "#e2e8f0",
+                                            },
+                                            margin=dict(l=20, r=20, t=20, b=20),
+                                            showlegend=True,
+                                            height=400,
+                                        )
+                                        .update_traces(
+                                            textposition="inside",
+                                            textinfo="percent+label",
+                                            textfont_size=13,
+                                        )
                                     )
-                                    .update_layout(
-                                        font={
-                                            "family": "Segoe UI, sans-serif",
-                                            "color": "#e2e8f0",
-                                        },
-                                        margin=dict(l=20, r=20, t=20, b=20),
-                                        showlegend=True,
-                                        height=400,
-                                    )
-                                    .update_traces(
-                                        textposition="inside",
-                                        textinfo="percent+label",
-                                        textfont_size=13,
-                                    ))
                                     if not df_severidad_mortalidad.empty
-                                    else apply_dark_theme(go.Figure()
-                                    .add_annotation(
-                                        text="No hay datos disponibles",
-                                        xref="paper",
-                                        yref="paper",
-                                        x=0.5,
-                                        y=0.5,
-                                        showarrow=False,
-                                        font=dict(size=20, color="#94a3b8"),
-                                    )
-                                    .update_layout(
-                                        height=400,
-                                        xaxis=dict(visible=False),
-                                        yaxis=dict(visible=False),
-                                    )),
+                                    else apply_dark_theme(
+                                        go.Figure()
+                                        .add_annotation(
+                                            text="No hay datos disponibles",
+                                            xref="paper",
+                                            yref="paper",
+                                            x=0.5,
+                                            y=0.5,
+                                            showarrow=False,
+                                            font=dict(size=20, color="#94a3b8"),
+                                        )
+                                        .update_layout(
+                                            height=400,
+                                            xaxis=dict(visible=False),
+                                            yaxis=dict(visible=False),
+                                        )
+                                    ),
                                 ),
                             ],
                             className="chart-card chart-small",
@@ -1037,61 +1056,65 @@ app.layout = html.Div(
                                 dcc.Graph(
                                     id="grafico-mortalidad-dist",
                                     config={"displayModeBar": False},
-                                    figure=apply_dark_theme(px.pie(
-                                        df_severidad_mortalidad["mortalidad_label"]
-                                        .value_counts()
-                                        .reset_index()
-                                        if not df_severidad_mortalidad.empty
-                                        else pd.DataFrame(),
-                                        values="count",
-                                        names="mortalidad_label",
-                                        hole=0.4,
-                                        color="mortalidad_label",
-                                        color_discrete_map={
-                                            "Bajo": "#22c55e",
-                                            "Moderado": "#eab308",
-                                            "Alto": "#f97316",
-                                            "Extremo": "#dc2626",
-                                        },
-                                        category_orders={
-                                            "mortalidad_label": [
-                                                "Bajo",
-                                                "Moderado",
-                                                "Alto",
-                                                "Extremo",
-                                            ]
-                                        },
+                                    figure=apply_dark_theme(
+                                        px.pie(
+                                            df_severidad_mortalidad["mortalidad_label"]
+                                            .value_counts()
+                                            .reset_index()
+                                            if not df_severidad_mortalidad.empty
+                                            else pd.DataFrame(),
+                                            values="count",
+                                            names="mortalidad_label",
+                                            hole=0.4,
+                                            color="mortalidad_label",
+                                            color_discrete_map={
+                                                "Bajo": "#22c55e",
+                                                "Moderado": "#eab308",
+                                                "Alto": "#f97316",
+                                                "Extremo": "#dc2626",
+                                            },
+                                            category_orders={
+                                                "mortalidad_label": [
+                                                    "Bajo",
+                                                    "Moderado",
+                                                    "Alto",
+                                                    "Extremo",
+                                                ]
+                                            },
+                                        )
+                                        .update_layout(
+                                            font={
+                                                "family": "Segoe UI, sans-serif",
+                                                "color": "#e2e8f0",
+                                            },
+                                            margin=dict(l=20, r=20, t=20, b=20),
+                                            showlegend=True,
+                                            height=400,
+                                        )
+                                        .update_traces(
+                                            textposition="inside",
+                                            textinfo="percent+label",
+                                            textfont_size=13,
+                                        )
                                     )
-                                    .update_layout(
-                                        font={
-                                            "family": "Segoe UI, sans-serif",
-                                            "color": "#e2e8f0",
-                                        },
-                                        margin=dict(l=20, r=20, t=20, b=20),
-                                        showlegend=True,
-                                        height=400,
-                                    )
-                                    .update_traces(
-                                        textposition="inside",
-                                        textinfo="percent+label",
-                                        textfont_size=13,
-                                    ))
                                     if not df_severidad_mortalidad.empty
-                                    else apply_dark_theme(go.Figure()
-                                    .add_annotation(
-                                        text="No hay datos disponibles",
-                                        xref="paper",
-                                        yref="paper",
-                                        x=0.5,
-                                        y=0.5,
-                                        showarrow=False,
-                                        font=dict(size=20, color="#94a3b8"),
-                                    )
-                                    .update_layout(
-                                        height=400,
-                                        xaxis=dict(visible=False),
-                                        yaxis=dict(visible=False),
-                                    )),
+                                    else apply_dark_theme(
+                                        go.Figure()
+                                        .add_annotation(
+                                            text="No hay datos disponibles",
+                                            xref="paper",
+                                            yref="paper",
+                                            x=0.5,
+                                            y=0.5,
+                                            showarrow=False,
+                                            font=dict(size=20, color="#94a3b8"),
+                                        )
+                                        .update_layout(
+                                            height=400,
+                                            xaxis=dict(visible=False),
+                                            yaxis=dict(visible=False),
+                                        )
+                                    ),
                                 ),
                             ],
                             className="chart-card chart-small",
@@ -1109,55 +1132,59 @@ app.layout = html.Div(
                         dcc.Graph(
                             id="grafico-severidad-mortalidad-heatmap",
                             config={"displayModeBar": False},
-                            figure=apply_dark_theme(px.density_heatmap(
-                                df_severidad_mortalidad
-                                if not df_severidad_mortalidad.empty
-                                else pd.DataFrame(),
-                                x="severidad_label",
-                                y="mortalidad_label",
-                                color_continuous_scale="RdYlGn_r",
-                                labels={
-                                    "severidad_label": "Nivel de Severidad APR",
-                                    "mortalidad_label": "Riesgo de Mortalidad APR",
-                                },
-                                category_orders={
-                                    "severidad_label": [
-                                        "Leve",
-                                        "Moderado",
-                                        "Grave",
-                                        "Extremo",
-                                    ],
-                                    "mortalidad_label": [
-                                        "Bajo",
-                                        "Moderado",
-                                        "Alto",
-                                        "Extremo",
-                                    ],
-                                },
-                            ).update_layout(
-                                font={
-                                    "family": "Segoe UI, sans-serif",
-                                    "color": "#e2e8f0",
-                                },
-                                margin=dict(l=100, r=30, t=30, b=100),
-                                height=500,
-                            ))
-                            if not df_severidad_mortalidad.empty
-                            else apply_dark_theme(go.Figure()
-                            .add_annotation(
-                                text="No hay datos disponibles",
-                                xref="paper",
-                                yref="paper",
-                                x=0.5,
-                                y=0.5,
-                                showarrow=False,
-                                font=dict(size=20, color="#94a3b8"),
+                            figure=apply_dark_theme(
+                                px.density_heatmap(
+                                    df_severidad_mortalidad
+                                    if not df_severidad_mortalidad.empty
+                                    else pd.DataFrame(),
+                                    x="severidad_label",
+                                    y="mortalidad_label",
+                                    color_continuous_scale="RdYlGn_r",
+                                    labels={
+                                        "severidad_label": "Nivel de Severidad APR",
+                                        "mortalidad_label": "Riesgo de Mortalidad APR",
+                                    },
+                                    category_orders={
+                                        "severidad_label": [
+                                            "Leve",
+                                            "Moderado",
+                                            "Grave",
+                                            "Extremo",
+                                        ],
+                                        "mortalidad_label": [
+                                            "Bajo",
+                                            "Moderado",
+                                            "Alto",
+                                            "Extremo",
+                                        ],
+                                    },
+                                ).update_layout(
+                                    font={
+                                        "family": "Segoe UI, sans-serif",
+                                        "color": "#e2e8f0",
+                                    },
+                                    margin=dict(l=100, r=30, t=30, b=100),
+                                    height=500,
+                                )
                             )
-                            .update_layout(
-                                height=500,
-                                xaxis=dict(visible=False),
-                                yaxis=dict(visible=False),
-                            )),
+                            if not df_severidad_mortalidad.empty
+                            else apply_dark_theme(
+                                go.Figure()
+                                .add_annotation(
+                                    text="No hay datos disponibles",
+                                    xref="paper",
+                                    yref="paper",
+                                    x=0.5,
+                                    y=0.5,
+                                    showarrow=False,
+                                    font=dict(size=20, color="#94a3b8"),
+                                )
+                                .update_layout(
+                                    height=500,
+                                    xaxis=dict(visible=False),
+                                    yaxis=dict(visible=False),
+                                )
+                            ),
                         ),
                     ],
                     style={"marginTop": "20px"},
@@ -1172,62 +1199,66 @@ app.layout = html.Div(
                         dcc.Graph(
                             id="grafico-severidad-mortalidad-bars",
                             config={"displayModeBar": False},
-                            figure=apply_dark_theme(px.histogram(
-                                df_severidad_mortalidad
-                                if not df_severidad_mortalidad.empty
-                                else pd.DataFrame(),
-                                x="severidad_label",
-                                color="mortalidad_label",
-                                barmode="group",
-                                labels={
-                                    "severidad_label": "Nivel de Severidad APR",
-                                    "mortalidad_label": "Riesgo de Mortalidad",
-                                    "count": "Número de Casos",
-                                },
-                                color_discrete_map={
-                                    "Bajo": "#22c55e",
-                                    "Moderado": "#eab308",
-                                    "Alto": "#f97316",
-                                    "Extremo": "#dc2626",
-                                },
-                                category_orders={
-                                    "severidad_label": [
-                                        "Leve",
-                                        "Moderado",
-                                        "Grave",
-                                        "Extremo",
-                                    ],
-                                    "mortalidad_label": [
-                                        "Bajo",
-                                        "Moderado",
-                                        "Alto",
-                                        "Extremo",
-                                    ],
-                                },
-                            ).update_layout(
-                                font={
-                                    "family": "Segoe UI, sans-serif",
-                                    "color": "#e2e8f0",
-                                },
-                                margin=dict(l=50, r=30, t=30, b=50),
-                                height=450,
-                            ))
-                            if not df_severidad_mortalidad.empty
-                            else apply_dark_theme(go.Figure()
-                            .add_annotation(
-                                text="No hay datos disponibles",
-                                xref="paper",
-                                yref="paper",
-                                x=0.5,
-                                y=0.5,
-                                showarrow=False,
-                                font=dict(size=20, color="#94a3b8"),
+                            figure=apply_dark_theme(
+                                px.histogram(
+                                    df_severidad_mortalidad
+                                    if not df_severidad_mortalidad.empty
+                                    else pd.DataFrame(),
+                                    x="severidad_label",
+                                    color="mortalidad_label",
+                                    barmode="group",
+                                    labels={
+                                        "severidad_label": "Nivel de Severidad APR",
+                                        "mortalidad_label": "Riesgo de Mortalidad",
+                                        "count": "Número de Casos",
+                                    },
+                                    color_discrete_map={
+                                        "Bajo": "#22c55e",
+                                        "Moderado": "#eab308",
+                                        "Alto": "#f97316",
+                                        "Extremo": "#dc2626",
+                                    },
+                                    category_orders={
+                                        "severidad_label": [
+                                            "Leve",
+                                            "Moderado",
+                                            "Grave",
+                                            "Extremo",
+                                        ],
+                                        "mortalidad_label": [
+                                            "Bajo",
+                                            "Moderado",
+                                            "Alto",
+                                            "Extremo",
+                                        ],
+                                    },
+                                ).update_layout(
+                                    font={
+                                        "family": "Segoe UI, sans-serif",
+                                        "color": "#e2e8f0",
+                                    },
+                                    margin=dict(l=50, r=30, t=30, b=50),
+                                    height=450,
+                                )
                             )
-                            .update_layout(
-                                height=450,
-                                xaxis=dict(visible=False),
-                                yaxis=dict(visible=False),
-                            )),
+                            if not df_severidad_mortalidad.empty
+                            else apply_dark_theme(
+                                go.Figure()
+                                .add_annotation(
+                                    text="No hay datos disponibles",
+                                    xref="paper",
+                                    yref="paper",
+                                    x=0.5,
+                                    y=0.5,
+                                    showarrow=False,
+                                    font=dict(size=20, color="#94a3b8"),
+                                )
+                                .update_layout(
+                                    height=450,
+                                    xaxis=dict(visible=False),
+                                    yaxis=dict(visible=False),
+                                )
+                            ),
                         ),
                     ],
                     style={"marginTop": "20px"},
@@ -1364,42 +1395,49 @@ app.layout = html.Div(
                 dcc.Graph(
                     id="grafico-peso-estancia",
                     config={"displayModeBar": False},
-                    figure=apply_dark_theme(px.scatter(
-                        df_peso_estancia
-                        if not df_peso_estancia.empty
-                        else pd.DataFrame(),
-                        x="peso_espanol_apr",
-                        y="estancia_dias",
-                        title="Relación entre Peso APR-GRD y Estancia Hospitalaria",
-                        labels={
-                            "peso_espanol_apr": "Peso APR-GRD Español",
-                            "estancia_dias": "Días de Estancia",
-                        },
-                        color="estancia_dias",
-                        size="peso_espanol_apr",
-                        color_continuous_scale="Viridis",
-                        hover_data={"peso_espanol_apr": ":.3f", "estancia_dias": True},
-                    ).update_layout(
-                        font={"family": "Segoe UI, sans-serif", "color": "#e2e8f0"},
-                        margin=dict(l=50, r=30, t=60, b=50),
-                        height=400,
-                    ))
-                    if not df_peso_estancia.empty
-                    else apply_dark_theme(go.Figure()
-                    .add_annotation(
-                        text="No hay datos disponibles",
-                        xref="paper",
-                        yref="paper",
-                        x=0.5,
-                        y=0.5,
-                        showarrow=False,
-                        font=dict(size=20, color="#94a3b8"),
+                    figure=apply_dark_theme(
+                        px.scatter(
+                            df_peso_estancia
+                            if not df_peso_estancia.empty
+                            else pd.DataFrame(),
+                            x="peso_espanol_apr",
+                            y="estancia_dias",
+                            title="Relación entre Peso APR-GRD y Estancia Hospitalaria",
+                            labels={
+                                "peso_espanol_apr": "Peso APR-GRD Español",
+                                "estancia_dias": "Días de Estancia",
+                            },
+                            color="estancia_dias",
+                            size="peso_espanol_apr",
+                            color_continuous_scale="Viridis",
+                            hover_data={
+                                "peso_espanol_apr": ":.3f",
+                                "estancia_dias": True,
+                            },
+                        ).update_layout(
+                            font={"family": "Segoe UI, sans-serif", "color": "#e2e8f0"},
+                            margin=dict(l=50, r=30, t=60, b=50),
+                            height=400,
+                        )
                     )
-                    .update_layout(
-                        height=400,
-                        xaxis=dict(visible=False),
-                        yaxis=dict(visible=False),
-                    )),
+                    if not df_peso_estancia.empty
+                    else apply_dark_theme(
+                        go.Figure()
+                        .add_annotation(
+                            text="No hay datos disponibles",
+                            xref="paper",
+                            yref="paper",
+                            x=0.5,
+                            y=0.5,
+                            showarrow=False,
+                            font=dict(size=20, color="#94a3b8"),
+                        )
+                        .update_layout(
+                            height=400,
+                            xaxis=dict(visible=False),
+                            yaxis=dict(visible=False),
+                        )
+                    ),
                     style={"marginBottom": "30px"},
                 ),
                 # Tabla de datos
@@ -1501,9 +1539,7 @@ app.layout = html.Div(
         # Sección 5: Insights y Conclusiones
         html.Div(
             [
-                html.H3(
-                    "5️⃣ Insights Clave y Conclusiones", className="chart-title"
-                ),
+                html.H3("5️⃣ Insights Clave y Conclusiones", className="chart-title"),
                 html.Div(
                     [
                         html.Div(
