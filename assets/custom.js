@@ -442,33 +442,33 @@ function setupAccessibilityPanel() {
   intensitySlider.addEventListener("input", function () {
     currentIntensity = parseInt(this.value);
     intensityDisplay.textContent = currentIntensity + "%";
-    
+
     // Actualizar el fondo del slider
-    this.style.setProperty('--slider-value', currentIntensity + '%');
+    this.style.setProperty("--slider-value", currentIntensity + "%");
 
     if (isColorblindMode) {
       applyColorblindMode(currentType, currentIntensity);
     }
   });
-  
+
   // Inicializar el valor del slider
-  intensitySlider.style.setProperty('--slider-value', '70%');
+  intensitySlider.style.setProperty("--slider-value", "70%");
 
   // Slider de intensidad alto contraste
   contrastSlider.addEventListener("input", function () {
     currentContrast = parseInt(this.value);
     contrastDisplay.textContent = currentContrast + "%";
-    
+
     // Actualizar el fondo del slider
-    this.style.setProperty('--slider-value', currentContrast + '%');
+    this.style.setProperty("--slider-value", currentContrast + "%");
 
     if (isHighContrastMode) {
       applyHighContrastMode(currentContrast);
     }
   });
-  
+
   // Inicializar el valor del slider
-  contrastSlider.style.setProperty('--slider-value', '80%');
+  contrastSlider.style.setProperty("--slider-value", "80%");
 
   // Selección de tamaño de letra
   sizeOptions.forEach((option) => {
@@ -496,36 +496,36 @@ function applyColorblindMode(type, intensity) {
 
   // Aplicar intensidad mediante CSS filters
   const intensityValue = intensity / 100; // Convertir de 0-100 a 0-1
-  const charts = document.querySelectorAll('.js-plotly-plot, .chart-card');
-  
-  charts.forEach(chart => {
+  const charts = document.querySelectorAll(".js-plotly-plot, .chart-card");
+
+  charts.forEach((chart) => {
     // Calcular valores de filtro basados en el tipo y la intensidad
-    let filterValue = '';
-    
-    switch(type) {
-      case 'protanopia':
-      case 'deuteranopia':
+    let filterValue = "";
+
+    switch (type) {
+      case "protanopia":
+      case "deuteranopia":
         // Rojo-Verde: ajustar contraste y saturación
-        const contrast = 1 + (0.2 * intensityValue);
-        const saturate = 1 + (0.3 * intensityValue);
+        const contrast = 1 + 0.2 * intensityValue;
+        const saturate = 1 + 0.3 * intensityValue;
         filterValue = `contrast(${contrast}) saturate(${saturate})`;
         break;
-      
-      case 'tritanopia':
+
+      case "tritanopia":
         // Azul-Amarillo: ajustar contraste y brillo
-        const contrastT = 1 + (0.3 * intensityValue);
-        const brightness = 1 + (0.1 * intensityValue);
+        const contrastT = 1 + 0.3 * intensityValue;
+        const brightness = 1 + 0.1 * intensityValue;
         filterValue = `contrast(${contrastT}) brightness(${brightness})`;
         break;
-      
-      case 'achromatopsia':
+
+      case "achromatopsia":
         // Sin color: escala de grises con contraste
         const grayscale = 0.7 * intensityValue;
-        const contrastA = 1 + (0.4 * intensityValue);
+        const contrastA = 1 + 0.4 * intensityValue;
         filterValue = `grayscale(${grayscale}) contrast(${contrastA})`;
         break;
     }
-    
+
     chart.style.filter = filterValue;
   });
 
@@ -546,9 +546,9 @@ function removeColorblindMode() {
   );
 
   // Remover filtros aplicados
-  const charts = document.querySelectorAll('.js-plotly-plot, .chart-card');
-  charts.forEach(chart => {
-    chart.style.filter = '';
+  const charts = document.querySelectorAll(".js-plotly-plot, .chart-card");
+  charts.forEach((chart) => {
+    chart.style.filter = "";
   });
 
   resetChartColors();
@@ -597,11 +597,11 @@ function applyHighContrastMode(intensity) {
 
   // Aplicar intensidad mediante CSS filters
   const intensityValue = intensity / 100;
-  const contrast = 1 + (0.8 * intensityValue); // De 1.0 a 1.8
-  const brightness = 1 + (0.15 * intensityValue); // De 1.0 a 1.15
-  const saturate = 1 + (0.25 * intensityValue); // De 1.0 a 1.25
-  
-  const container = document.querySelector('.container');
+  const contrast = 1 + 0.8 * intensityValue; // De 1.0 a 1.8
+  const brightness = 1 + 0.15 * intensityValue; // De 1.0 a 1.15
+  const saturate = 1 + 0.25 * intensityValue; // De 1.0 a 1.25
+
+  const container = document.querySelector(".container");
   if (container) {
     container.style.filter = `contrast(${contrast}) brightness(${brightness}) saturate(${saturate})`;
   }
@@ -614,9 +614,9 @@ function removeHighContrastMode() {
   document.body.classList.remove("high-contrast-mode");
 
   // Remover filtros aplicados
-  const container = document.querySelector('.container');
+  const container = document.querySelector(".container");
   if (container) {
-    container.style.filter = '';
+    container.style.filter = "";
   }
 
   console.log("✓ Modo alto contraste desactivado");
