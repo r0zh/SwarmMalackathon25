@@ -67,56 +67,52 @@ def create_weight_stay_section(df: pd.DataFrame, theme: str = "dark") -> html.Di
 
     return html.Div(
         [
-            html.H3(
-                "4️⃣ Peso APR-GRD y Estancia Hospitalaria",
-                className="chart-title",
-            ),
-            html.P(
-                "Correlación entre el peso APR-GRD español y los días de estancia hospitalaria",
-                style={
-                    "textAlign": "center",
-                    "color": "#64748b",
-                    "marginBottom": "20px",
-                    "fontSize": "0.95rem",
-                },
+            html.Div(
+                [
+                    html.H3(
+                        "4️⃣ Peso APR-GRD y Estancia Hospitalaria",
+                        className="section-title",
+                    ),
+                    html.P(
+                        "Correlación entre el peso APR-GRD español y los días de estancia hospitalaria",
+                        className="section-subtitle",
+                    ),
+                ],
+                style={"marginBottom": "32px"},
             ),
             # Gráfico de dispersión
-            dcc.Graph(
-                id="grafico-peso-estancia",
-                config={"displayModeBar": False},
-                figure=fig_scatter,
-                style={"marginBottom": "30px"},
-            ),
-            # Tabla de datos
-            table_peso,
-            # Estadísticas resumen
             html.Div(
                 [
                     html.Div(
                         [
-                            html.H4("📈 Estadísticas", style={"marginBottom": "15px"}),
-                            html.P(
-                                f"Total de registros: {format_number(total_registros)}"
+                            html.H4(
+                                "Relación entre Peso APR-GRD y Estancia Hospitalaria"
                             ),
-                            html.P(f"Peso promedio: {peso_promedio:.3f}"),
-                            html.P(f"Estancia promedio: {estancia_promedio:.1f} días"),
-                            html.P(
-                                f"Estancia máxima: {format_number(estancia_max)} días"
-                            ),
-                            html.P(
-                                f"Estancia mínima: {format_number(estancia_min)} días"
+                            dcc.Graph(
+                                id="grafico-peso-estancia",
+                                config={"displayModeBar": False},
+                                figure=fig_scatter,
                             ),
                         ],
-                        style={
-                            "backgroundColor": "#f0f9ff",
-                            "padding": "20px",
-                            "borderRadius": "8px",
-                            "marginTop": "20px",
-                            "border": "1px solid #bae6fd",
-                        },
+                        className="chart-card",
                     )
-                ]
+                ],
+                style={"margin": "0 24px 32px 24px"},
+            ),
+            # Tabla de datos
+            html.Div(
+                [
+                    html.Div(
+                        [
+                            html.H4("Datos de Peso y Estancia"),
+                            table_peso,
+                        ],
+                        className="chart-card",
+                    )
+                ],
+                style={"margin": "0 24px 32px 24px"},
             ),
         ],
-        className="chart-card full",
+        className="section-container",
+        role="region",
     )

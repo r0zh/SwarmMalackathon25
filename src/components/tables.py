@@ -12,7 +12,6 @@ def create_data_table(
     columns: Optional[List[Dict[str, Any]]] = None,
     page_size: int = 10,
     sort_action: Literal["native", "custom", "none"] = "native",
-    filter_action: Literal["native", "custom", "none"] = "native",
     style_table: Optional[Dict[str, Any]] = None,
     style_header: Optional[Dict[str, Any]] = None,
     style_cell: Optional[Dict[str, Any]] = None,
@@ -28,7 +27,6 @@ def create_data_table(
         columns: Lista de diccionarios con definición de columnas
         page_size: Número de filas por página
         sort_action: Tipo de ordenamiento ('native', 'custom', None)
-        filter_action: Tipo de filtro ('native', 'custom', None)
         style_table: Estilos para la tabla completa
         style_header: Estilos para el encabezado
         style_cell: Estilos para las celdas
@@ -100,7 +98,6 @@ def create_data_table(
         page_size=page_size,
         sort_action=sort_action,
         sort_mode="multi",
-        filter_action=filter_action,
         style_table=final_style_table,
         style_cell=final_style_cell,
         style_header=final_style_header,
@@ -149,32 +146,44 @@ def create_comparison_table(
     # Definir columnas
     columns = [{"name": col, "id": col} for col in pivot_df.columns]
 
-    # Estilos personalizados
+    # Estilos mínimos
     style_header = {
         "backgroundColor": header_color,
         "color": "white",
         "fontWeight": "bold",
         "textAlign": "center",
-        "border": f"1px solid {header_color}",
+        "padding": "10px",
+    }
+
+    style_cell = {
+        "textAlign": "center",
+        "padding": "10px",
+        "fontSize": "14px",
+    }
+
+    style_data = {
+        "backgroundColor": "white",
+        "color": "#000",
     }
 
     style_data_conditional = [
         {
             "if": {"row_index": "odd"},
-            "backgroundColor": "#f8fafc",
-        },
-        {
-            "if": {"column_id": "Total"},
-            "backgroundColor": "#fee2e2",
-            "fontWeight": "bold",
+            "backgroundColor": "#f9f9f9",
         },
     ]
 
-    return create_data_table(
-        df=pivot_df,
-        columns=columns,
+    return dash_table.DataTable(
+        columns=columns,  # type: ignore[arg-type]
+        data=pivot_df.to_dict("records") if not pivot_df.empty else [],  # type: ignore[arg-type]
         style_header=style_header,
-        style_data_conditional=style_data_conditional,
+        style_cell=style_cell,
+        style_data=style_data,
+        style_data_conditional=style_data_conditional,  # type: ignore[arg-type]
+        sort_action="native",
+        sort_mode="multi",
+        page_action="native",
+        page_size=10,
         **kwargs,
     )
 
@@ -231,11 +240,6 @@ def create_crosstab_table(
         },
         {
             "if": {"column_id": margins_name},
-            "backgroundColor": "#fee2e2",
-            "fontWeight": "bold",
-        },
-        {
-            "if": {"filter_query": f"{{index}} = '{margins_name}'"},
             "backgroundColor": "#fee2e2",
             "fontWeight": "bold",
         },

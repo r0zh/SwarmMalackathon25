@@ -9,12 +9,16 @@ from ..components import (
     create_bar_chart,
     create_pie_chart,
     create_line_chart,
-    create_heatmap,
 )
 from ..utils.helpers import format_number, get_mode_value
 
 
-def create_diagnostics_section(df: pd.DataFrame, theme: str = "dark") -> html.Div:
+from typing import Union
+
+
+def create_diagnostics_section(
+    df: pd.DataFrame, theme: str = "dark"
+) -> Union[html.Div, html.Section]:
     """
     Crea la sección completa de análisis de diagnósticos y demografía.
 
@@ -23,7 +27,7 @@ def create_diagnostics_section(df: pd.DataFrame, theme: str = "dark") -> html.Di
         theme: Tema (dark/light)
 
     Returns:
-        html.Div: Sección de diagnósticos
+        html.Section: Sección de diagnósticos
     """
     # Preparar datos
     total_registros = len(df) if not df.empty else 0
@@ -61,8 +65,58 @@ def create_diagnostics_section(df: pd.DataFrame, theme: str = "dark") -> html.Di
         else pd.DataFrame()
     )
 
+    # Define age range order for legend sorting
+    age_order = [
+        "0-5",
+        "6-10",
+        "11-15",
+        "16-20",
+        "21-25",
+        "26-30",
+        "31-35",
+        "36-40",
+        "41-45",
+        "46-50",
+        "51-55",
+        "56-60",
+        "61-65",
+        "66-70",
+        "71-75",
+        "76-80",
+        "81-85",
+        "+85",
+    ]
+
+    # Vibrant color palette for age ranges
+    age_colors = [
+        "#0891b2",
+        "#06b6d4",
+        "#10b981",
+        "#14b8a6",
+        "#059669",
+        "#16a34a",
+        "#84cc16",
+        "#eab308",
+        "#f59e0b",
+        "#f97316",
+        "#ef4444",
+        "#dc2626",
+        "#991b1b",
+        "#7c2d12",
+        "#6366f1",
+        "#8b5cf6",
+        "#a855f7",
+        "#d946ef",
+    ]
+
     fig_edad = create_pie_chart(
-        df=df_edad, values="count", names="rango_de_edad", height=400, theme=theme
+        df=df_edad,
+        values="count",
+        names="rango_de_edad",
+        category_orders={"rango_de_edad": age_order},
+        color_discrete_sequence=age_colors,
+        height=400,
+        theme=theme,
     )
 
     # Gráfico 3: Ingresos por mes
@@ -84,34 +138,21 @@ def create_diagnostics_section(df: pd.DataFrame, theme: str = "dark") -> html.Di
         theme=theme,
     )
 
-    # Gráfico 4: Mapa de calor
-    fig_heatmap = create_heatmap(
-        df=df if not df.empty else pd.DataFrame(),
-        x="rango_de_edad",
-        y="diagnostico_principal",
-        labels={
-            "rango_de_edad": "Rango de Edad",
-            "diagnostico_principal": "Diagnóstico",
-        },
-        color_continuous_scale="YlOrRd",
-        height=600,
-        theme=theme,
-    )
-
     return html.Div(
         [
-            html.H3(
-                "1️⃣ Análisis de Diagnósticos y Demografía",
-                className="chart-title",
-            ),
-            html.P(
-                "Distribución de diagnósticos principales, tendencias temporales y análisis demográfico",
-                style={
-                    "textAlign": "center",
-                    "color": "#64748b",
-                    "marginBottom": "20px",
-                    "fontSize": "0.95rem",
-                },
+            html.Div(
+                [
+                    html.H3(
+                        "1️⃣ Análisis de Diagnósticos y Demografía",
+                        className="section-title",
+                        id="section-diagnostics-title",
+                    ),
+                    html.P(
+                        "Distribución de diagnósticos principales, tendencias temporales y análisis demográfico",
+                        className="section-subtitle",
+                    ),
+                ],
+                style={"marginBottom": "32px"},
             ),
             # Gráficos en grid
             html.Div(
@@ -122,10 +163,6 @@ def create_diagnostics_section(df: pd.DataFrame, theme: str = "dark") -> html.Di
                             html.H4(
                                 "Top 10 Diagnósticos Principales",
                                 id="chart-title-diagnosticos",
-                                style={
-                                    "textAlign": "center",
-                                    "marginBottom": "15px",
-                                },
                             ),
                             html.Div(
                                 "Gráfico de barras horizontales mostrando los 10 diagnósticos principales más frecuentes",
@@ -145,12 +182,7 @@ def create_diagnostics_section(df: pd.DataFrame, theme: str = "dark") -> html.Di
                     html.Div(
                         [
                             html.H4(
-                                "Distribución por Rango de Edad",
-                                id="chart-title-edad",
-                                style={
-                                    "textAlign": "center",
-                                    "marginBottom": "15px",
-                                },
+                                "Distribución por Rango de Edad", id="chart-title-edad"
                             ),
                             html.Div(
                                 "Gráfico circular mostrando la distribución de casos por rangos de edad",
@@ -172,77 +204,27 @@ def create_diagnostics_section(df: pd.DataFrame, theme: str = "dark") -> html.Di
             # Gráfico de tendencia temporal
             html.Div(
                 [
-                    html.H4(
-                        "Ingresos por Mes",
-                        id="chart-title-temporal",
-                        style={"textAlign": "center", "marginBottom": "15px"},
-                    ),
-                    html.Div(
-                        "Gráfico de líneas mostrando la evolución temporal de ingresos mensuales",
-                        className="sr-only",
-                        id="chart-desc-temporal",
-                    ),
-                    dcc.Graph(
-                        id="grafico-temporal",
-                        config={"displayModeBar": False},
-                        figure=fig_temporal,
-                    ),
-                ],
-                style={"marginTop": "20px"},
-                tabIndex=0,
-            ),
-            # Mapa de calor: Diagnóstico vs Edad
-            html.Div(
-                [
-                    html.H4(
-                        "Mapa de Calor: Diagnósticos más frecuentes por Rango de Edad",
-                        id="chart-title-heatmap",
-                        style={"textAlign": "center", "marginBottom": "15px"},
-                    ),
-                    html.Div(
-                        "Mapa de calor mostrando la relación entre diagnósticos y rangos de edad, donde los colores más intensos indican mayor frecuencia",
-                        className="sr-only",
-                        id="chart-desc-heatmap",
-                    ),
-                    dcc.Graph(
-                        id="grafico-heatmap",
-                        config={"displayModeBar": False},
-                        figure=fig_heatmap,
-                    ),
-                ],
-                style={"marginTop": "20px"},
-                tabIndex=0,
-            ),
-            # Estadísticas resumen
-            html.Div(
-                [
                     html.Div(
                         [
-                            html.H4(
-                                "📊 Estadísticas Generales",
-                                style={"marginBottom": "15px"},
+                            html.H4("Ingresos por Mes", id="chart-title-temporal"),
+                            html.Div(
+                                "Gráfico de líneas mostrando la evolución temporal de ingresos mensuales",
+                                className="sr-only",
+                                id="chart-desc-temporal",
                             ),
-                            html.P(
-                                f"Total de registros: {format_number(total_registros)}"
-                            ),
-                            html.P(
-                                f"Diagnósticos únicos: {format_number(diagnosticos_unicos)}"
-                            ),
-                            html.P(f"Rango de edad más común: {rango_edad_comun}"),
-                            html.P(
-                                f"Diagnóstico más frecuente: {diagnostico_frecuente}"
+                            dcc.Graph(
+                                id="grafico-temporal",
+                                config={"displayModeBar": False},
+                                figure=fig_temporal,
                             ),
                         ],
-                        style={
-                            "backgroundColor": "#f0f9ff",
-                            "padding": "20px",
-                            "borderRadius": "8px",
-                            "marginTop": "20px",
-                            "border": "1px solid #bae6fd",
-                        },
+                        className="chart-card",
+                        tabIndex=0,
                     )
-                ]
+                ],
+                style={"margin": "0 24px 32px 24px"},
             ),
         ],
-        className="chart-card full",
+        className="section-container",
+        role="region",
     )

@@ -10,9 +10,9 @@ THEME_COLORS = {
     "dark": {
         "background": "rgba(0,0,0,0)",
         "plot_bg": "rgba(0,0,0,0.02)",
-        "text": "#e2e8f0",
-        "title": "#f1f5f9",
-        "grid": "#334155",
+        "text": "#334155",  # Darker for better contrast
+        "title": "#1e293b",  # Darker for better contrast
+        "grid": "#cbd5e1",
     },
     "light": {
         "background": "rgba(255,255,255,0)",
@@ -49,14 +49,25 @@ def apply_theme(fig: go.Figure, theme: str = "dark") -> go.Figure:
         fig: Figura con el tema aplicado
     """
     colors = get_theme_colors(theme)
-    template = "plotly_dark" if theme == "dark" else "plotly"
+    template = "plotly_white" if theme == "dark" else "plotly"
 
     fig.update_layout(
         template=template,
         paper_bgcolor=colors["background"],
         plot_bgcolor=colors["plot_bg"],
-        font=dict(color=colors["text"], family="Inter, system-ui, sans-serif"),
-        title_font=dict(color=colors["title"], size=16),
+        font=dict(
+            color=colors["text"], family="system-ui, -apple-system, sans-serif", size=11
+        ),
+        title_font=dict(
+            color=colors["title"],
+            size=14,
+            family="system-ui, -apple-system, sans-serif",
+        ),
+        hoverlabel=dict(
+            bgcolor="white",
+            font_size=11,
+            font_family="system-ui, -apple-system, sans-serif",
+        ),
     )
 
     return fig

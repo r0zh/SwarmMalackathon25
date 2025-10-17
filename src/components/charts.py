@@ -90,12 +90,22 @@ def create_bar_chart(
     fig.update_layout(
         height=height,
         showlegend=False,
-        margin=dict(
-            l=100 if orientation == "h" else 50, r=30, t=60 if title else 30, b=50
-        ),
+        margin=dict(l=40, r=20, t=40 if title else 10, b=60),
         title_text=title,
-        # Mejorar accesibilidad con información de hover más descriptiva
         hovermode="closest",
+    )
+
+    fig.update_xaxes(
+        showgrid=True,
+        gridwidth=1,
+        gridcolor="rgba(203, 213, 225, 0.3)",
+        tickfont=dict(size=10),
+    )
+    fig.update_yaxes(
+        showgrid=True,
+        gridwidth=1,
+        gridcolor="rgba(203, 213, 225, 0.3)",
+        tickfont=dict(size=10),
     )
 
     return apply_theme(fig, theme)
@@ -108,6 +118,7 @@ def create_pie_chart(
     title: Optional[str] = None,
     hole: float = 0.4,
     color_discrete_sequence: Optional[list] = None,
+    category_orders: Optional[dict] = None,
     height: int = 400,
     theme: str = "dark",
 ) -> go.Figure:
@@ -121,6 +132,7 @@ def create_pie_chart(
         title: Título del gráfico
         hole: Tamaño del agujero central (0-1, 0=pastel completo)
         color_discrete_sequence: Secuencia de colores
+        category_orders: Orden de categorías para la leyenda
         height: Altura del gráfico
         theme: Tema (dark/light)
 
@@ -137,14 +149,31 @@ def create_pie_chart(
         title=title,
         hole=hole,
         color_discrete_sequence=color_discrete_sequence or px.colors.qualitative.Set3,
+        category_orders=category_orders or {},
     )
 
-    fig.update_traces(textposition="inside", textinfo="percent+label", textfont_size=13)
+    fig.update_traces(
+        textposition="inside",
+        textinfo="percent",
+        textfont_size=10,
+        marker=dict(line=dict(color="#f8fafc", width=1.5)),
+    )
 
     fig.update_layout(
         height=height,
         showlegend=True,
-        margin=dict(l=20, r=20, t=60 if title else 20, b=20),
+        margin=dict(l=10, r=10, t=40 if title else 10, b=10),
+        legend=dict(
+            orientation="v",
+            yanchor="middle",
+            y=0.5,
+            xanchor="left",
+            x=1.02,
+            font=dict(size=9),
+            bgcolor="rgba(255,255,255,0.9)",
+            bordercolor="#e2e8f0",
+            borderwidth=1,
+        ),
     )
 
     return apply_theme(fig, theme)
@@ -197,9 +226,13 @@ def create_line_chart(
 
     fig.update_layout(
         height=height,
-        margin=dict(l=50, r=30, t=60 if title else 30, b=100),
-        xaxis=dict(tickangle=-45),
+        margin=dict(l=40, r=20, t=40 if title else 10, b=80),
+        xaxis=dict(tickangle=-45, tickfont=dict(size=10)),
+        yaxis=dict(tickfont=dict(size=10)),
     )
+
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor="rgba(203, 213, 225, 0.3)")
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor="rgba(203, 213, 225, 0.3)")
 
     return apply_theme(fig, theme)
 
@@ -247,8 +280,9 @@ def create_heatmap(
 
     fig.update_layout(
         height=height,
-        margin=dict(l=150, r=30, t=60 if title else 30, b=100),
-        xaxis=dict(tickangle=-45),
+        margin=dict(l=40, r=20, t=40 if title else 10, b=80),
+        xaxis=dict(tickangle=-45, tickfont=dict(size=9)),
+        yaxis=dict(tickfont=dict(size=9)),
     )
 
     return apply_theme(fig, theme)
@@ -302,8 +336,14 @@ def create_scatter_chart(
     )
 
     fig.update_layout(
-        height=height, margin=dict(l=50, r=30, t=60 if title else 30, b=50)
+        height=height,
+        margin=dict(l=40, r=20, t=40 if title else 10, b=60),
+        xaxis=dict(tickfont=dict(size=10)),
+        yaxis=dict(tickfont=dict(size=10)),
     )
+
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor="rgba(203, 213, 225, 0.3)")
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor="rgba(203, 213, 225, 0.3)")
 
     return apply_theme(fig, theme)
 
@@ -354,8 +394,12 @@ def create_histogram(
 
     fig.update_layout(
         height=height,
-        margin=dict(l=50, r=30, t=60 if title else 30, b=100),
-        xaxis=dict(tickangle=-45) if barmode != "stack" else {},
+        margin=dict(l=40, r=20, t=40 if title else 10, b=80),
+        xaxis=dict(tickangle=-45 if barmode != "stack" else 0, tickfont=dict(size=10)),
+        yaxis=dict(tickfont=dict(size=10)),
     )
+
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor="rgba(203, 213, 225, 0.3)")
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor="rgba(203, 213, 225, 0.3)")
 
     return apply_theme(fig, theme)

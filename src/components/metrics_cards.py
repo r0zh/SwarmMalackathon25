@@ -36,14 +36,58 @@ def create_metric_card(
     return html.Div(
         [
             html.Div(
-                icon,
-                className="metric-icon",
-                style={"fontSize": "2.5rem"},
-                role="img",
+                [
+                    html.Span(
+                        icon,
+                        className="metric-icon",
+                        style={
+                            "fontSize": "2.5rem",
+                            "marginBottom": "16px",
+                            "display": "block",
+                        },
+                        role="img",
+                        title=f"Icono de {title}",
+                    ),
+                    html.H3(
+                        title,
+                        id=title_id,
+                        style={
+                            "marginBottom": "20px",
+                            "fontSize": "0.875rem",
+                            "fontWeight": "600",
+                            "color": "#64748b",
+                            "textTransform": "uppercase",
+                            "letterSpacing": "0.5px",
+                        },
+                    ),
+                    html.H2(
+                        value,
+                        className="metric-value",
+                        style={
+                            "color": color,
+                            "marginBottom": "12px",
+                            "fontSize": "2.75rem",
+                            "fontWeight": "700",
+                            "lineHeight": "1",
+                        },
+                    ),
+                    html.P(
+                        subtitle,
+                        style={
+                            "fontSize": "0.875rem",
+                            "color": "#64748b",
+                            "fontWeight": "400",
+                            "margin": "0",
+                        },
+                    ),
+                ],
+                style={
+                    "display": "flex",
+                    "flexDirection": "column",
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                },
             ),
-            html.H3(title, id=title_id),
-            html.H2(value, className="metric-value", style={"color": color}),
-            html.P(subtitle, style={"fontSize": "0.9rem", "opacity": "0.7"}),
             # Hidden description for screen readers
             html.Span(
                 f"{title}: {value}, {subtitle}",
@@ -54,9 +98,13 @@ def create_metric_card(
         style={
             "backgroundColor": background,
             "border": f"2px solid {border}",
-            "borderRadius": "12px",
-            "padding": "20px",
+            "borderRadius": "16px",
+            "padding": "32px 24px",
             "textAlign": "center",
+            "minHeight": "200px",
+            "display": "flex",
+            "flexDirection": "column",
+            "justifyContent": "center",
         },
         role="region",
         tabIndex=0,

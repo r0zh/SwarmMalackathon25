@@ -138,31 +138,25 @@ def create_severity_section(df: pd.DataFrame, theme: str = "dark") -> html.Div:
 
     return html.Div(
         [
-            html.H3(
-                "3️⃣ Severidad y Riesgo de Mortalidad APR",
-                className="chart-title",
-            ),
-            html.P(
-                "Evaluación de la gravedad clínica y correlación con el riesgo de mortalidad",
-                style={
-                    "textAlign": "center",
-                    "color": "#64748b",
-                    "marginBottom": "20px",
-                    "fontSize": "0.95rem",
-                },
+            html.Div(
+                [
+                    html.H3(
+                        "3️⃣ Severidad y Riesgo de Mortalidad APR",
+                        className="section-title",
+                    ),
+                    html.P(
+                        "Evaluación de la gravedad clínica y correlación con el riesgo de mortalidad",
+                        className="section-subtitle",
+                    ),
+                ],
+                style={"marginBottom": "32px"},
             ),
             # Gráficos en grid
             html.Div(
                 [
                     html.Div(
                         [
-                            html.H4(
-                                "Distribución de Niveles de Severidad",
-                                style={
-                                    "textAlign": "center",
-                                    "marginBottom": "15px",
-                                },
-                            ),
+                            html.H4("Distribución de Niveles de Severidad"),
                             dcc.Graph(
                                 id="grafico-severidad-dist",
                                 config={"displayModeBar": False},
@@ -173,13 +167,7 @@ def create_severity_section(df: pd.DataFrame, theme: str = "dark") -> html.Div:
                     ),
                     html.Div(
                         [
-                            html.H4(
-                                "Distribución de Riesgo de Mortalidad",
-                                style={
-                                    "textAlign": "center",
-                                    "marginBottom": "15px",
-                                },
-                            ),
+                            html.H4("Distribución de Riesgo de Mortalidad"),
                             dcc.Graph(
                                 id="grafico-mortalidad-dist",
                                 config={"displayModeBar": False},
@@ -194,75 +182,36 @@ def create_severity_section(df: pd.DataFrame, theme: str = "dark") -> html.Div:
             # Mapa de calor
             html.Div(
                 [
-                    html.H4(
-                        "Mapa de Calor: Correlación Severidad vs Mortalidad",
-                        style={"textAlign": "center", "marginBottom": "15px"},
-                    ),
-                    dcc.Graph(
-                        id="grafico-severidad-mortalidad-heatmap",
-                        config={"displayModeBar": False},
-                        figure=fig_heatmap,
-                    ),
+                    html.Div(
+                        [
+                            html.H4(
+                                "Mapa de Calor: Correlación Severidad vs Mortalidad"
+                            ),
+                            dcc.Graph(
+                                id="grafico-severidad-mortalidad-heatmap",
+                                config={"displayModeBar": False},
+                                figure=fig_heatmap,
+                            ),
+                        ],
+                        className="chart-card",
+                    )
                 ],
-                style={"marginTop": "20px"},
-            ),
-            # Barras agrupadas
-            html.Div(
-                [
-                    html.H4(
-                        "Distribución Combinada: Severidad y Mortalidad",
-                        style={"textAlign": "center", "marginBottom": "15px"},
-                    ),
-                    dcc.Graph(
-                        id="grafico-severidad-mortalidad-bars",
-                        config={"displayModeBar": False},
-                        figure=fig_bars,
-                    ),
-                ],
-                style={"marginTop": "20px"},
+                style={"margin": "0 24px 32px 24px"},
             ),
             # Tabla de contingencia
             html.Div(
                 [
-                    html.H4(
-                        "Tabla de Contingencia: Severidad vs Mortalidad",
-                        style={"textAlign": "center", "marginBottom": "15px"},
-                    ),
-                    table_crosstab,
-                ],
-                style={"marginTop": "30px"},
-            ),
-            # Estadísticas resumen
-            html.Div(
-                [
                     html.Div(
                         [
-                            html.H4(
-                                "📊 Análisis Estadístico",
-                                style={"marginBottom": "15px"},
-                            ),
-                            html.P(f"Total de casos: {format_number(total_casos)}"),
-                            html.P(f"Severidad más común: {severidad_comun}"),
-                            html.P(
-                                f"Riesgo de mortalidad más común: {mortalidad_comun}"
-                            ),
-                            html.P(
-                                f"Casos de severidad extrema: {format_number(casos_extremos_severidad)}"
-                            ),
-                            html.P(
-                                f"Casos de mortalidad extrema: {format_number(casos_extremos_mortalidad)}"
-                            ),
+                            html.H4("Tabla de Contingencia: Severidad vs Mortalidad"),
+                            table_crosstab,
                         ],
-                        style={
-                            "backgroundColor": "#fef2f2",
-                            "padding": "20px",
-                            "borderRadius": "8px",
-                            "marginTop": "20px",
-                            "border": "2px solid #fecaca",
-                        },
+                        className="chart-card",
                     )
-                ]
+                ],
+                style={"margin": "0 24px 32px 24px"},
             ),
         ],
-        className="chart-card full",
+        className="section-container",
+        role="region",
     )

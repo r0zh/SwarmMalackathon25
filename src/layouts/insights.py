@@ -47,7 +47,14 @@ def create_insights_section(
 
     return html.Div(
         [
-            html.H3("5️⃣ Insights Clave y Conclusiones", className="chart-title"),
+            html.Div(
+                [
+                    html.H3(
+                        "5️⃣ Insights Clave y Conclusiones", className="section-title"
+                    ),
+                ],
+                style={"marginBottom": "30px"},
+            ),
             html.Div(
                 [
                     html.Div(
@@ -98,5 +105,5 @@ def create_insights_section(
                 className="tips-grid",
             ),
         ],
-        className="chart-card full tips-section",
+        className="chart-card tips-section",
     )

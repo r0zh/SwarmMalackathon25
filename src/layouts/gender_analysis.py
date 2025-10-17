@@ -53,6 +53,7 @@ def create_gender_analysis_section(df: pd.DataFrame, theme: str = "dark") -> htm
             "#3b82f6",
             "#ec4899",
         ],  # Blue for Masculino, Pink for Femenino
+        category_orders={"sexo_label": ["Masculino", "Femenino"]},
         height=400,
         theme=theme,
     )
@@ -86,35 +87,6 @@ def create_gender_analysis_section(df: pd.DataFrame, theme: str = "dark") -> htm
         theme=theme,
     )
 
-    # Gráfico 3: Proporción por diagnóstico
-    df_proporcion = (
-        df[
-            df["diagnostico_principal"].isin(
-                df["diagnostico_principal"].value_counts().head(15).index
-            )
-        ]
-        if not df.empty
-        else pd.DataFrame()
-    )
-
-    fig_proporcion = create_histogram(
-        df=df_proporcion,
-        x="sexo_label",
-        color="sexo_label",
-        barmode="stack",
-        labels={
-            "diagnostico_principal": "Diagnóstico",
-            "count": "Número de Casos",
-            "sexo_label": "Sexo",
-        },
-        color_discrete_map={
-            "Masculino": "#3b82f6",
-            "Femenino": "#ec4899",
-        },
-        height=500,
-        theme=theme,
-    )
-
     # Tabla comparativa
     table_sexo = create_comparison_table(
         df=df if not df.empty else pd.DataFrame(),
@@ -127,18 +99,18 @@ def create_gender_analysis_section(df: pd.DataFrame, theme: str = "dark") -> htm
 
     return html.Div(
         [
-            html.H3(
-                "2️⃣ Análisis por Sexo: Perspectiva de Género",
-                className="chart-title",
-            ),
-            html.P(
-                "Distribución de diagnósticos y patrones diferenciados por sexo del paciente",
-                style={
-                    "textAlign": "center",
-                    "color": "#64748b",
-                    "marginBottom": "20px",
-                    "fontSize": "0.95rem",
-                },
+            html.Div(
+                [
+                    html.H3(
+                        "2️⃣ Análisis por Sexo: Perspectiva de Género",
+                        className="section-title",
+                    ),
+                    html.P(
+                        "Distribución de diagnósticos y patrones diferenciados por sexo del paciente",
+                        className="section-subtitle",
+                    ),
+                ],
+                style={"marginBottom": "32px"},
             ),
             # Gráficos en grid
             html.Div(
@@ -146,13 +118,7 @@ def create_gender_analysis_section(df: pd.DataFrame, theme: str = "dark") -> htm
                     # Gráfico 1
                     html.Div(
                         [
-                            html.H4(
-                                "Distribución General por Sexo",
-                                style={
-                                    "textAlign": "center",
-                                    "marginBottom": "15px",
-                                },
-                            ),
+                            html.H4("Distribución General por Sexo"),
                             dcc.Graph(
                                 id="grafico-sexo-general",
                                 config={"displayModeBar": False},
@@ -164,13 +130,7 @@ def create_gender_analysis_section(df: pd.DataFrame, theme: str = "dark") -> htm
                     # Gráfico 2
                     html.Div(
                         [
-                            html.H4(
-                                "Top 10 Diagnósticos por Sexo",
-                                style={
-                                    "textAlign": "center",
-                                    "marginBottom": "15px",
-                                },
-                            ),
+                            html.H4("Top 10 Diagnósticos por Sexo"),
                             dcc.Graph(
                                 id="grafico-diagnosticos-sexo",
                                 config={"displayModeBar": False},
@@ -182,103 +142,20 @@ def create_gender_analysis_section(df: pd.DataFrame, theme: str = "dark") -> htm
                 ],
                 className="charts-grid",
             ),
-            # Gráfico de proporción
-            html.Div(
-                [
-                    html.H4(
-                        "Proporción de Sexo en Diagnósticos Principales",
-                        style={"textAlign": "center", "marginBottom": "15px"},
-                    ),
-                    dcc.Graph(
-                        id="grafico-proporcion-sexo",
-                        config={"displayModeBar": False},
-                        figure=fig_proporcion,
-                    ),
-                ],
-                style={"marginTop": "20px"},
-            ),
             # Tabla comparativa
-            html.Div(
-                [
-                    html.H4(
-                        "Tabla Comparativa: Diagnósticos por Sexo",
-                        style={"textAlign": "center", "marginBottom": "15px"},
-                    ),
-                    table_sexo,
-                ],
-                style={"marginTop": "30px"},
-            ),
-            # Estadísticas resumen
             html.Div(
                 [
                     html.Div(
                         [
-                            html.H4(
-                                "📊 Estadísticas por Sexo",
-                                style={"marginBottom": "15px"},
-                            ),
-                            html.Div(
-                                [
-                                    html.Div(
-                                        [
-                                            html.H5(
-                                                "👨 Masculino",
-                                                style={"color": "#3b82f6"},
-                                            ),
-                                            html.P(
-                                                f"Total casos: {format_number(total_masculino)}"
-                                            ),
-                                            html.P(
-                                                f"Diagnósticos únicos: {format_number(diagnosticos_masculino)}"
-                                            ),
-                                        ],
-                                        style={
-                                            "flex": "1",
-                                            "padding": "15px",
-                                            "backgroundColor": "#eff6ff",
-                                            "borderRadius": "8px",
-                                            "border": "2px solid #bfdbfe",
-                                        },
-                                    ),
-                                    html.Div(
-                                        [
-                                            html.H5(
-                                                "👩 Femenino",
-                                                style={"color": "#ec4899"},
-                                            ),
-                                            html.P(
-                                                f"Total casos: {format_number(total_femenino)}"
-                                            ),
-                                            html.P(
-                                                f"Diagnósticos únicos: {format_number(diagnosticos_femenino)}"
-                                            ),
-                                        ],
-                                        style={
-                                            "flex": "1",
-                                            "padding": "15px",
-                                            "backgroundColor": "#fdf2f8",
-                                            "borderRadius": "8px",
-                                            "border": "2px solid #fbcfe8",
-                                        },
-                                    ),
-                                ],
-                                style={
-                                    "display": "flex",
-                                    "gap": "20px",
-                                    "marginTop": "15px",
-                                },
-                            ),
+                            html.H4("Tabla Comparativa: Diagnósticos por Sexo"),
+                            table_sexo,
                         ],
-                        style={
-                            "backgroundColor": "#f8fafc",
-                            "padding": "20px",
-                            "borderRadius": "8px",
-                            "marginTop": "20px",
-                            "border": "1px solid #e2e8f0",
-                        },
+                        className="chart-card",
                     )
-                ]
+                ],
+                style={"margin": "0 24px 32px 24px"},
             ),
         ],
-        className="chart-card full",
+        className="section-container",
+        role="region",
     )
