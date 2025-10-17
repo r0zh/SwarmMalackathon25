@@ -28,7 +28,7 @@ class Config:
     CACHE_TIMEOUT = int(os.getenv("CACHE_TIMEOUT", "300"))  # 5 minutes default
 
     # Theme Configuration
-    DEFAULT_THEME = os.getenv("DEFAULT_THEME", "dark")  # "dark" or "light"
+    DEFAULT_THEME = os.getenv("DEFAULT_THEME", "light")  # "dark" or "light"
 
     @classmethod
     def validate(cls):

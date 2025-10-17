@@ -11,7 +11,7 @@ from ..utils.themes import apply_theme
 
 
 def create_empty_chart(
-    message: str = "No hay datos disponibles", height: int = 400, theme: str = "dark"
+    message: str = "No hay datos disponibles", height: int = 400, theme: str = "light"
 ) -> go.Figure:
     """
     Crea un gráfico vacío con un mensaje.
@@ -53,7 +53,7 @@ def create_bar_chart(
     color: Optional[str] = None,
     color_continuous_scale: str = "Blues",
     height: int = 400,
-    theme: str = "dark",
+    theme: str = "light",
 ) -> go.Figure:
     """
     Crea un gráfico de barras.
@@ -120,7 +120,7 @@ def create_pie_chart(
     color_discrete_sequence: Optional[list] = None,
     category_orders: Optional[dict] = None,
     height: int = 400,
-    theme: str = "dark",
+    theme: str = "light",
 ) -> go.Figure:
     """
     Crea un gráfico de pastel/donut.
@@ -159,6 +159,13 @@ def create_pie_chart(
         marker=dict(line=dict(color="#f8fafc", width=1.5)),
     )
 
+    # Configuración de la leyenda según el tema
+    legend_bgcolor = (
+        "rgba(30, 41, 59, 0.9)" if theme == "dark" else "rgba(255,255,255,0.9)"
+    )
+    legend_bordercolor = "#475569" if theme == "dark" else "#e2e8f0"
+    legend_font_color = "#e2e8f0" if theme == "dark" else "#1e293b"
+
     fig.update_layout(
         height=height,
         showlegend=True,
@@ -169,9 +176,9 @@ def create_pie_chart(
             y=0.5,
             xanchor="left",
             x=1.02,
-            font=dict(size=9),
-            bgcolor="rgba(255,255,255,0.9)",
-            bordercolor="#e2e8f0",
+            font=dict(size=9, color=legend_font_color),
+            bgcolor=legend_bgcolor,
+            bordercolor=legend_bordercolor,
             borderwidth=1,
         ),
     )
@@ -188,7 +195,7 @@ def create_line_chart(
     markers: bool = True,
     line_color: str = "#60a5fa",
     height: int = 350,
-    theme: str = "dark",
+    theme: str = "light",
 ) -> go.Figure:
     """
     Crea un gráfico de líneas.
@@ -246,7 +253,7 @@ def create_heatmap(
     color_continuous_scale: str = "YlOrRd",
     category_orders: Optional[dict] = None,
     height: int = 500,
-    theme: str = "dark",
+    theme: str = "light",
 ) -> go.Figure:
     """
     Crea un mapa de calor.
@@ -299,7 +306,7 @@ def create_scatter_chart(
     color_continuous_scale: str = "Viridis",
     hover_data: Optional[dict] = None,
     height: int = 400,
-    theme: str = "dark",
+    theme: str = "light",
 ) -> go.Figure:
     """
     Crea un gráfico de dispersión.
@@ -358,7 +365,7 @@ def create_histogram(
     color_discrete_map: Optional[dict] = None,
     category_orders: Optional[dict] = None,
     height: int = 400,
-    theme: str = "dark",
+    theme: str = "light",
 ) -> go.Figure:
     """
     Crea un histograma.

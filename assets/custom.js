@@ -662,6 +662,13 @@ const graphObserver = new MutationObserver((mutations) => {
           // Asegurar que el gráfico sea visible
           node.style.opacity = "1";
           node.style.transform = "translateY(0)";
+
+          // Aplicar tema oscuro si está activado
+          if (document.body.classList.contains("dark-mode")) {
+            setTimeout(() => {
+              updateAllChartsTheme("dark");
+            }, 100);
+          }
         }
       });
     }
@@ -691,6 +698,48 @@ function addTooltips() {
 
 // Ejecutar tooltips después de que el DOM se cargue
 setTimeout(addTooltips, 500);
+
+// Setup external dark mode toggle button
+function setupDarkModeButton() {
+  const darkModeBtn = document.getElementById("dark-mode-toggle-btn");
+  if (!darkModeBtn) {
+    console.log("Dark mode button not found, retrying...");
+    return;
+  }
+
+  let isDarkMode = false;
+
+  // Update button icon based on theme
+  function updateButtonIcon() {
+    darkModeBtn.textContent = isDarkMode ? "☀️" : "🌙";
+    darkModeBtn.title = isDarkMode
+      ? "Cambiar a modo claro"
+      : "Cambiar a modo oscuro";
+  }
+
+  // Toggle dark mode
+  darkModeBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    isDarkMode = !isDarkMode;
+
+    if (isDarkMode) {
+      applyDarkMode();
+    } else {
+      removeDarkMode();
+    }
+
+    updateButtonIcon();
+
+    console.log("✓ Dark mode toggled:", isDarkMode ? "ON" : "OFF");
+  });
+
+  // Initialize icon
+  updateButtonIcon();
+
+  console.log("✓ Dark mode button initialized");
+}
 
 // Añadir indicador de carga
 window.addEventListener("load", function () {
@@ -756,6 +805,151 @@ function removeFocusTrap() {
     panel.removeEventListener("keydown", panel._focusTrapHandler);
     delete panel._focusTrapHandler;
   }
+}
+
+// ===================================
+// DARK MODE FUNCTIONS
+// ===================================
+
+function applyDarkMode() {
+  // Aplicar clase dark-mode al body
+  document.body.classList.add("dark-mode");
+
+  // Actualizar todos los gráficos de Plotly con tema oscuro
+  updateAllChartsTheme("dark");
+
+  console.log("✓ Modo oscuro activado");
+}
+
+function removeDarkMode() {
+  // Remover clase dark-mode del body
+  document.body.classList.remove("dark-mode");
+
+  // Restaurar todos los gráficos de Plotly con tema claro
+  updateAllChartsTheme("light");
+
+  console.log("✓ Modo oscuro desactivado");
+}
+
+function updateAllChartsTheme(theme) {
+  const graphs = document.querySelectorAll(".js-plotly-plot");
+
+  if (!window.Plotly) {
+    console.log(
+      "Plotly no está disponible aún, los gráficos se actualizarán en la próxima recarga"
+    );
+    return;
+  }
+
+  graphs.forEach((graph) => {
+    try {
+      if (graph && graph.data && graph.layout) {
+        const isDark = theme === "dark";
+
+        // Colores del tema
+        const colors = {
+          background: isDark ? "rgba(30, 41, 59, 0)" : "rgba(255,255,255,0)",
+          plot_bg: isDark ? "rgba(15, 23, 42, 0.3)" : "rgba(248,250,252,0.5)",
+          text: isDark ? "#cbd5e1" : "#1e293b",
+          title: isDark ? "#f1f5f9" : "#0f172a",
+          grid: isDark ? "rgba(71, 85, 105, 0.3)" : "#e2e8f0",
+          legend_bg: isDark ? "rgba(30, 41, 59, 0.9)" : "rgba(255,255,255,0.9)",
+          legend_border: isDark ? "#475569" : "#e2e8f0",
+        };
+
+        // Actualizar layout del gráfico
+        const layoutUpdate = {
+          paper_bgcolor: colors.background,
+          plot_bgcolor: colors.plot_bg,
+          font: {
+            color: colors.text,
+            family: "system-ui, -apple-system, sans-serif",
+            size: 11,
+          },
+          title: {
+            font: {
+              color: colors.title,
+              size: 14,
+              family: "system-ui, -apple-system, sans-serif",
+            },
+          },
+          xaxis: {
+            gridcolor: colors.grid,
+            color: colors.text,
+          },
+          yaxis: {
+            gridcolor: colors.grid,
+            color: colors.text,
+          },
+          legend: {
+            bgcolor: colors.legend_bg,
+            bordercolor: colors.legend_border,
+            font: {
+              color: colors.text,
+            },
+          },
+          hoverlabel: {
+            bgcolor: isDark ? "#1e293b" : "white",
+            font: {
+              color: isDark ? "#e2e8f0" : "#1e293b",
+              size: 11,
+              family: "system-ui, -apple-system, sans-serif",
+            },
+          },
+        };
+
+        // Aplicar actualización
+        window.Plotly.relayout(graph, layoutUpdate);
+
+        // Actualizar ejes si existen múltiples
+        const axisUpdates = {};
+        Object.keys(graph.layout).forEach((key) => {
+          if (key.startsWith("xaxis") || key.startsWith("yaxis")) {
+            axisUpdates[key + ".gridcolor"] = colors.grid;
+            axisUpdates[key + ".color"] = colors.text;
+          }
+        });
+
+        if (Object.keys(axisUpdates).length > 0) {
+          window.Plotly.relayout(graph, axisUpdates);
+        }
+      }
+    } catch (e) {
+      console.log("Error actualizando gráfico:", e);
+    }
+  });
+
+  console.log(`✓ ${graphs.length} gráficos actualizados al tema ${theme}`);
+}
+
+// Initialize dark mode button when DOM is ready
+function initDarkModeWithRetry() {
+  let attempts = 0;
+  const maxAttempts = 10;
+
+  function trySetup() {
+    attempts++;
+    const btn = document.getElementById("dark-mode-toggle-btn");
+
+    if (btn) {
+      setupDarkModeButton();
+    } else if (attempts < maxAttempts) {
+      console.log(`Waiting for dark mode button... (attempt ${attempts})`);
+      setTimeout(trySetup, 200);
+    } else {
+      console.log("Dark mode button not found after max attempts");
+    }
+  }
+
+  trySetup();
+}
+
+// Start initialization
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initDarkModeWithRetry);
+} else {
+  // DOM already loaded, try immediately
+  setTimeout(initDarkModeWithRetry, 100);
 }
 
 console.log("✅ Dashboard JavaScript inicializado correctamente");

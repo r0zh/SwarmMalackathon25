@@ -8,11 +8,11 @@ import plotly.graph_objects as go
 # Definición de colores para cada tema
 THEME_COLORS = {
     "dark": {
-        "background": "rgba(0,0,0,0)",
-        "plot_bg": "rgba(0,0,0,0.02)",
-        "text": "#334155",  # Darker for better contrast
-        "title": "#1e293b",  # Darker for better contrast
-        "grid": "#cbd5e1",
+        "background": "rgba(30, 41, 59, 0)",  # Transparent dark
+        "plot_bg": "rgba(15, 23, 42, 0.3)",  # Dark blue-gray
+        "text": "#cbd5e1",  # Light gray text
+        "title": "#f1f5f9",  # Very light gray for titles
+        "grid": "rgba(71, 85, 105, 0.3)",  # Subtle dark grid
     },
     "light": {
         "background": "rgba(255,255,255,0)",
@@ -37,19 +37,19 @@ def get_theme_colors(theme: str = "dark") -> dict:
     return THEME_COLORS.get(theme, THEME_COLORS["dark"])
 
 
-def apply_theme(fig: go.Figure, theme: str = "dark") -> go.Figure:
+def apply_theme(fig: go.Figure, theme: str = "light") -> go.Figure:
     """
     Aplica el tema (claro/oscuro) consistente a las figuras de Plotly.
 
     Args:
         fig: Figura de Plotly
-        theme: "dark" o "light" (default: "dark")
+        theme: "dark" o "light" (default: "light")
 
     Returns:
         fig: Figura con el tema aplicado
     """
     colors = get_theme_colors(theme)
-    template = "plotly_white" if theme == "dark" else "plotly"
+    template = "plotly_dark" if theme == "dark" else "plotly_white"
 
     fig.update_layout(
         template=template,
@@ -64,9 +64,18 @@ def apply_theme(fig: go.Figure, theme: str = "dark") -> go.Figure:
             family="system-ui, -apple-system, sans-serif",
         ),
         hoverlabel=dict(
-            bgcolor="white",
+            bgcolor="#1e293b" if theme == "dark" else "white",
+            font_color="#e2e8f0" if theme == "dark" else "#1e293b",
             font_size=11,
             font_family="system-ui, -apple-system, sans-serif",
+        ),
+        xaxis=dict(
+            gridcolor=colors["grid"],
+            color=colors["text"],
+        ),
+        yaxis=dict(
+            gridcolor=colors["grid"],
+            color=colors["text"],
         ),
     )
 

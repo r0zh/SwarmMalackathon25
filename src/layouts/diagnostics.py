@@ -17,7 +17,7 @@ from typing import Union
 
 
 def create_diagnostics_section(
-    df: pd.DataFrame, theme: str = "dark"
+    df: pd.DataFrame, theme: str = "light"
 ) -> Union[html.Div, html.Section]:
     """
     Crea la sección completa de análisis de diagnósticos y demografía.

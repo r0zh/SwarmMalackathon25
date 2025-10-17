@@ -13,7 +13,7 @@ from ..components import (
 from ..utils.helpers import format_number
 
 
-def create_gender_analysis_section(df: pd.DataFrame, theme: str = "dark") -> html.Div:
+def create_gender_analysis_section(df: pd.DataFrame, theme: str = "light") -> html.Div:
     """
     Crea la sección completa de análisis por sexo.
 
@@ -95,6 +95,7 @@ def create_gender_analysis_section(df: pd.DataFrame, theme: str = "dark") -> htm
         pivot_col="sexo_label",
         top_n=20,
         header_color="#6366f1",
+        theme=theme,
     )
 
     return html.Div(

@@ -55,6 +55,13 @@ def create_header() -> html.Div:
                 ],
                 className="header",
             ),
+            # Dark mode toggle button (fixed position)
+            html.Button(
+                "🌙",
+                id="dark-mode-toggle-btn",
+                className="dark-mode-toggle",
+                title="Cambiar tema",
+            ),
         ]
     )
 

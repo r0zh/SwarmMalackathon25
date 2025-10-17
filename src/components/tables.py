@@ -17,6 +17,7 @@ def create_data_table(
     style_cell: Optional[Dict[str, Any]] = None,
     style_data: Optional[Dict[str, Any]] = None,
     style_data_conditional: Optional[List[Dict[str, Any]]] = None,
+    theme: str = "light",
     **kwargs: Any,
 ) -> dash_table.DataTable:
     """
@@ -32,6 +33,7 @@ def create_data_table(
         style_cell: Estilos para las celdas
         style_data: Estilos para los datos
         style_data_conditional: Estilos condicionales
+        theme: Tema de color ('light' o 'dark')
         **kwargs: Argumentos adicionales para DataTable
 
     Returns:
@@ -41,7 +43,10 @@ def create_data_table(
     if columns is None:
         columns = [{"name": col, "id": col} for col in df.columns]
 
-    # Estilos por defecto
+    # Determinar colores según el tema
+    is_dark = theme == "dark"
+
+    # Estilos por defecto según el tema
     default_style_table = {
         "overflowX": "auto",
         "overflowY": "auto",
@@ -53,31 +58,33 @@ def create_data_table(
         "padding": "12px",
         "fontFamily": "Segoe UI, sans-serif",
         "fontSize": "14px",
-        "border": "1px solid #e2e8f0",
+        "border": f"1px solid {'#334155' if is_dark else '#e2e8f0'}",
+        "backgroundColor": "#1e293b" if is_dark else "white",
+        "color": "#e2e8f0" if is_dark else "#1e293b",
     }
 
     default_style_header = {
-        "backgroundColor": "#6366f1",
+        "backgroundColor": "#4f46e5" if is_dark else "#6366f1",
         "color": "white",
         "fontWeight": "bold",
         "textAlign": "center",
-        "border": "1px solid #4f46e5",
+        "border": f"1px solid {'#3730a3' if is_dark else '#4f46e5'}",
     }
 
     default_style_data = {
-        "backgroundColor": "white",
-        "color": "#1e293b",
+        "backgroundColor": "#1e293b" if is_dark else "white",
+        "color": "#e2e8f0" if is_dark else "#1e293b",
     }
 
     default_style_data_conditional = [
         {
             "if": {"row_index": "odd"},
-            "backgroundColor": "#f8fafc",
+            "backgroundColor": "#0f172a" if is_dark else "#f8fafc",
         },
         {
             "if": {"state": "active"},
-            "backgroundColor": "#dbeafe",
-            "border": "1px solid #2563eb",
+            "backgroundColor": "#1e3a5f" if is_dark else "#dbeafe",
+            "border": f"1px solid {'#3b82f6' if is_dark else '#2563eb'}",
         },
     ]
 
@@ -114,6 +121,7 @@ def create_comparison_table(
     pivot_col: str,
     top_n: int = 20,
     header_color: str = "#6366f1",
+    theme: str = "light",
     **kwargs,
 ) -> dash_table.DataTable:
     """
@@ -126,13 +134,14 @@ def create_comparison_table(
         pivot_col: Columna para hacer pivot
         top_n: Número de filas superiores a mostrar
         header_color: Color del encabezado
+        theme: Tema de color ('light' o 'dark')
         **kwargs: Argumentos adicionales
 
     Returns:
         dash_table.DataTable: Tabla comparativa
     """
     if df.empty:
-        return create_data_table(pd.DataFrame())
+        return create_data_table(pd.DataFrame(), theme=theme)
 
     # Crear tabla pivot
     pivot_df = df.groupby(index_col)[value_col].value_counts().unstack(fill_value=0)
@@ -146,7 +155,10 @@ def create_comparison_table(
     # Definir columnas
     columns = [{"name": col, "id": col} for col in pivot_df.columns]
 
-    # Estilos mínimos
+    # Determinar colores según el tema
+    is_dark = theme == "dark"
+
+    # Estilos según tema
     style_header = {
         "backgroundColor": header_color,
         "color": "white",
@@ -159,17 +171,20 @@ def create_comparison_table(
         "textAlign": "center",
         "padding": "10px",
         "fontSize": "14px",
+        "backgroundColor": "#1e293b" if is_dark else "white",
+        "color": "#e2e8f0" if is_dark else "#1e293b",
+        "border": f"1px solid {'#334155' if is_dark else '#e2e8f0'}",
     }
 
     style_data = {
-        "backgroundColor": "white",
-        "color": "#000",
+        "backgroundColor": "#1e293b" if is_dark else "white",
+        "color": "#e2e8f0" if is_dark else "#1e293b",
     }
 
     style_data_conditional = [
         {
             "if": {"row_index": "odd"},
-            "backgroundColor": "#f9f9f9",
+            "backgroundColor": "#0f172a" if is_dark else "#f9f9f9",
         },
     ]
 
@@ -194,6 +209,7 @@ def create_crosstab_table(
     col_col: str,
     margins: bool = True,
     margins_name: str = "Total",
+    theme: str = "light",
     **kwargs,
 ) -> dash_table.DataTable:
     """
@@ -205,13 +221,14 @@ def create_crosstab_table(
         col_col: Columna para las columnas
         margins: Incluir totales marginales
         margins_name: Nombre para los totales
+        theme: Tema de color ('light' o 'dark')
         **kwargs: Argumentos adicionales
 
     Returns:
         dash_table.DataTable: Tabla de tabulación cruzada
     """
     if df.empty:
-        return create_data_table(pd.DataFrame())
+        return create_data_table(pd.DataFrame(), theme=theme)
 
     # Crear crosstab
     crosstab_df = pd.crosstab(
@@ -232,25 +249,28 @@ def create_crosstab_table(
         for col in crosstab_df.columns
     ]
 
-    # Estilos condicionales
+    # Determinar colores según el tema
+    is_dark = theme == "dark"
+
+    # Estilos condicionales según tema
     style_data_conditional = [
         {
             "if": {"row_index": "odd"},
-            "backgroundColor": "#fef2f2",
+            "backgroundColor": "#1e1e2e" if is_dark else "#fef2f2",
         },
         {
             "if": {"column_id": margins_name},
-            "backgroundColor": "#fee2e2",
+            "backgroundColor": "#7f1d1d" if is_dark else "#fee2e2",
             "fontWeight": "bold",
         },
     ]
 
     style_header = {
-        "backgroundColor": "#dc2626",
+        "backgroundColor": "#b91c1c" if is_dark else "#dc2626",
         "color": "white",
         "fontWeight": "bold",
         "textAlign": "center",
-        "border": "1px solid #b91c1c",
+        "border": f"1px solid {'#991b1b' if is_dark else '#b91c1c'}",
     }
 
     return create_data_table(
@@ -259,5 +279,6 @@ def create_crosstab_table(
         style_header=style_header,
         style_data_conditional=style_data_conditional,
         page_size=20,
+        theme=theme,
         **kwargs,
     )

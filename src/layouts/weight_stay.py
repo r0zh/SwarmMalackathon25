@@ -9,7 +9,7 @@ from ..components import create_scatter_chart, create_data_table
 from ..utils.helpers import format_number
 
 
-def create_weight_stay_section(df: pd.DataFrame, theme: str = "dark") -> html.Div:
+def create_weight_stay_section(df: pd.DataFrame, theme: str = "light") -> html.Div:
     """
     Crea la sección completa de análisis de peso APR-GRD y estancia.
 
@@ -56,6 +56,7 @@ def create_weight_stay_section(df: pd.DataFrame, theme: str = "dark") -> html.Di
             {"name": "Estancia (días)", "id": "estancia_dias"},
         ],
         page_size=10,
+        theme=theme,
         style_header={
             "backgroundColor": "#2563eb",
             "color": "white",

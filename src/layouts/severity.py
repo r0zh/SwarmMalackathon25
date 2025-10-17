@@ -14,7 +14,7 @@ from ..components import (
 from ..utils.helpers import format_number, get_mode_value
 
 
-def create_severity_section(df: pd.DataFrame, theme: str = "dark") -> html.Div:
+def create_severity_section(df: pd.DataFrame, theme: str = "light") -> html.Div:
     """
     Crea la sección completa de análisis de severidad y mortalidad.
 
@@ -134,6 +134,7 @@ def create_severity_section(df: pd.DataFrame, theme: str = "dark") -> html.Div:
         col_col="mortalidad_label",
         margins=True,
         margins_name="Total",
+        theme=theme,
     )
 
     return html.Div(
